@@ -1,5 +1,5 @@
 {
-    "num_training_samples": 2,
+    "num_training_samples": 4,
     "epochs": 10,
     "training_mse": [
         0.9,

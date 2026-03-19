@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Football Social Club - DataOps Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        header {
+            background: #0d47a1;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+        }
+
+        .team-list, .system-list {
+            padding-left: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th, td {
+            border: 1px solid #d9e2ec;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #eef4ff;
+        }
+
+        code {
+            background: #eef2f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .endpoint {
+            font-weight: bold;
+            color: #0d47a1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #0d47a1;
+            padding: 6px 10px;
+            border-radius: 20px;
+            margin: 4px 6px 0 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Football Social Club</h1>
+        <p>DataOps-based Data Factory for Statistical Classification</p>
+        <p>Software System Engineering Project - Academic Year 2025/2026</p>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>Project Overview</h2>
+            <p>
+                This project implements a modular DataOps pipeline for the Football Social Club platform.
+                The system collects football, medical, and social data, transforms it into prepared sessions,
+                generates learning sets, trains and validates machine learning models, deploys predictions,
+                and evaluates classifier performance.
+            </p>
+            <div>
+                <span class="tag">Flask</span>
+                <span class="tag">Python</span>
+                <span class="tag">CSV Processing</span>
+                <span class="tag">JSON Communication</span>
+                <span class="tag">DataOps</span>
+                <span class="tag">Machine Learning</span>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>System Modules</h2>
+            <ul class="system-list">
+                <li><strong>Client-Side System:</strong> reads player data and generates JSON messages.</li>
+                <li><strong>Ingestion System:</strong> receives data and creates raw sessions.</li>
+                <li><strong>Preparation System:</strong> extracts and prepares features.</li>
+                <li><strong>Segregation System:</strong> checks balancing and coverage, then generates learning sets.</li>
+                <li><strong>Development System:</strong> performs training, validation, and testing.</li>
+                <li><strong>Production System:</strong> predicts player score and star rating.</li>
+                <li><strong>Evaluation System:</strong> compares expert and classifier labels.</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>Available URLs</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>URL</th>
+                        <th>Method</th>
+                        <th>Description & PowerShell Command</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="endpoint">/</span></td>
+                        <td>GET</td>
+                        <td>
+                            Homepage of the project.<br>
+                            <code>Invoke-WebRequest http://127.0.0.1:5000/</code>
+                        </td>
+                        <td><button onclick="callAPI('/', 'GET')">Run</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="endpoint">/health</span></td>
+                        <td>GET</td>
+                        <td>
+                            Checks application status.<br>
+                            <code>Invoke-RestMethod http://127.0.0.1:5000/health</code>
+                        </td>
+                        <td><button onclick="callAPI('/health', 'GET')">Run</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="endpoint">/client-side/run</span></td>
+                        <td>POST</td>
+                        <td>
+                            Generates client-side JSON message.<br>
+                            <code>Invoke-RestMethod -Method Post -Uri http://127.0.0.1:5000/client-side/run</code>
+                        </td>
+                        <td><button onclick="callAPI('/client-side/run', 'POST')">Run</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="endpoint">/ingestion/run</span></td>
+                        <td>POST</td>
+                        <td>
+                            Creates raw session.<br>
+                            <code>Invoke-RestMethod -Method Post -Uri http://127.0.0.1:5000/ingestion/run</code>
+                        </td>
+                        <td><button onclick="callAPI('/ingestion/run', 'POST')">Run</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="endpoint">/preparation/run</span></td>
+                        <td>POST</td>
+                        <td>
+                            Generates prepared session.<br>
+                            <code>Invoke-RestMethod -Method Post -Uri http://127.0.0.1:5000/preparation/run</code>
+                        </td>
+                        <td><button onclick="callAPI('/preparation/run', 'POST')">Run</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="endpoint">/segregation/run</span></td>
+                        <td>POST</td>
+                        <td>
+                            Generates learning sets + checks.<br>
+                            <code>Invoke-RestMethod -Method Post -Uri http://127.0.0.1:5000/segregation/run</code>
+                        </td>
+                        <td><button onclick="callAPI('/segregation/run', 'POST')">Run</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="endpoint">/development/run</span></td>
+                        <td>POST</td>
+                        <td>
+                            Runs training, validation, testing.<br>
+                            <code>Invoke-RestMethod -Method Post -Uri http://127.0.0.1:5000/development/run</code>
+                        </td>
+                        <td><button onclick="callAPI('/development/run', 'POST')">Run</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="endpoint">/production/run</span></td>
+                        <td>POST</td>
+                        <td>
+                            Generates prediction.<br>
+                            <code>Invoke-RestMethod -Method Post -Uri http://127.0.0.1:5000/production/run</code>
+                        </td>
+                        <td><button onclick="callAPI('/production/run', 'POST')">Run</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="endpoint">/evaluation/run</span></td>
+                        <td>POST</td>
+                        <td>
+                            Evaluates classifier.<br>
+                            <code>Invoke-RestMethod -Method Post -Uri http://127.0.0.1:5000/evaluation/run</code>
+                        </td>
+                        <td><button onclick="callAPI('/evaluation/run', 'POST')">Run</button></td>
+                    </tr>
+                    <tr>
+                        <td><span class="endpoint">/pipeline/run</span></td>
+                        <td>POST</td>
+                        <td>
+                            Runs full pipeline.<br>
+                            <code>Invoke-RestMethod -Method Post -Uri http://127.0.0.1:5000/pipeline/run</code>
+                        </td>
+                        <td><button onclick="callAPI('/pipeline/run', 'POST')">Run</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="card">
+            <h2>How to Use</h2>
+            <p>
+                Start the Flask application with:
+            </p>
+            <p><code>python app.py</code></p>
+            <p>
+                Then open:
+            </p>
+            <p><code>http://127.0.0.1:5000/</code></p>
+            <p>
+                To execute routes such as the full pipeline, use PowerShell:
+            </p>
+            <p><code>Invoke-RestMethod -Method Post -Uri http://127.0.0.1:5000/pipeline/run</code></p>
+        </section>
+
+        <section class="card">
+            <h2>Team Members</h2>
+            <ul class="team-list">
+                <li>Reza Almassi</li>
+                <li>Simone Maccarone</li>
+                <li>Prashant Gautam</li>
+                <li>Carlo Pio Pace</li>
+                <li>Gabriele Caioli</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        Football Social Club - SSE Project 2025/2026
+    </footer>
+
+    <script>
+        function callAPI(endpoint, method) {
+            fetch(endpoint, {
+                method: method,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const newWindow = window.open();
+                newWindow.document.write("<pre>" + JSON.stringify(data, null, 2) + "</pre>");
+            })
+            .catch(error => {
+                const newWindow = window.open();
+                newWindow.document.write("<pre>Error: " + error + "</pre>");
+            });
+        }
+    </script>
+</body>
+</html>

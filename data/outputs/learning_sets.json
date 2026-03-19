@@ -17,9 +17,7 @@
                 "social_influence_score": 629.6,
                 "injuries_impact_score": 216.6
             }
-        }
-    ],
-    "validation_set": [
+        },
         {
             "session_id": "raw-session-58-20260319161657",
             "player_id": 58,
@@ -28,9 +26,7 @@
                 "social_influence_score": 629.6,
                 "injuries_impact_score": 216.6
             }
-        }
-    ],
-    "test_set": [
+        },
         {
             "session_id": "raw-session-55-20260319163643",
             "player_id": 55,
@@ -38,6 +34,28 @@
                 "skill_overall": 51.2,
                 "social_influence_score": 277.5,
                 "injuries_impact_score": 41.7
+            }
+        }
+    ],
+    "validation_set": [
+        {
+            "session_id": "raw-session-55-20260319163643",
+            "player_id": 55,
+            "features": {
+                "skill_overall": 51.2,
+                "social_influence_score": 277.5,
+                "injuries_impact_score": 41.7
+            }
+        }
+    ],
+    "test_set": [
+        {
+            "session_id": "raw-session-83-20260319171501",
+            "player_id": 83,
+            "features": {
+                "skill_overall": 72.2,
+                "social_influence_score": 500.7,
+                "injuries_impact_score": 164.1
             }
         }
     ]

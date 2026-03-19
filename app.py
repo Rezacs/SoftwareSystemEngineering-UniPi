@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 from client_side.service import ClientSideService
 from ingestion.orchestrator import IngestionSystemOrchestrator
@@ -21,10 +21,7 @@ evaluation_orchestrator = EvaluationSystemOrchestrator()
 
 @app.get("/")
 def home():
-    return jsonify({
-        "project": "Football Social Club",
-        "status": "running"
-    })
+    return render_template("index.html")
 
 
 @app.get("/health")

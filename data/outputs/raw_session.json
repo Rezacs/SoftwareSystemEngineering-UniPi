@@ -1,44 +1,44 @@
 {
-    "session_id": "raw-session-83-20260319171501",
-    "created_at": "2026-03-19T17:15:01.559885",
+    "session_id": "raw-session-37-20260319172111",
+    "created_at": "2026-03-19T17:21:11.927519",
     "records": [
         {
-            "player_id": 83,
+            "player_id": 37,
             "football": {
-                "player_id": 83,
-                "short_name": "F. Wirtz",
-                "long_name": "Florian Richard Wirtz",
-                "age": 20,
-                "height_cm": 177.0,
-                "weight_kg": 71.0,
-                "club_name": "Bayer 04 Leverkusen",
-                "league_name": "Bundesliga",
-                "nationality_name": "Germany",
-                "preferred_foot": "Right",
-                "overall": 85.0,
-                "potential": 91.0,
-                "shooting": 76.0,
-                "passing": 83.0,
-                "dribbling": 87.0,
-                "defending": 52.0,
-                "physic": 63.0
+                "player_id": 37,
+                "short_name": "Bernardo Silva",
+                "long_name": "Bernardo Mota Veiga de Carvalho e Silva",
+                "age": 28,
+                "height_cm": 173.0,
+                "weight_kg": 64.0,
+                "club_name": "Manchester City",
+                "league_name": "Premier League",
+                "nationality_name": "Portugal",
+                "preferred_foot": "Left",
+                "overall": 88.0,
+                "potential": 88.0,
+                "shooting": 78.0,
+                "passing": 86.0,
+                "dribbling": 92.0,
+                "defending": 70.0,
+                "physic": 69.0
             },
             "medical": {
-                "player_id": 83,
-                "player_name": "Florian Wirtz",
+                "player_id": 37,
+                "player_name": "Bernardo Silva",
                 "position": "Midfield - Attacking Midfield",
                 "main_position": "Midfield",
-                "current_club_name": "Liverpool FC",
-                "days_missed": 386.0,
-                "games_missed": 69.0,
-                "injury_reason": "Inner ligament injury | Capsular injury | bruise | muscular problems | Stomach flu | Rest | Cruciate ligament tear | Hip flexor problems | Adductor pain | Corona virus | Knee problems",
-                "season_name": "24/25 | 23/24 | 22/23 | 21/22 | 20/21"
+                "current_club_name": "Manchester City",
+                "days_missed": 151.0,
+                "games_missed": 28.0,
+                "injury_reason": "unknown injury | muscular problems | Muscle injury | Knock | Ankle injury | Hamstring injury",
+                "season_name": "24/25 | 23/24 | 21/22 | 20/21 | 18/19 | 16/17 | 15/16"
             },
             "social": {
-                "player_id": 83,
-                "short_name": "Florian Wirtz",
-                "number_of_likes": 178,
-                "number_of_followers": 639
+                "player_id": 37,
+                "short_name": "Bernardo Silva",
+                "number_of_likes": 160,
+                "number_of_followers": 354
             }
         }
     ]

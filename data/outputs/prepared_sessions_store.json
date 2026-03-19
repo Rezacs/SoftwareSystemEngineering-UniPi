@@ -52,5 +52,14 @@
             "social_influence_score": 500.7,
             "injuries_impact_score": 164.1
         }
+    },
+    {
+        "session_id": "raw-session-37-20260319172111",
+        "player_id": 37,
+        "features": {
+            "skill_overall": 79.0,
+            "social_influence_score": 295.8,
+            "injuries_impact_score": 64.9
+        }
     }
 ]

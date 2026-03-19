@@ -1,5 +1,5 @@
 {
-    "num_test_samples": 1,
+    "num_test_samples": 2,
     "selected_model": {
         "model_name": "model_2",
         "layers": 3,

@@ -1,0 +1,12 @@
+{
+    "evaluation_result": {
+        "num_sessions": 2,
+        "total_errors": 0,
+        "max_consecutive_errors": 0
+    },
+    "thresholds": {
+        "max_total_errors_threshold": 5,
+        "max_consecutive_errors_threshold": 3
+    },
+    "accepted": true
+}

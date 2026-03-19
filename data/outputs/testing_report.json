@@ -1,0 +1,15 @@
+{
+    "num_test_samples": 1,
+    "selected_model": {
+        "model_name": "model_2",
+        "layers": 3,
+        "neurons": 32,
+        "training_error": 0.12,
+        "validation_error": 0.16,
+        "mse": 0.16,
+        "complexity": 96
+    },
+    "test_error": 0.17,
+    "generalization_gap": 0.010000000000000009,
+    "status": "testing_completed"
+}

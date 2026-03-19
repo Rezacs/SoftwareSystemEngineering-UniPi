@@ -1,0 +1,39 @@
+{
+    "player_id": 55,
+    "football": {
+        "player_id": 55,
+        "short_name": "F. Arancibia",
+        "long_name": "Francisco Andr\u00e9s Arancibia Silva",
+        "age": 21,
+        "height_cm": 170.0,
+        "weight_kg": 62.0,
+        "club_name": "Universidad de Chile",
+        "league_name": "Primera Division",
+        "nationality_name": "Chile",
+        "preferred_foot": "Left",
+        "overall": 68.0,
+        "potential": 80.0,
+        "shooting": 50.0,
+        "passing": 65.0,
+        "dribbling": 72.0,
+        "defending": 34.0,
+        "physic": 35.0
+    },
+    "medical": {
+        "player_id": 55,
+        "player_name": "Francisco Arancibia",
+        "position": "Attack - Right Winger",
+        "main_position": "Attack",
+        "current_club_name": "Deportivo Garcilaso",
+        "days_missed": 104.0,
+        "games_missed": 15.0,
+        "injury_reason": "ankle sprain | Lower leg fracture",
+        "season_name": "25/26 | 17/18"
+    },
+    "social": {
+        "player_id": 55,
+        "short_name": "Francisco Arancibia",
+        "number_of_likes": 568,
+        "number_of_followers": 153
+    }
+}

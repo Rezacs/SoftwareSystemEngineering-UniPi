@@ -1,0 +1,12 @@
+{
+    "balanced": false,
+    "tolerance": 0.05,
+    "distribution": {
+        "1_star": 0,
+        "2_star": 0,
+        "3_star": 1,
+        "4_star": 3,
+        "5_star": 0
+    },
+    "average": 0.8
+}

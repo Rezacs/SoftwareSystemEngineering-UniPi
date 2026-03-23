@@ -1,0 +1,5 @@
+pyreverse -o png -p ClientSide client_side
+
+pyreverse -o png -p FootballSocialClub -d diagrams .
+
+pyreverse -o png -p FootballSocialClub -d diagrams common client_side ingestion preparation segregation development production evaluation

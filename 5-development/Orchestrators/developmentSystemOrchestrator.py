@@ -14,28 +14,6 @@ from Views.testingReportView import TestingReportView
 from typing import List, Optional
 
 class DevelopmentSystemOrchestrator:
-    """
-    Orchestrates the full Application Logic Development lifecycle:
-      1. Iterative training over hyper-parameter configurations
-      2. Validation (select best classifier)
-      3. Testing (acceptance check)
-      4. Deployment (send classifier + config to external system)
- 
-    Mirrors the sequence diagram:
-      Loop [Classifier Not Valid]
-        → TrainingOrchestrator.setParameters / generateLearningPlot
-        → LearningPlotView.displayLearningPlot
-        → ValidationOrchestrator.checkTable
-          Loop [for each hyper-parameter configuration]
-            → TrainingOrchestrator.setParameters / trainClassifier
-        → ValidationReportView.displayValidationReport
-      → TestingOrchestrator.testClassifier
-      → TestingReportView.displayTrainingReport
-      alt [Test Passed]
-        → CommunicationController.sendClassifier
-      alt [Test Not Passed]
-        → CommunicationController.sendConfig
-    """
  
     def __init__(
         self,

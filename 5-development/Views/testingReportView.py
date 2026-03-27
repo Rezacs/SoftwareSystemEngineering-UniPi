@@ -1,7 +1,11 @@
+# Views/testingReportView.py
 from Data.testingReport import TestingReport
+
 class TestingReportView:
-    def display_training_report(self, testing_report: TestingReport) -> None:
-        print("[TestingReportView] Displaying testing report.")
-        print(f"  Testing error            : {testing_report.testing_error}")
-        print(f"  Generalization threshold : {testing_report.generalization_threshold}")
-        print(f"  Result (passed)          : {testing_report.result}")
+    def display_training_report(self, report: TestingReport) -> None:
+        print("[TestingReportView] Testing Report:")
+        print(f"  Testing error             : {report.testing_error:.4f}")
+        print(f"  Generalization threshold  : {report.generalization_threshold}")
+        print(f"  Passed                    : {report.result}")
+        if report.classifier:
+            print(f"  Classifier                : {report.classifier.classifier_id}")

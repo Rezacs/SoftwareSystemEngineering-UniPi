@@ -1,6 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
-from dataclasses import field
+
 @dataclass
 class LearningPlot:
     mse: List[float] = field(default_factory=list)

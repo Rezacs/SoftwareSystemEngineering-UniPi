@@ -1,12 +1,10 @@
 {
-    "balanced": false,
-    "tolerance": 0.05,
-    "distribution": {
-        "1_star": 0,
-        "2_star": 0,
-        "3_star": 2,
-        "4_star": 5,
-        "5_star": 0
-    },
-    "average": 1.4
+    "balanced": true, 
+    "unbalanced_classes": {
+        "1-star": false,
+        "2-star": false,
+        "3-star": false,
+        "4-star": false,
+        "5-star": false
+    }
 }

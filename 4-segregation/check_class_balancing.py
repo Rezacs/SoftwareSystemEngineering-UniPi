@@ -1,19 +1,13 @@
 class CheckClassBalancing:
-    def assign_label(self, prepared_session: dict) -> str:
-        score = prepared_session["features"]["skill_overall"]
+    def retrieveLabels(self, prepared_sessions: list) -> list[str]:
+        labels = []
+        for session in prepared_sessions:
+            label = session.get("label")
+            if label is not None:
+                labels.append(label)
+        return labels
 
-        if score < 20:
-            return "1_star"
-        elif score < 40:
-            return "2_star"
-        elif score < 60:
-            return "3_star"
-        elif score < 80:
-            return "4_star"
-        else:
-            return "5_star"
-
-    def build_distribution(self, prepared_sessions: list) -> dict:
+    def generatePlotData(self, labels: list[str], tolerance: float = 0.05) -> dict:
         distribution = {
             "1_star": 0,
             "2_star": 0,
@@ -22,13 +16,9 @@ class CheckClassBalancing:
             "5_star": 0
         }
 
-        for session in prepared_sessions:
-            label = self.assign_label(session)
-            distribution[label] += 1
-
-        return distribution
-
-    def check_balance(self, distribution: dict, tolerance: float = 0.05) -> dict:
+        for label in labels:
+            if label in distribution:
+                distribution[label] += 1
         counts = list(distribution.values())
         total = sum(counts)
 
@@ -54,3 +44,13 @@ class CheckClassBalancing:
             "distribution": distribution,
             "average": average
         }
+
+    def build_distribution(self, prepared_sessions: list) -> dict:
+        labels = self.retrieveLabels(prepared_sessions)
+        return self.generatePlotData(labels)["distribution"]
+
+    def check_balance(self, distribution: dict, tolerance: float = 0.05) -> dict:
+        labels = []
+        for label, count in distribution.items():
+            labels.extend([label] * count)
+        return self.generatePlotData(labels, tolerance)

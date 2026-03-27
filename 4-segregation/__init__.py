@@ -1,0 +1,6 @@
+CONFIG_PATH = "4-segregation/config/config.json"
+PREPARED_SESSION_PATH = "data/outputs/prepared_session.json"
+PREPARED_SESSIONS_STORE_PATH = "data/outputs/prepared_sessions_store.json"
+BALANCING_REPORT_PATH = "data/outputs/balancing_report.json"
+COVERAGE_REPORT_PATH = "data/outputs/coverage_report.json"
+CALIBRATION_SETS_PATH = "data/outputs/learning_sets.json"

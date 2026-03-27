@@ -21,7 +21,7 @@ class CheckInputCoverage:
             "unique_values": unique_values
         }
 
-    def build_coverage_report(self, prepared_sessions: list) -> dict:
+    def retrieveStatistics(self, prepared_sessions: list) -> dict:
         feature_map = {
             "skill_overall": [],
             "social_influence_score": [],
@@ -35,14 +35,28 @@ class CheckInputCoverage:
                 if value is not None:
                     feature_map[key].append(value)
 
-        feature_reports = {
+        return {
             feature_name: self.analyze_feature(values)
             for feature_name, values in feature_map.items()
         }
 
-        all_covered = all(report["covered"] for report in feature_reports.values())
+    def generatePlotData(self, statistics: dict, threshold: float = 0.8) -> dict:
+        feature_reports = statistics
+        covered_features = sum(
+            1 for report in feature_reports.values() if report["covered"]
+        )
+        coverage_ratio = (
+            covered_features / len(feature_reports) if feature_reports else 0
+        )
+        all_covered = coverage_ratio >= threshold
 
         return {
             "all_features_covered": all_covered,
+            "coverage_ratio": coverage_ratio,
+            "coverage_threshold": threshold,
             "features": feature_reports
         }
+
+    def build_coverage_report(self, prepared_sessions: list) -> dict:
+        statistics = self.retrieveStatistics(prepared_sessions)
+        return self.generatePlotData(statistics)

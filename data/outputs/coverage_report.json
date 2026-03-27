@@ -3,21 +3,15 @@
     "features": {
         "skill_overall": {
             "covered": true,
-            "min": 51.2,
-            "max": 79.0,
-            "unique_values": 4
+            "comment": ""
         },
         "social_influence_score": {
             "covered": true,
-            "min": 277.5,
-            "max": 629.6,
-            "unique_values": 4
+            "comment": ""
         },
         "injuries_impact_score": {
             "covered": true,
-            "min": 41.7,
-            "max": 216.6,
-            "unique_values": 4
+            "comment": ""
         }
     }
 }

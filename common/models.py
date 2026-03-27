@@ -48,3 +48,4 @@ class CombinedPlayerRecord:
     football: FootballRecord | None
     medical: MedicalRecord | None
     social: SocialRecord | None
+    label: str | None = None

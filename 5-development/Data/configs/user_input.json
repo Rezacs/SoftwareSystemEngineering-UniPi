@@ -1,6 +1,6 @@
 {
 	"max_iter": 300,
-	"good_max_iter": true,
+	"good_max_iter": false,
 	"best_model": 0,
 	"approved": false
 }

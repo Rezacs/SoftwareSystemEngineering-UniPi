@@ -50,7 +50,7 @@ class DevelopmentSystemOrchestrator:
         overfitting_threshold: float = 0.1,
         generalization_threshold: float = 0.15,
         max_outer_iterations: int = 3,
-        testing_mode: bool = False,
+        testing_mode: bool = True,
     ) -> None:
         self._learning_set             = learning_set
         self._hyper_param_configs      = hyper_param_configs

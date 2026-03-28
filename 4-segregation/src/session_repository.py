@@ -1,7 +1,7 @@
-from common.json_io import JsonIO
+from .utils.json_io import JsonIO
 
 
-class PreparedSessionController:
+class SessionRepository:
     def receive(self, path: str):
         return JsonIO.load(path)
 

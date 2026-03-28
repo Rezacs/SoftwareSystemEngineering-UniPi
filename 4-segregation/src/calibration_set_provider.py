@@ -1,4 +1,4 @@
-class LearningSetsController:
+class CalibrationSetProvider:
     def generateCalibrationSets(self, prepared_sessions: list) -> dict:
         total = len(prepared_sessions)
 
@@ -19,7 +19,7 @@ class LearningSetsController:
         }
 
     def sendCalibrationSets(self, calibration_sets: dict, path: str):
-        from common.json_io import JsonIO
+        from .utils.json_io import JsonIO
         JsonIO.save(path, calibration_sets)
 
     def generate_learning_sets(self, prepared_sessions: list) -> dict:

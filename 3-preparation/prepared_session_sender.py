@@ -1,4 +1,4 @@
-from common.json_io import JsonIO
+from .utils.json_io import JsonIO
 
 
 class PreparedSessionSender:

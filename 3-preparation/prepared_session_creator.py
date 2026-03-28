@@ -1,4 +1,4 @@
-from common.feature_extractor import compute_feature_scores
+from .utils.feature_extractor import compute_feature_scores
 
 
 class PreparedSessionCreator:

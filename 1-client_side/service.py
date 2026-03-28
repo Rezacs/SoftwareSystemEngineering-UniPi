@@ -1,10 +1,10 @@
 import random
 from dataclasses import asdict
 
-from common.csv_reader import CSVReader
-from common.data_merger import DataMerger
-from common.json_io import JsonIO
-from common.label_table_builder import LabelTableBuilder
+from .utils.csv_reader import CSVReader
+from .utils.data_merger import DataMerger
+from .utils.json_io import JsonIO
+from .utils.label_table_builder import LabelTableBuilder
 
 
 class ClientSideService:

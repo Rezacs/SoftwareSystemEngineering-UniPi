@@ -1,0 +1,10 @@
+{
+	"phase": "LearningCurve",
+	"max_iter": 300,
+	"avg_params": {
+		"num_layers": 3,
+		"num_neurons": 75
+	},
+	"best_classifier_data": null,
+	"iteration": 0
+}

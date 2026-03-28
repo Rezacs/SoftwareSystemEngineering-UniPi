@@ -1,4 +1,3 @@
-# Views/validationReportView.py
 from Data.validationReport import ValidationReport
 
 class ValidationReportView:

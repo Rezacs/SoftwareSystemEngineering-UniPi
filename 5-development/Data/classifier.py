@@ -7,4 +7,4 @@ class Classifier:
     number_of_layers: int
     training_error: float
     validation_error: float
-    model: bytes  # pickle-serialized sklearn model
+    model_path: str  # path to joblib-serialised model on disk

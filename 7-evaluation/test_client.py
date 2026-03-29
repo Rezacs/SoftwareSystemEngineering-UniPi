@@ -1,22 +1,14 @@
 import requests
-import json
 
-# The URL of your running server
 url = "http://127.0.0.1:8001/evaluation"
 
-# Dummy player data mimicking what the 'previous system' would send
+# Now perfectly matching: 
+# 1. 'source' must be 'expert' or 'classifier'
+# 2. 'rating' must be between 1 and 5
 dummy_data = {
     "player_id": "PLAYER_007",
-    "name": "Cristiano Rover",
-    "metrics": {
-        "speed": 90,
-        "stamina": 85,
-        "precision": 88
-    },
-    "metadata": {
-        "source": "Match_Scanner_v1",
-        "timestamp": "2026-03-29T16:30:00"
-    }
+    "rating": 5, 
+    "source": "expert" 
 }
 
 print(f"Sending dummy data to {url}...")
@@ -26,4 +18,4 @@ try:
     print(f"Status Code: {response.status_code}")
     print(f"Server Response: {response.text}")
 except Exception as e:
-    print(f"Error connecting to server: {e}")
+    print(f"Connection failed: {e}")

@@ -6,12 +6,12 @@ import logging
 import threading
 import os
 
-# Notice how ALL of these now start with 'src.' !
 from src.utility.json_validation import validate_json_data_file
 from src.utility import data_folder
 from src.comms import ServerREST
 from src.comms.json_transfer_api import ReceiveJsonApi
 from src.player_store_controller import PlayerStoreController
+from src.evaluation_report_controller import EvaluationReportController
 
 CONFIG_PATH_REL = "configs/eval_config.json"
 CONFIG_SCHEMA_PATH_REL = "schema/eval_config_schema.json"
@@ -26,10 +26,13 @@ class EvaluationSystemOrchestrator:
     """
     Orchestrator class for all Evaluation System functions
     """
+
     def __init__(self):
         self.player_store_controller = PlayerStoreController()
+        self.evaluation_report_controller = EvaluationReportController()
         self.config = None
         self.ip_config = None
+        self.server = None
 
     def load_config(self):
         """Loads and validates evaluation system configuration file"""
@@ -70,16 +73,42 @@ class EvaluationSystemOrchestrator:
         self.player_store_controller.store.ps_create_table(query_expert)
         self.player_store_controller.store.ps_create_table(query_classifier)
 
+    # def handle_message(self, label_dict):
+    #     """
+    #     Callback function passed to the comms API. 
+    #     Executes the saving logic in a separate thread.
+    #     This handles data from BOTH the test client and the real Classifier.
+    #     """
+    #     print(f"Orchestrator received data for processing: {label_dict.get('player_id')}")
+        
+    #     # We launch a thread so the HTTP response is sent back immediately 
+    #     # while the database does the heavy lifting in the background.
+    #     thread = threading.Thread(
+    #         target=self.player_store_controller.save_label_prompt_eval,
+    #         args=(label_dict, self.config)
+    #     )
+    #     thread.start()
+    #     return True
+
     def handle_message(self, label_dict):
         """
-        Callback function passed to the comms API. 
-        Executes the saving logic in a separate thread.
+        Processes incoming labels and triggers a human-readable report.
         """
-        thread = threading.Thread(
-            target=self.player_store_controller.save_label_prompt_eval,
-            args=(label_dict, self.config)
-        )
-        thread.start()
+        player_id = label_dict.get('player_id')
+        source = label_dict.get('source')
+        
+        print(f"Orchestrator processing {source} data for: {player_id}")
+        
+        # 1. Save data directly (Blocking call ensures data is in DB before report starts)
+        self.player_store_controller.save_label_prompt_eval(label_dict, self.config)
+        
+        # 2. Trigger the Report
+        # We generate the report specifically when an 'expert' rating arrives 
+        # to complete the comparison for the Human Manager.
+        if source == 'expert':
+            self.evaluation_report_controller.generate_human_report(player_id)
+            
+        return True
 
     def start_server(self):
         """Starts the REST server at the given IPv4 and Port, and assigns handler"""
@@ -88,16 +117,21 @@ class EvaluationSystemOrchestrator:
         
         logging.info("Start server for receiving football player evaluations")
         
-        # Instantiate server from the comms folder
-        self.server = ServerREST(self)
+        # 1. Initialize the Server Base
+        self.server = ServerREST()
+        
+        # 2. Add the Resource (Endpoint)
+        # Note: Mapping to '/evaluation' to match your test_client.py
         self.server.api.add_resource(
             ReceiveJsonApi,
-            "/",
+            "/evaluation",
             resource_class_kwargs={
                 'json_schema_path': LABEL_PATH_SCHEMA_REL,
                 'handler': self.handle_message
             }
         )
+        
+        # 3. Run the Flask loop
         self.server.run(debug=False, host=trg_ip_listen_on, port=trg_port_listen_on)
 
     def run(self):
@@ -111,5 +145,5 @@ class EvaluationSystemOrchestrator:
         self.create_tables()
         print("SQLite Database and tables created/verified.")
         
-        print("Starting REST server... Waiting for player data.")
+        print(f"Starting REST server... Listening on {self.ip_config['ipv4_address']}:{self.ip_config['port']}/evaluation")
         self.start_server()

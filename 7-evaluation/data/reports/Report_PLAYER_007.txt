@@ -1,0 +1,18 @@
+
+====================================================
+FOOTBALL SOCIAL CLUB - EVALUATION AUDIT REPORT
+====================================================
+Generated on: 2026-03-29 19:37:32
+Target Player: PLAYER_007
+----------------------------------------------------
+RATINGS SUMMARY:
+- AI Classifier Rating:  4 / 5
+- Human Expert Rating:   5 / 5
+----------------------------------------------------
+ANALYSIS:
+Discrepancy Score: 1
+Status: CONSISTENT
+
+NOTES FOR EVALUATOR:
+The AI and Expert are in alignment. High confidence in data.
+====================================================

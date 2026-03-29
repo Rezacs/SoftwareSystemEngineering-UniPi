@@ -105,8 +105,17 @@ class EvaluationSystemOrchestrator:
         # 2. Trigger the Report
         # We generate the report specifically when an 'expert' rating arrives 
         # to complete the comparison for the Human Manager.
-        if source == 'expert':
+        if source == "expert":
+            # GENERATE EVALUATION REPORT (BPMN)
+            print(f"Triggering comparison report for {player_id}...")
             self.evaluation_report_controller.generate_human_report(player_id)
+            
+            # 3. REMOVE LABELS (BPMN)
+            print("Executing BPMN Task: REMOVE LABELS...")
+            self.player_store_controller.remove_labels(player_id)
+            
+        else:
+            print(f"Classifier data saved to buffer. Waiting for Expert rating.")
             
         return True
 

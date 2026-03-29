@@ -102,3 +102,31 @@ class PlayerStoreController:
         finally:
             if self.db_semaphore._value == 0:
                 self.db_semaphore.release()
+
+    def remove_labels(self, player_id):
+        """
+        Removes the player's labels from the buffer 
+        after the evaluation report is generated.
+        """
+        import sqlite3
+        import os
+        from src.utility import data_folder
+
+        # Build the exact path to the database manually
+        db_path = os.path.join(data_folder, "evaluationDB.db")
+        
+        try:
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
+            
+            # Delete the specific player's data from both tables
+            cursor.execute("DELETE FROM expertLabelTable WHERE player_id = ?", (player_id,))
+            cursor.execute("DELETE FROM classifierLabelTable WHERE player_id = ?", (player_id,))
+            
+            conn.commit()
+            conn.close()
+            
+            print(f"Buffer Cleared: Labels for {player_id} successfully removed from database.")
+            
+        except Exception as e:
+            print(f"Error removing labels for {player_id}: {e}")

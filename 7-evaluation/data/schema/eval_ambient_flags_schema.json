@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ambient Flags Schema",
+  "type": "object",
+  "properties": {
+    "db_name": { "type": "string" },
+    "testing": { "type": "string" },
+    "timing": { "type": "string" },
+    "delete_db_on_load": { "type": "string" },
+    "print_labels": { "type": "string" }
+  },
+  "required": [
+    "db_name",
+    "testing",
+    "timing",
+    "delete_db_on_load",
+    "print_labels"
+  ]
+}

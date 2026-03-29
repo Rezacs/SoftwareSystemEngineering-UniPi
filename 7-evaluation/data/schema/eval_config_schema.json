@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Evaluation Thresholds Schema",
+  "type": "object",
+  "properties": {
+    "min_labels_opinionated": { "type": "number" },
+    "max_conflicting_labels_threshold": { "type": "number" },
+    "max_consecutive_conflicting_labels_threshold": { "type": "number" }
+  },
+  "required": [
+    "min_labels_opinionated",
+    "max_conflicting_labels_threshold",
+    "max_consecutive_conflicting_labels_threshold"
+  ]
+}

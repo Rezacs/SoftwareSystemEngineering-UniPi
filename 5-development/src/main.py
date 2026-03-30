@@ -1,10 +1,10 @@
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
 
-from Inputs.preparedSession import PreparedSession
-from Inputs.learningSet import LearningSet
-from Inputs.hyperParameters import HyperParameters
-from Orchestrators.developmentSystemOrchestrator import DevelopmentSystemOrchestrator
+from Data.preparedSession import PreparedSession
+from Data.learningSet import LearningSet
+from Data.hyperParameters import HyperParameters
+from src.developmentSystemOrchestrator import DevelopmentSystemOrchestrator
 
 
 def build_learning_set(n_samples: int = 300) -> LearningSet:

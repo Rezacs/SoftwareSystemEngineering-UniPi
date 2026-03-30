@@ -8,8 +8,8 @@ from sklearn.neural_network import MLPClassifier
 
 from Data.classifier import Classifier
 from Data.learningPlot import LearningPlot
-from Inputs.hyperParameters import HyperParameters
-from Inputs.preparedSession import PreparedSession
+from Data.hyperParameters import HyperParameters
+from Data.preparedSession import PreparedSession
 
 
 def _sessions_to_frames(sessions: List[PreparedSession]):

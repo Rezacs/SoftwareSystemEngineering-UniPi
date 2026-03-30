@@ -1,23 +1,23 @@
 import json
 import os
 import sys
+import time
 from typing import Any, Dict, List, Optional
 
-import joblib
 import pandas as pd
 
 from Data.learningPlot import LearningPlot
 from Data.validationReport import ValidationReport
 from Data.testingReport import TestingReport
-from Inputs.hyperParameters import HyperParameters
-from Inputs.learningSet import LearningSet
-from Inputs.preparedSession import PreparedSession
-from Orchestrators.trainingOrchestrator import TrainingOrchestrator
-from Orchestrators.validationOrchestrator import ValidationOrchestrator
-from Orchestrators.testingOrchestrator import TestingOrchestrator
-from Views.learningPlotView import LearningPlotView
-from Views.validationReportView import ValidationReportView
-from Views.testingReportView import TestingReportView
+from Data.hyperParameters import HyperParameters
+from Data.learningSet import LearningSet
+from Data.preparedSession import PreparedSession
+from trainingOrchestrator import TrainingOrchestrator
+from validationOrchestrator import ValidationOrchestrator
+from testingOrchestrator import TestingOrchestrator
+from learningPlotView import LearningPlotView
+from validationReportView import ValidationReportView
+from testingReportView import TestingReportView
 
 # ── Paths ──────────────────────────────────────────────────────────────
 DATA_FOLDER            = "data"
@@ -39,8 +39,19 @@ class DevelopmentSystemOrchestrator:
     """
     State-machine orchestrator for the full development cycle.
 
-    Phases (stored in data/internal/status.json):
-        Ready → LearningCurve → Validation → ValidationReport → Testing → Results
+    Stop&Go pattern (testing_mode=False):
+        Each phase ends with sys.exit(0). The user inspects outputs,
+        edits data/configs/user_input.json, then re-runs main.py.
+        The status is persisted in data/internal/status.json so each
+        restart resumes exactly where it left off.
+
+    Testing mode (testing_mode=True):
+        User decisions are simulated on-the-fly; the app never stops
+        between phases. Timestamps are recorded for benchmarking.
+
+    Phases:
+        Starting → Ready → LearningCurve → Validation
+        → ValidationReport → Testing → Results
     """
 
     def __init__(
@@ -50,7 +61,7 @@ class DevelopmentSystemOrchestrator:
         overfitting_threshold: float = 0.1,
         generalization_threshold: float = 0.15,
         max_outer_iterations: int = 3,
-        testing_mode: bool = True,
+        testing_mode: bool = False,
     ) -> None:
         self._learning_set             = learning_set
         self._hyper_param_configs      = hyper_param_configs
@@ -59,7 +70,10 @@ class DevelopmentSystemOrchestrator:
         self._max_outer_iterations     = max_outer_iterations
         self._testing_mode             = testing_mode
 
-        # Persisted state
+        # Timestamps (testing mode only)
+        self._start_time: Optional[int] = None
+
+        # Load persisted state — never overwrite it here
         self._status: Dict[str, Any] = self._load_status()
 
         # Views
@@ -70,7 +84,7 @@ class DevelopmentSystemOrchestrator:
     # ── status persistence ─────────────────────────────────────────────
     def _default_status(self) -> Dict[str, Any]:
         return {
-            "phase":                "Ready",
+            "phase":                "Starting",   # ← "Starting", not "Ready"
             "max_iter":             200,
             "avg_params":           {},
             "best_classifier_data": None,
@@ -93,32 +107,65 @@ class DevelopmentSystemOrchestrator:
         self._save_status()
 
     def _reset_status(self) -> None:
+        """Full reset back to Starting so the next run() begins fresh."""
         self._status = self._default_status()
         self._save_status()
 
     # ── user input ─────────────────────────────────────────────────────
-    def _reset_user_input(self) -> None:
-        payload = {
-            "max_iter":      self._status.get("max_iter", 200),
-            "good_max_iter": self._status["phase"] not in ["Ready", "LearningCurve"],
-            "best_model":    (self._status.get("best_classifier_data") or {}).get("index", 0),
-            "approved":      False,
-        }
+    def _write_user_input_template(self) -> None:
+        """
+        Write a template user_input.json for the current phase.
+        Called once per stop, so the user knows exactly what to fill in.
+        Previous values are preserved where possible so the user only
+        needs to change what matters.
+        """
+        phase = self._status["phase"]
+
+        # Start from whatever is already on disk so prior fields survive
+        existing: dict = {}
+        if os.path.isfile(USER_INPUT_PATH):
+            try:
+                with open(USER_INPUT_PATH, "r", encoding="UTF-8") as f:
+                    existing = json.load(f)
+            except (json.JSONDecodeError, OSError):
+                existing = {}
+
+        if phase == "LearningCurve":
+            payload = {
+                "max_iter":      existing.get("max_iter", self._status.get("max_iter", 200)),
+                "good_max_iter": False,   # user must explicitly set this to True
+            }
+        elif phase == "ValidationReport":
+            payload = {
+                "best_model": existing.get("best_model", 0),
+            }
+        elif phase == "Results":
+            payload = {
+                "approved": False,        # user must explicitly set this to True
+            }
+        else:
+            payload = existing  # nothing to change for other phases
+
         os.makedirs(os.path.dirname(USER_INPUT_PATH), exist_ok=True)
         with open(USER_INPUT_PATH, "w", encoding="UTF-8") as f:
             json.dump(payload, f, indent="\t")
 
     def _get_user_input(self) -> dict:
+        """Return user input — simulated in testing mode, read from disk otherwise."""
         if self._testing_mode:
             return self._simulate_user_input()
         try:
             with open(USER_INPUT_PATH, "r", encoding="UTF-8") as f:
                 return json.load(f)
         except FileNotFoundError:
-            print(f"ERROR: {USER_INPUT_PATH} not found.")
+            print(f"[Orchestrator] ERROR: {USER_INPUT_PATH} not found.")
+            sys.exit(1)
+        except json.JSONDecodeError:
+            print(f"[Orchestrator] ERROR: {USER_INPUT_PATH} contains invalid JSON.")
             sys.exit(1)
 
     def _simulate_user_input(self) -> dict:
+        """Generate a plausible user decision automatically (testing mode only)."""
         phase = self._status["phase"]
         if phase == "LearningCurve":
             return {"max_iter": 300, "good_max_iter": True}
@@ -134,6 +181,18 @@ class DevelopmentSystemOrchestrator:
                 report = json.load(f)
             return {"approved": report["errors"]["passed"]}
         return {}
+
+    # ── stop helper ────────────────────────────────────────────────────
+    def _stop(self, message: str) -> None:
+        """
+        Write the user-input template, print instructions, and exit.
+        Only called in interactive (stop&go) mode.
+        """
+        self._write_user_input_template()
+        print(f"\n[Orchestrator] STOP — {message}")
+        print(f"  → Edit {USER_INPUT_PATH}")
+        print(f"  → Then re-run main.py to continue.\n")
+        sys.exit(0)
 
     # ── helpers ────────────────────────────────────────────────────────
     def _get_frames(self, split: str):
@@ -152,12 +211,22 @@ class DevelopmentSystemOrchestrator:
     def run(self) -> None:
         print("=" * 60)
         print("DevelopmentSystemOrchestrator: run()")
+        print(f"  Phase resumed: '{self._status['phase']}'")
+        print(f"  Testing mode : {self._testing_mode}")
         print("=" * 60)
-        self._update_status({"phase": "Ready"})
+
+        if self._testing_mode:
+            self._start_time = time.time_ns()
+
+        # ── Only initialise on a brand-new run ────────────────────────
+        # In stop&go mode the status file already holds the correct phase
+        # from the previous run — we must NOT overwrite it.
+        if self._status["phase"] == "Starting":
+            self._update_status({"phase": "Ready"})
+
         self._execute_development()
 
     def _execute_development(self) -> None:
-        phase = self._status["phase"]
         dispatch = {
             "Ready":            self._ready_phase,
             "LearningCurve":    self._learning_curve_phase,
@@ -166,14 +235,17 @@ class DevelopmentSystemOrchestrator:
             "Testing":          self._testing_phase,
             "Results":          self._results_phase,
         }
+        phase   = self._status["phase"]
         handler = dispatch.get(phase)
         if handler:
             handler()
         else:
-            print(f"[Orchestrator] Unknown phase: {phase}")
+            print(f"[Orchestrator] Unknown phase: '{phase}' — resetting.")
+            self._reset_status()
 
     # ── phases ─────────────────────────────────────────────────────────
     def _ready_phase(self) -> None:
+        """Compute average hyper-parameters; advance to LearningCurve."""
         val_orch   = ValidationOrchestrator(
             hp_configs=self._hyper_param_configs,
             classifier_folder=CLASSIFIER_FOLDER,
@@ -187,44 +259,50 @@ class DevelopmentSystemOrchestrator:
         self._update_status({"avg_params": avg_params, "phase": "LearningCurve"})
 
         if not self._testing_mode:
-            self._reset_user_input()
-            print(f"Set max_iter in {USER_INPUT_PATH}, then re-run.")
-            sys.exit(0)
+            # The template written here tells the user what max_iter to set
+            self._stop(
+                f"Set 'max_iter' (int) and leave 'good_max_iter': false "
+                f"in {USER_INPUT_PATH}, then re-run."
+            )
         else:
             self._execute_development()
 
     def _learning_curve_phase(self) -> None:
-        user_input  = self._get_user_input()
-        first_iter  = self._status.get("iteration", 0) == 0
-        good_iter   = user_input.get("good_max_iter", False)
+        """Generate learning curve; loop until user approves iteration count."""
+        user_input = self._get_user_input()
+        good_iter  = user_input.get("good_max_iter", False)
 
-        if first_iter or not good_iter:
-            self._update_status({"max_iter": user_input["max_iter"]})
-            print(f"[Orchestrator] Generating learning curve "
-                  f"({user_input['max_iter']} epochs) …")
+        if not good_iter:
+            # Accept whatever max_iter the user wrote (or keep the old one)
+            max_iter = user_input.get("max_iter", self._status["max_iter"])
+            self._update_status({"max_iter": max_iter})
+            print(f"[Orchestrator] Generating learning curve ({max_iter} epochs) …")
 
             X_train, y_train = self._get_frames("training_set")
             to = TrainingOrchestrator()
             params = dict(self._status.get("avg_params", {}))
-            params["max_iter"] = self._status["max_iter"]
+            params["max_iter"] = max_iter
             to.set_parameters(params)
 
             plot = to.generate_learning_curve(X_train, y_train, LEARNING_CURVE_PATH)
             self._learning_plot_view.display_learning_plot(plot)
 
             if not self._testing_mode:
-                self._reset_user_input()
-                print(f"Check learning curve at {LEARNING_CURVE_PATH}")
-                print(f"Set good_max_iter=true in {USER_INPUT_PATH} when satisfied.")
-                sys.exit(0)
+                self._stop(
+                    f"Inspect the curve at {LEARNING_CURVE_PATH}. "
+                    f"Adjust 'max_iter' if needed, then set 'good_max_iter': true "
+                    f"to proceed."
+                )
             else:
                 self._execute_development()
+
         else:
             print(f"[Orchestrator] Iterations approved: {self._status['max_iter']}")
             self._update_status({"phase": "Validation"})
             self._execute_development()
 
     def _grid_search_phase(self) -> None:
+        """Train one classifier per HP config; write validation report."""
         print("[Orchestrator] Starting grid search …")
         X_train, y_train = self._get_frames("training_set")
         X_val,   y_val   = self._get_frames("validation_set")
@@ -245,38 +323,51 @@ class DevelopmentSystemOrchestrator:
         self._update_status({"phase": "ValidationReport"})
 
         if not self._testing_mode:
-            self._reset_user_input()
-            print(f"Check validation report at {VALIDATION_REPORT_PATH}")
-            print(f"Set best_model in {USER_INPUT_PATH}. Use 0 to reject all.")
-            sys.exit(0)
+            self._stop(
+                f"Inspect {VALIDATION_REPORT_PATH}. "
+                f"Set 'best_model' to the chosen index (0 = reject all)."
+            )
         else:
             self._execute_development()
 
     def _model_selection_phase(self) -> None:
+        """Read user's model choice; go to Testing or retry from Ready."""
         best_model_index = self._get_user_input().get("best_model", 0)
         print(f"[Orchestrator] User selected model index: {best_model_index}")
 
         if best_model_index == 0:
             iteration = self._status.get("iteration", 0) + 1
             if iteration >= self._max_outer_iterations:
-                print(f"[Orchestrator] Max iterations ({self._max_outer_iterations}) reached. Stopping.")
+                print(
+                    f"[Orchestrator] Max outer iterations "
+                    f"({self._max_outer_iterations}) reached — stopping."
+                )
                 self._reset_status()
                 return
-            print(f"[Orchestrator] Validation rejected — retry {iteration}/{self._max_outer_iterations}")
+            print(
+                f"[Orchestrator] Validation rejected — "
+                f"retry {iteration}/{self._max_outer_iterations}"
+            )
             self._update_status({"phase": "Ready", "iteration": iteration})
             self._execute_development()
             return
 
         classifier_data = self._retrieve_classifier_data(best_model_index)
         if classifier_data is None:
-            print("[Orchestrator] Selected model is invalid.")
-            sys.exit(1)
+            print(f"[Orchestrator] Model index {best_model_index} is not valid.")
+            if not self._testing_mode:
+                self._stop(
+                    f"Choose a valid model index from {VALIDATION_REPORT_PATH}."
+                )
+            else:
+                sys.exit(1)
 
-        print(f"[Orchestrator] Selected: {classifier_data}")
+        print(f"[Orchestrator] Selected classifier: {classifier_data}")
         self._update_status({"phase": "Testing", "best_classifier_data": classifier_data})
         self._execute_development()
 
     def _testing_phase(self) -> None:
+        """Run final acceptance test on the selected classifier."""
         print("[Orchestrator] Starting testing …")
         best_data  = self._status["best_classifier_data"]
         cl_id      = best_data["index"]
@@ -294,15 +385,20 @@ class DevelopmentSystemOrchestrator:
         self._update_status({"phase": "Results"})
 
         if not self._testing_mode:
-            self._reset_user_input()
-            print(f"Check testing report at {TESTING_REPORT_PATH}")
-            print(f"Set approved=true/false in {USER_INPUT_PATH}.")
-            sys.exit(0)
+            self._stop(
+                f"Inspect {TESTING_REPORT_PATH}. "
+                f"Set 'approved': true to accept the classifier, false to reject."
+            )
         else:
             self._execute_development()
 
     def _results_phase(self) -> None:
+        """Final decision: publish classifier or declare failure."""
         approved = self._get_user_input().get("approved", False)
+
+        if self._testing_mode and self._start_time is not None:
+            elapsed_ns = time.time_ns() - self._start_time
+            print(f"[Orchestrator] ⏱  Total cycle time: {elapsed_ns / 1e9:.3f} s")
 
         if approved:
             best_data  = self._status["best_classifier_data"]
@@ -312,4 +408,5 @@ class DevelopmentSystemOrchestrator:
         else:
             print("[Orchestrator] ✗ Rejected. Development failed.")
 
+        # Always reset so the next run() starts fresh
         self._reset_status()

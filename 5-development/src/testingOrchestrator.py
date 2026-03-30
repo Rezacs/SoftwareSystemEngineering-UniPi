@@ -5,7 +5,7 @@ import joblib
 import pandas as pd
 
 from Data.testingReport import TestingReport
-from Inputs.hyperParameters import HyperParameters
+from Data.hyperParameters import HyperParameters
 
 
 class TestingOrchestrator:

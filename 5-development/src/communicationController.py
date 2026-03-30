@@ -1,6 +1,6 @@
 import pickle
 from Data.classifier import Classifier
-from Inputs.hyperParameters import HyperParameters
+from Data.hyperParameters import HyperParameters
 
 
 class CommunicationController:

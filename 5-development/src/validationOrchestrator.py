@@ -6,8 +6,8 @@ import pandas as pd
 
 from Data.classifier import Classifier
 from Data.validationReport import ValidationReport
-from Inputs.hyperParameters import HyperParameters
-from Orchestrators.trainingOrchestrator import TrainingOrchestrator
+from Data.hyperParameters import HyperParameters
+from trainingOrchestrator import TrainingOrchestrator
 
 
 class ValidationOrchestrator:

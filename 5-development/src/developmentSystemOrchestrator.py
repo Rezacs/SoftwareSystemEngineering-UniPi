@@ -12,12 +12,12 @@ from Data.testingReport import TestingReport
 from Data.hyperParameters import HyperParameters
 from Data.learningSet import LearningSet
 from Data.preparedSession import PreparedSession
-from trainingOrchestrator import TrainingOrchestrator
-from validationOrchestrator import ValidationOrchestrator
-from testingOrchestrator import TestingOrchestrator
-from learningPlotView import LearningPlotView
-from validationReportView import ValidationReportView
-from testingReportView import TestingReportView
+from src.trainingOrchestrator import TrainingOrchestrator
+from src.validationOrchestrator import ValidationOrchestrator
+from src.testingOrchestrator import TestingOrchestrator
+from src.learningPlotView import LearningPlotView
+from src.validationReportView import ValidationReportView
+from src.testingReportView import TestingReportView
 
 # ── Paths ──────────────────────────────────────────────────────────────
 DATA_FOLDER            = "data"
@@ -29,8 +29,13 @@ TESTING_REPORT_PATH    = os.path.join(DATA_FOLDER, "reports/testing_report.json"
 USER_INPUT_PATH        = os.path.join(DATA_FOLDER, "configs/user_input.json")
 
 
-def _sessions_to_frames(sessions: List[PreparedSession]):
-    X = pd.DataFrame([s.features for s in sessions])
+FEATURE_COLS = ["skillOverall", "socialInfluence", "injuriesImpact"]
+
+
+def _sessions_to_frames(sessions):
+    X = pd.DataFrame(
+        [{col: getattr(s, col) for col in FEATURE_COLS} for s in sessions]
+    )
     y = [s.label for s in sessions]
     return X, y
 

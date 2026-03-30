@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
-from hyperParameters import HyperParameters
+from Data.hyperParameters import HyperParameters
 
 @dataclass
 class TestingReport:

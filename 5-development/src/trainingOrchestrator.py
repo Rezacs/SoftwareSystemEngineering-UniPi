@@ -11,9 +11,14 @@ from Data.learningPlot import LearningPlot
 from Data.hyperParameters import HyperParameters
 from Data.preparedSession import PreparedSession
 
+# Columns used as model features — UUID and idPlayer are identifiers, not features
+FEATURE_COLS = ["skillOverall", "socialInfluence", "injuriesImpact"]
+
 
 def _sessions_to_frames(sessions: List[PreparedSession]):
-    X = pd.DataFrame([s.features for s in sessions])
+    X = pd.DataFrame(
+        [{col: getattr(s, col) for col in FEATURE_COLS} for s in sessions]
+    )
     y = [s.label for s in sessions]
     return X, y
 

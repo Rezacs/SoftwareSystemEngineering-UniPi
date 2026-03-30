@@ -1,0 +1,8 @@
+{
+	"classifier_id": "clf_A",
+	"testing_error": 0.1111,
+	"generalization_threshold": 0.15,
+	"errors": {
+		"passed": true
+	}
+}

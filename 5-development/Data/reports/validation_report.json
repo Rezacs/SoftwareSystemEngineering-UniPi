@@ -1,0 +1,31 @@
+{
+	"overfitting_threshold": 0.1,
+	"best_classifiers": [
+		{
+			"index": 1,
+			"classifier_id": "clf_A",
+			"training_error": 0.1476,
+			"validation_error": 0.1778,
+			"overfitting_gap": 0.0302,
+			"valid": true
+		},
+		{
+			"index": 2,
+			"classifier_id": "clf_B",
+			"training_error": 0.0762,
+			"validation_error": 0.1333,
+			"overfitting_gap": 0.0571,
+			"valid": true
+		},
+		{
+			"index": 3,
+			"classifier_id": "clf_C",
+			"training_error": 0.081,
+			"validation_error": 0.1333,
+			"overfitting_gap": 0.0524,
+			"valid": true
+		}
+	],
+	"selected_classifier": "clf_B",
+	"approve": true
+}

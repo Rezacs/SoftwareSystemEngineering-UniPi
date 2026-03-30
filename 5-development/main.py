@@ -1,5 +1,6 @@
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
+import uuid
 
 from Data.preparedSession import PreparedSession
 from Data.learningSet import LearningSet
@@ -10,16 +11,25 @@ from src.developmentSystemOrchestrator import DevelopmentSystemOrchestrator
 def build_learning_set(n_samples: int = 300) -> LearningSet:
     X, y = make_classification(
         n_samples=n_samples,
-        n_features=10,
-        n_informative=6,
-        n_redundant=2,
+        n_features=3,        # exactly skillOverall, socialInfluence, injuriesImpact
+        n_informative=3,
+        n_redundant=0,
         random_state=42,
     )
     X = StandardScaler().fit_transform(X)
+
     sessions = [
-        PreparedSession(features=X[i].tolist(), label=int(y[i]))
+        PreparedSession(
+            UUID=str(uuid.uuid4()),
+            idPlayer=f"player_{i}",
+            skillOverall=float(X[i, 0]),
+            socialInfluence=float(X[i, 1]),
+            injuriesImpact=float(X[i, 2]),
+            label=int(y[i]),
+        )
         for i in range(n_samples)
     ]
+
     train_end = int(n_samples * 0.70)
     val_end   = int(n_samples * 0.85)
     return LearningSet(
@@ -44,6 +54,6 @@ if __name__ == "__main__":
         overfitting_threshold=0.1,
         generalization_threshold=0.15,
         max_outer_iterations=3,
-        testing_mode=False,  # False = interactive mode, pauses for user_input.json each phase
+        testing_mode=True,
     )
     orchestrator.run()

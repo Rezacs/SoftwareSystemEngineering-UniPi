@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List
-from hyperParameters import HyperParameters
+from Data.hyperParameters import HyperParameters
 
 @dataclass
 class ValidationReport:

@@ -3,15 +3,16 @@ CommunicationController
 =======================
 Handles all network I/O for the Development System:
 
-  INBOUND  — Flask REST server that receives JSON payloads (e.g. a
-             LearningSet from the Data-Collection system) and saves
-             them to disk, then notifies the orchestrator.
+  INBOUND  — Flask REST server that receives the learning-set payload
+             from the Data-Collection system.
 
-  OUTBOUND — POST helpers that send JSON reports and PNG images to
-             other systems identified by their IP address.
+  OUTBOUND — Two targeted POST operations only:
+               • send the classifier (.sav) to the Production System
+                 when the test passes.
+               • send the testing report (JSON) to the Monitoring System
+                 when the test does not pass.
 
-Both directions use the same JSON-over-HTTP convention agreed across
-the pipeline (point VI of the project specification).
+Network addresses are configured as constants at the top of this file.
 """
 
 import json
@@ -24,40 +25,45 @@ from flask import Flask, Response, jsonify, request
 
 
 # ---------------------------------------------------------------------------
-# Default network settings  (override via constructor)
+# ── Network configuration — edit these to match your deployment ────────────
 # ---------------------------------------------------------------------------
-DEFAULT_HOST = "0.0.0.0"   # listen on all interfaces
-DEFAULT_PORT = 5000
 
+# Machine that sends us the learning-set payload
+SEGREGATION_SYSTEM_IP   = "192.168.1.10"   # IP of the Data-Collection system
+SEGREGATION_SYSTEM_PORT = 5000
+
+# Machine that receives the trained classifier when the test passes
+PRODUCTION_SYSTEM_IP   = "192.168.1.20"   # IP of the Production System
+PRODUCTION_SYSTEM_PORT = 5000
+PRODUCTION_ENDPOINT    = "/classifier"
+
+# Machine that receives the testing report when the test does NOT pass
+MESSAGING_SYSTEM_IP   = "192.168.1.30"   # IP of the Monitoring System
+MESSAGING_SYSTEM_PORT = 5000
+MESSAGING_ENDPOINT    = "/report"
+
+# This machine
+LISTEN_HOST = "0.0.0.0"   # listen on all interfaces
+LISTEN_PORT = 5000
+
+
+# ---------------------------------------------------------------------------
 
 class CommunicationController:
     """
     Manages inbound and outbound HTTP communication.
 
-    Parameters
-    ----------
-    host : str
-        Interface the Flask server listens on.
-    port : int
-        Port the Flask server listens on.
-    received_data_path : str
-        Where incoming JSON payloads are persisted before the
-        orchestrator processes them.
+    Inbound : Flask REST server on LISTEN_PORT.
+    Outbound: targeted POSTs to Production System or Monitoring System.
     """
 
     def __init__(
         self,
-        host: str = DEFAULT_HOST,
-        port: int = DEFAULT_PORT,
         received_data_path: str = "data/internal/received_data.json",
     ) -> None:
-        self._host               = host
-        self._port               = port
-        self._received_data_path = received_data_path
-
-        self._app                        = Flask(__name__)
+        self._received_data_path             = received_data_path
+        self._app: Flask                     = Flask(__name__)
         self._on_data_received: Optional[Callable[[dict], None]] = None
-
         self._register_routes()
 
     # -----------------------------------------------------------------------
@@ -65,34 +71,27 @@ class CommunicationController:
     # -----------------------------------------------------------------------
 
     def _register_routes(self) -> None:
-        """Attach all REST endpoints to the Flask app."""
 
         @self._app.route("/data", methods=["POST"])
         def receive_data() -> Response:
             """
-            Endpoint for receiving a JSON payload from another system.
-            Expected content-type: application/json
-
-            The payload is:
-              1. Validated as JSON.
-              2. Persisted to ``received_data_path``.
-              3. Forwarded to the registered callback (orchestrator).
-
-            Returns 200 on success, 400 on bad input.
+            Receives the learning-set JSON payload from the Data-Collection
+            system.  Persists it to disk, then notifies the orchestrator.
             """
             if not request.is_json:
                 return jsonify({"error": "Content-Type must be application/json"}), 400
 
             payload: dict = request.get_json(force=True)
 
-            # Persist raw payload so the orchestrator can reload it after restart
             os.makedirs(os.path.dirname(self._received_data_path), exist_ok=True)
             with open(self._received_data_path, "w", encoding="UTF-8") as f:
                 json.dump(payload, f, indent="\t")
 
-            print(f"[CommunicationController] Received data → saved to {self._received_data_path}")
+            print(
+                f"[CommunicationController] Payload received from "
+                f"{SEGREGATION_SYSTEM_IP}:{SEGREGATION_SYSTEM_PORT} → saved to {self._received_data_path}"
+            )
 
-            # Notify orchestrator if a callback is registered
             if self._on_data_received is not None:
                 self._on_data_received(payload)
 
@@ -100,175 +99,120 @@ class CommunicationController:
 
         @self._app.route("/health", methods=["GET"])
         def health() -> Response:
-            """Simple liveness probe so other machines can check we are up."""
+            """Liveness probe."""
             return jsonify({"status": "running"}), 200
 
     def start_server(self, on_data_received: Callable[[dict], None]) -> None:
         """
-        Start the Flask server in a **daemon thread** so it does not
-        block the main orchestrator thread.
+        Start the Flask server in a daemon thread.
 
         Parameters
         ----------
-        on_data_received : Callable[[dict], None]
-            Function called by the /data endpoint once a payload has
-            been saved.  Typically ``orchestrator.handle_message``.
+        on_data_received :
+            Called by /data once the payload is saved.
+            Typically ``main.handle_message``.
         """
         self._on_data_received = on_data_received
 
-        flask_thread = threading.Thread(
+        thread = threading.Thread(
             target=lambda: self._app.run(
-                host=self._host,
-                port=self._port,
+                host=LISTEN_HOST,
+                port=LISTEN_PORT,
                 debug=False,
-                use_reloader=False,   # must be False inside a thread
+                use_reloader=False,
             ),
-            daemon=True,             # dies automatically when main process exits
+            daemon=True,
         )
-        flask_thread.start()
+        thread.start()
         print(
-            f"[CommunicationController] REST server listening on "
-            f"http://{self._host}:{self._port}"
+            f"[CommunicationController] Listening on "
+            f"http://{LISTEN_HOST}:{LISTEN_PORT}  "
+            f"(expecting sender: {SEGREGATION_SYSTEM_IP}:{SEGREGATION_SYSTEM_PORT})"
         )
 
     # -----------------------------------------------------------------------
-    # OUTBOUND — POST helpers
+    # OUTBOUND — two operations only
     # -----------------------------------------------------------------------
 
     @staticmethod
-    def _build_url(ip: str, port: int, endpoint: str) -> str:
-        """Construct a full URL from components."""
-        endpoint = endpoint.lstrip("/")
-        return f"http://{ip}:{port}/{endpoint}"
-
-    def send_json(
-        self,
-        target_ip: str,
-        payload: dict,
-        target_port: int = DEFAULT_PORT,
-        endpoint: str = "/data",
-        timeout: int = 10,
-    ) -> bool:
-        """
-        POST a JSON payload to another machine.
-
-        Parameters
-        ----------
-        target_ip   : IP address (or hostname) of the target machine.
-        payload     : Dictionary that will be serialised as JSON.
-        target_port : Port on the target machine (default 5000).
-        endpoint    : URL path on the target machine (default /data).
-        timeout     : Request timeout in seconds.
-
-        Returns
-        -------
-        True if the request succeeded (HTTP 2xx), False otherwise.
-        """
-        url = self._build_url(target_ip, target_port, endpoint)
+    def _post_json(url: str, payload: dict, timeout: int = 10) -> bool:
+        """Low-level JSON POST helper."""
         try:
-            response = requests.post(
+            r = requests.post(
                 url,
                 json=payload,
                 headers={"Content-Type": "application/json"},
                 timeout=timeout,
             )
-            response.raise_for_status()
-            print(f"[CommunicationController] JSON sent to {url} → {response.status_code}")
+            r.raise_for_status()
+            print(f"[CommunicationController] JSON sent → {url} ({r.status_code})")
             return True
         except requests.exceptions.RequestException as exc:
-            print(f"[CommunicationController] Failed to send JSON to {url}: {exc}")
+            print(f"[CommunicationController] POST failed → {url}: {exc}")
             return False
 
-    def send_json_file(
-        self,
-        target_ip: str,
-        json_path: str,
-        target_port: int = DEFAULT_PORT,
-        endpoint: str = "/data",
-        timeout: int = 10,
-    ) -> bool:
-        """
-        Read a JSON file from disk and POST it to another machine.
-
-        Parameters
-        ----------
-        target_ip  : IP address of the target machine.
-        json_path  : Local path to the .json file to send.
-        """
+    @staticmethod
+    def _post_file(url: str, file_path: str, field: str, mime: str, timeout: int = 30) -> bool:
+        """Low-level multipart file POST helper."""
         try:
-            with open(json_path, "r", encoding="UTF-8") as f:
-                payload = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError) as exc:
-            print(f"[CommunicationController] Cannot read {json_path}: {exc}")
-            return False
-
-        return self.send_json(target_ip, payload, target_port, endpoint, timeout)
-
-    def send_png(
-        self,
-        target_ip: str,
-        png_path: str,
-        target_port: int = DEFAULT_PORT,
-        endpoint: str = "/image",
-        timeout: int = 10,
-    ) -> bool:
-        """
-        POST a PNG file as multipart/form-data to another machine.
-
-        The receiving endpoint is expected to accept a file field
-        named ``"file"``.
-
-        Parameters
-        ----------
-        target_ip : IP address of the target machine.
-        png_path  : Local path to the .png file to send.
-        """
-        url = self._build_url(target_ip, target_port, endpoint)
-        try:
-            with open(png_path, "rb") as img:
-                response = requests.post(
+            with open(file_path, "rb") as fh:
+                r = requests.post(
                     url,
-                    files={"file": (os.path.basename(png_path), img, "image/png")},
+                    files={field: (os.path.basename(file_path), fh, mime)},
                     timeout=timeout,
                 )
-            response.raise_for_status()
-            print(f"[CommunicationController] PNG sent to {url} → {response.status_code}")
+            r.raise_for_status()
+            print(f"[CommunicationController] File sent → {url} ({r.status_code})")
             return True
         except FileNotFoundError:
-            print(f"[CommunicationController] PNG file not found: {png_path}")
+            print(f"[CommunicationController] File not found: {file_path}")
             return False
         except requests.exceptions.RequestException as exc:
-            print(f"[CommunicationController] Failed to send PNG to {url}: {exc}")
+            print(f"[CommunicationController] POST failed → {url}: {exc}")
             return False
 
-    # -----------------------------------------------------------------------
-    # Convenience wrappers used by the orchestrator
-    # -----------------------------------------------------------------------
+    # ── Public API ──────────────────────────────────────────────────────────
 
-    def send_validation_report(self, target_ip: str, json_path: str, **kwargs) -> bool:
-        """Send the validation report JSON to another system."""
-        return self.send_json_file(target_ip, json_path, **kwargs)
-
-    def send_testing_report(self, target_ip: str, json_path: str, **kwargs) -> bool:
-        """Send the testing report JSON to another system."""
-        return self.send_json_file(target_ip, json_path, **kwargs)
-
-    def send_learning_curve(self, target_ip: str, png_path: str, **kwargs) -> bool:
-        """Send the learning-curve PNG to another system."""
-        return self.send_png(target_ip, png_path, **kwargs)
-
-    def send_classifier_report(
-        self,
-        target_ip: str,
-        json_path: str,
-        png_path: Optional[str] = None,
-        **kwargs,
-    ) -> bool:
+    def send_classifier(self, model_path: str) -> bool:
         """
-        Send the final classifier report (JSON + optional PNG) to the
-        Production System (or any downstream consumer).
+        Send the trained classifier (.sav file) to the Production System.
+        Called when the testing phase PASSES.
+
+        Parameters
+        ----------
+        model_path : local path to the joblib-serialised model file.
         """
-        ok = self.send_json_file(target_ip, json_path, **kwargs)
-        if png_path and os.path.isfile(png_path):
-            ok = self.send_png(target_ip, png_path, **kwargs) and ok
-        return ok
+        url = (
+            f"http://{PRODUCTION_SYSTEM_IP}:{PRODUCTION_SYSTEM_PORT}"
+            f"{PRODUCTION_ENDPOINT}"
+        )
+        print(
+            f"[CommunicationController] Sending classifier to "
+            f"Production System ({PRODUCTION_SYSTEM_IP}:{PRODUCTION_SYSTEM_PORT}) …"
+        )
+        return self._post_file(url, model_path, field="classifier", mime="application/octet-stream")
+
+    def send_testing_report(self, report_path: str) -> bool:
+        """
+        Send the testing report (JSON) to the Monitoring System.
+        Called when the testing phase DOES NOT PASS.
+
+        Parameters
+        ----------
+        report_path : local path to the testing_report.json file.
+        """
+        url = (
+            f"http://{MESSAGING_SYSTEM_IP}:{MESSAGING_SYSTEM_PORT}"
+            f"{MESSAGING_ENDPOINT}"
+        )
+        print(
+            f"[CommunicationController] Sending testing report to "
+            f"Messaging System ({MESSAGING_SYSTEM_IP}:{MESSAGING_SYSTEM_PORT}) …"
+        )
+        try:
+            with open(report_path, "r", encoding="UTF-8") as f:
+                payload = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as exc:
+            print(f"[CommunicationController] Cannot read report: {exc}")
+            return False
+        return self._post_json(url, payload)

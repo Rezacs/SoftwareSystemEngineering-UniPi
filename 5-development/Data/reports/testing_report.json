@@ -1,7 +1,8 @@
 {
 	"classifier_id": "clf_A",
-	"testing_error": 0.1111,
-	"generalization_threshold": 0.15,
+	"metric": "MAE (rounded predictions)",
+	"testing_error": 0.2444,
+	"generalization_threshold": 0.5,
 	"errors": {
 		"passed": true
 	}

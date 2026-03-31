@@ -2,7 +2,7 @@ import requests
 import json
 import time
 
-DESTINATION_URL = "http://127.0.0.1:5000/data/internal/received_data.json"
+DESTINATION_URL = "http://127.0.0.1:5000/data"
 
 def send_mock_payload():
     print(f" Preparing to send mock payload to {DESTINATION_URL}...")

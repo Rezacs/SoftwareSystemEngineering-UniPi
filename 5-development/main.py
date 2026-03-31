@@ -177,40 +177,55 @@ def launch_pipeline(payload: dict, testing_mode: bool) -> None:
 
 # ── Entry point ────────────────────────────────────────────────────────────
 
+# ── Entry point ────────────────────────────────────────────────────────────
+
 if __name__ == "__main__":
+    # 1. First, check if we are already in the middle of a process
+    resuming = False
+    if os.path.isfile(STATUS_FILE_PATH):
+        try:
+            with open(STATUS_FILE_PATH, "r", encoding="UTF-8") as f:
+                status_data = json.load(f)
+                # If the phase is anything other than "Starting", we are in the middle
+                if status_data.get("phase", "Starting") not in ("Starting",):
+                    resuming = True
+        except (json.JSONDecodeError, IOError):
+            resuming = False
 
-    testing_mode = ask_testing_mode()
+    # 2. Decide testing_mode based on whether we are resuming
+    if resuming:
+        print("[Main] Active session detected. Bypassing mode selection...")
+        testing_mode = False  # Resuming implies Stop & Go (interactive)
+    else:
+        # Only ask the user if this is a fresh start
+        testing_mode = ask_testing_mode()
 
+    # 3. Execution logic
     if testing_mode:
         # ── Testing: synthetic data, no network, fully automated ───────
         print("[Main] Building synthetic payload …")
         launch_pipeline(build_synthetic_payload(), testing_mode=True)
 
     else:
-        # ── Stop & Go: check whether we are resuming or starting fresh ─
-        resuming = (
-            os.path.isfile(STATUS_FILE_PATH)
-            and json.load(open(STATUS_FILE_PATH, encoding="UTF-8"))
-                    .get("phase", "Starting") not in ("Starting",)
-        )
-
+        # ── Stop & Go: handle resume or wait for network ───────────────
         if resuming:
-            # Resume from the last persisted phase — no network needed
             print("[Main] Resuming pipeline from persisted phase …")
-            with open(LEARNING_SETS_PATH, "r", encoding="UTF-8") as f:
-                payload = json.load(f)
-            launch_pipeline(payload, testing_mode=False)
-
+            if os.path.exists(LEARNING_SETS_PATH):
+                with open(LEARNING_SETS_PATH, "r", encoding="UTF-8") as f:
+                    payload = json.load(f)
+                launch_pipeline(payload, testing_mode=False)
+            else:
+                print(f" Error: Status is active but {LEARNING_SETS_PATH} is missing!")
+        
         else:
             # Fresh start: spin up REST server and wait for the payload
             print("[Main] Waiting for learning-set payload via POST /data …")
             print(f"[Main] Listening on port {LISTEN_PORT} …\n")
 
-            received_event   = threading.Event()
+            received_event = threading.Event()
             received_payload: dict = {}
 
             def handle_message(payload: dict) -> None:
-                """Save payload to disk, then unblock the main thread."""
                 os.makedirs(os.path.dirname(LEARNING_SETS_PATH), exist_ok=True)
                 with open(LEARNING_SETS_PATH, "w", encoding="UTF-8") as f:
                     json.dump(payload, f, indent="\t")
@@ -220,6 +235,6 @@ if __name__ == "__main__":
             comm = CommunicationController(received_data_path=RECEIVED_DATA)
             comm.start_server(handle_message)
 
-            received_event.wait()   # block until POST /data arrives
+            received_event.wait() 
             print("[Main] Payload received — starting pipeline.\n")
             launch_pipeline(received_payload, testing_mode=False)

@@ -1,31 +1,23 @@
 {
-	"overfitting_threshold": 0.3,
+	"overfitting_threshold": 0.25,
 	"best_classifiers": [
 		{
 			"index": 1,
-			"classifier_id": "clf_A",
-			"training_error": 0.1667,
-			"validation_error": 0.2,
-			"overfitting_gap": 0.0333,
-			"valid": true
+			"classifier_id": "manual_alpha",
+			"training_error": 2.0,
+			"validation_error": 4.0,
+			"overfitting_gap": 2.0,
+			"valid": false
 		},
 		{
 			"index": 2,
-			"classifier_id": "clf_B",
-			"training_error": 0.1571,
-			"validation_error": 0.2,
-			"overfitting_gap": 0.0429,
-			"valid": true
-		},
-		{
-			"index": 3,
-			"classifier_id": "clf_C",
-			"training_error": 0.1476,
-			"validation_error": 0.1333,
-			"overfitting_gap": -0.0143,
-			"valid": true
+			"classifier_id": "manual_beta",
+			"training_error": 0.0,
+			"validation_error": 1.0,
+			"overfitting_gap": 1.0,
+			"valid": false
 		}
 	],
-	"selected_classifier": "clf_C",
-	"approve": true
+	"selected_classifier": "",
+	"approve": false
 }

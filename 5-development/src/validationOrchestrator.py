@@ -11,6 +11,11 @@ from src.trainingOrchestrator import TrainingOrchestrator
 
 
 class ValidationOrchestrator:
+    """
+    Implements the BPMN tasks:
+      • retrieve_average_parameters() → feeds SET AVERAGE HYPERPARAMS
+      • generate_validation_report()  → SET HYPERPARAMS + GENERATE VALIDATION REPORT
+    """
 
     def __init__(
         self,
@@ -26,7 +31,14 @@ class ValidationOrchestrator:
         self._training_orchestrator = training_orchestrator
         self._overfitting_threshold = overfitting_threshold
 
+    # ── BPMN Task: SET AVERAGE HYPERPARAMS (data retrieval part) ──────
+
     def retrieve_average_parameters(self) -> dict:
+        """
+        Computes the mean num_layers and num_neurons across all
+        HyperParameters configs. Result is consumed by
+        DevelopmentSystemOrchestrator.set_average_hyperparams().
+        """
         avg_layers  = sum(h.num_layers  for h in self._hp_configs) / len(self._hp_configs)
         avg_neurons = sum(h.num_neurons for h in self._hp_configs) / len(self._hp_configs)
         return {
@@ -34,23 +46,37 @@ class ValidationOrchestrator:
             "num_neurons": int(round(avg_neurons)),
         }
 
-    def grid_search(
+    # ── BPMN Tasks: SET HYPERPARAMS + GENERATE VALIDATION REPORT ──────
+
+    def generate_validation_report(
         self,
         X_train: pd.DataFrame,
         y_train: list,
         X_val: pd.DataFrame,
         y_val: list,
     ) -> ValidationReport:
-        print("[ValidationOrchestrator] Starting grid search …")
+        """
+        BPMN Tasks: SET HYPERPARAMS & GENERATE VALIDATION REPORT.
+
+        For each HyperParameters config:
+          1. SET HYPERPARAMS — configures the TrainingOrchestrator.
+          2. Trains the classifier and persists it to disk.
+        Then selects the best non-overfitting model and writes
+        validation_report.json.
+        """
+        print("[ValidationOrchestrator] SET HYPERPARAMS & GENERATE VALIDATION REPORT …")
         classifiers: List[Classifier] = []
 
         for idx, hp in enumerate(self._hp_configs, start=1):
             model_path = os.path.join(self._classifier_folder, f"model_{idx}.sav")
+
+            # BPMN Task: SET HYPERPARAMS
             self._training_orchestrator.set_parameters({
                 "num_layers":  hp.num_layers,
                 "num_neurons": hp.num_neurons,
                 "max_iter":    hp.num_iterations,
             })
+
             clf = self._training_orchestrator.train_classifier(
                 X_train, y_train, X_val, y_val,
                 classifier_id=hp.classifier_id,
@@ -88,8 +114,9 @@ class ValidationOrchestrator:
             }, f, indent="\t")
 
         print(
-            f"[ValidationOrchestrator] Selected='{selected_id}', "
-            f"Approved={approved}, Candidates={len(candidates)}"
+            f"[ValidationOrchestrator] Report written — "
+            f"selected='{selected_id}', approved={approved}, "
+            f"candidates={len(candidates)}"
         )
         return ValidationReport(
             overfitting_threshold=self._overfitting_threshold,
@@ -100,3 +127,7 @@ class ValidationOrchestrator:
             selected_classifier=selected_id,
             approve=approved,
         )
+
+    # alias for backward compatibility
+    def grid_search(self, X_train, y_train, X_val, y_val) -> ValidationReport:
+        return self.generate_validation_report(X_train, y_train, X_val, y_val)

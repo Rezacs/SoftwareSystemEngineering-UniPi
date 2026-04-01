@@ -1,0 +1,42 @@
+{
+	"network": {
+		"listen_host": "0.0.0.0",
+		"listen_port": 5000,
+		"segregation_system": {
+			"ip": "192.168.1.10",
+			"port": 5000
+		},
+		"production_system": {
+			"ip": "192.168.1.20",
+			"port": 5000,
+			"endpoint": "/classifier"
+		},
+		"messaging_system": {
+			"ip": "192.168.1.30",
+			"port": 5000,
+			"endpoint": "/report"
+		}
+	},
+	"paths": {
+		"data_folder": "Data",
+		"status_file": "Data/internal/status.json",
+		"classifier_folder": "Data/classifiers/",
+		"learning_curve": "Data/reports/learning_curve.png",
+		"validation_report": "Data/reports/validation_report.json",
+		"testing_report": "Data/reports/testing_report.json",
+		"user_input": "Data/configs/user_input.json",
+		"received_data": "Data/internal/received_data.json",
+		"learning_sets": "Data/internal/learning_sets.json"
+	},
+	"model": {
+		"feature_cols": ["skillOverall", "socialInfluence", "injuriesImpact"],
+		"score_min": 1,
+		"score_max": 5
+	},
+	"pipeline": {
+		"overfitting_threshold": 0.3,
+		"generalization_threshold": 0.5,
+		"max_outer_iterations": 3,
+		"default_max_iter": 200
+	}
+}

@@ -1,0 +1,48 @@
+{
+    "approved": false,
+    "balanced": false,
+    "totalSamples": 8,
+    "tolerance": 0.05,
+    "toleranceUsed": 0.05,
+    "distribution": {
+        "1_star": 1,
+        "2_star": 2,
+        "3_star": 1,
+        "4_star": 2,
+        "5_star": 2
+    },
+    "average": 1.6,
+    "averageSamplesPerClass": 1.6,
+    "classStatistics": [
+        {
+            "classLabel": 1,
+            "numSamples": 1,
+            "missingSamples": 1,
+            "excessiveSamples": 0
+        },
+        {
+            "classLabel": 2,
+            "numSamples": 2,
+            "missingSamples": 0,
+            "excessiveSamples": 0
+        },
+        {
+            "classLabel": 3,
+            "numSamples": 1,
+            "missingSamples": 1,
+            "excessiveSamples": 0
+        },
+        {
+            "classLabel": 4,
+            "numSamples": 2,
+            "missingSamples": 0,
+            "excessiveSamples": 0
+        },
+        {
+            "classLabel": 5,
+            "numSamples": 2,
+            "missingSamples": 0,
+            "excessiveSamples": 0
+        }
+    ]
+}

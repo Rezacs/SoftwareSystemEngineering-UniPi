@@ -1,0 +1,15 @@
+{
+    "event": "CLASSIFIER_REJECTED",
+    "classifier_id": "RandomForest_v3",
+    "batch_id": "Batch_PLAYER_10",
+    "timestamp": "2026-03-31T22:43:07.883307",
+    "action_required": "RECALIBRATE",
+    "reason": "Human evaluator rejected classification based on excessive errors.",
+    "failure_metrics": {
+        "tolerance_used": 0.5,
+        "total_errors": 2,
+        "total_errors_threshold": 4,
+        "max_consecutive_errors": 1,
+        "max_consecutive_errors_threshold": 3
+    }
+}

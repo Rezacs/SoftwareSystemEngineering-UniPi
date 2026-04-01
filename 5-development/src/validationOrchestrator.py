@@ -36,8 +36,7 @@ class ValidationOrchestrator:
     def retrieve_average_parameters(self) -> dict:
         """
         Computes the mean num_layers and num_neurons across all
-        HyperParameters configs. Result is consumed by
-        DevelopmentSystemOrchestrator.set_average_hyperparams().
+        HyperParameters configs.
         """
         avg_layers  = sum(h.num_layers  for h in self._hp_configs) / len(self._hp_configs)
         avg_neurons = sum(h.num_neurons for h in self._hp_configs) / len(self._hp_configs)
@@ -57,26 +56,19 @@ class ValidationOrchestrator:
     ) -> ValidationReport:
         """
         BPMN Tasks: SET HYPERPARAMS & GENERATE VALIDATION REPORT.
-
-        For each HyperParameters config:
-          1. SET HYPERPARAMS — configures the TrainingOrchestrator.
-          2. Trains the classifier and persists it to disk.
-        Then selects the best non-overfitting model and writes
-        validation_report.json.
+        Trains one classifier per HyperParameters config, selects the
+        best non-overfitting one, and writes validation_report.json.
         """
         print("[ValidationOrchestrator] SET HYPERPARAMS & GENERATE VALIDATION REPORT …")
         classifiers: List[Classifier] = []
 
         for idx, hp in enumerate(self._hp_configs, start=1):
             model_path = os.path.join(self._classifier_folder, f"model_{idx}.sav")
-
-            # BPMN Task: SET HYPERPARAMS
             self._training_orchestrator.set_parameters({
                 "num_layers":  hp.num_layers,
                 "num_neurons": hp.num_neurons,
                 "max_iter":    hp.num_iterations,
             })
-
             clf = self._training_orchestrator.train_classifier(
                 X_train, y_train, X_val, y_val,
                 classifier_id=hp.classifier_id,
@@ -128,6 +120,6 @@ class ValidationOrchestrator:
             approve=approved,
         )
 
-    # alias for backward compatibility
+    # alias
     def grid_search(self, X_train, y_train, X_val, y_val) -> ValidationReport:
         return self.generate_validation_report(X_train, y_train, X_val, y_val)

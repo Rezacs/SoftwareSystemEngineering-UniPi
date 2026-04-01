@@ -1,12 +1,12 @@
 {
-	"overfitting_threshold": 0.25,
+	"overfitting_threshold": 0.1,
 	"best_classifiers": [
 		{
 			"index": 1,
 			"classifier_id": "manual_alpha",
-			"training_error": 2.0,
-			"validation_error": 4.0,
-			"overfitting_gap": 2.0,
+			"training_error": 0.0,
+			"validation_error": 1.0,
+			"overfitting_gap": 1.0,
 			"valid": false
 		},
 		{

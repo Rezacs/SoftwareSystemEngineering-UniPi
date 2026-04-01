@@ -5,26 +5,20 @@ import joblib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.neural_network import MLPRegressor
-from sklearn.metrics import mean_absolute_error
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
 
 from Data.classifier import Classifier
 from Data.learningPlot import LearningPlot
 from Data.preparedSession import PreparedSession
-from src.config import FEATURE_COLS, SCORE_MIN, SCORE_MAX
 
 
-def _sessions_to_frames(sessions: List[PreparedSession]):
+def _sessions_to_frames(sessions: List[PreparedSession], feature_cols: List[str]):
     X = pd.DataFrame(
-        [{col: getattr(s, col) for col in FEATURE_COLS} for s in sessions]
+        [{col: getattr(s, col) for col in feature_cols} for s in sessions]
     )
     y = [s.label for s in sessions]
     return X, y
-
-
-def _predict_scores(mlp: MLPRegressor, X: np.ndarray) -> np.ndarray:
-    """Clip and round raw float predictions to the nearest integer in [SCORE_MIN, SCORE_MAX]."""
-    return np.clip(np.round(mlp.predict(X)), SCORE_MIN, SCORE_MAX).astype(int)
 
 
 class TrainingOrchestrator:
@@ -34,26 +28,28 @@ class TrainingOrchestrator:
       • CALIBRATE                        → generate_calibration_report()
       • GENERATE CALIBRATION REPORT      → generate_calibration_report()
       • train_classifier()               → called per HP config inside grid search
+
+    Uses MLPClassifier to predict an integer score in {1, 2, 3, 4, 5}.
     """
 
-    def __init__(self) -> None:
-        self._params: dict = {}
+    def __init__(self, feature_cols: List[str], score_min: int, score_max: int) -> None:
+        self._params:       dict      = {}
+        self._feature_cols: List[str] = feature_cols
+        self._score_min:    int       = score_min
+        self._score_max:    int       = score_max
 
     # ── BPMN Task: SET HYPERPARAMS ─────────────────────────────────────
 
     def set_parameters(self, params: dict) -> None:
-        """
-        BPMN Task: SET HYPERPARAMS
-        Receives the hyper-parameter dict before training or calibration.
-        """
+        """BPMN Task: SET HYPERPARAMS"""
         print(f"[TrainingOrchestrator] SET HYPERPARAMS: {params}")
         self._params = params
 
-    def _build_mlp(self, max_iter: Optional[int] = None) -> MLPRegressor:
+    def _build_mlp(self, max_iter: Optional[int] = None) -> MLPClassifier:
         num_layers  = self._params.get("num_layers",  2)
         num_neurons = self._params.get("num_neurons", 64)
         iterations  = max_iter or self._params.get("max_iter", 200)
-        return MLPRegressor(
+        return MLPClassifier(
             hidden_layer_sizes=tuple([num_neurons] * num_layers),
             max_iter=iterations,
             random_state=42,
@@ -70,8 +66,8 @@ class TrainingOrchestrator:
     ) -> LearningPlot:
         """
         BPMN Tasks: CALIBRATE & GENERATE CALIBRATION REPORT.
-        Fits the MLP for num_epochs, saves the loss curve as a PNG,
-        and returns a LearningPlot for the view layer.
+        Fits the MLP for num_epochs iterations, saves the loss curve
+        as a PNG, and returns a LearningPlot for the view layer.
         """
         print(f"[TrainingOrchestrator] CALIBRATE — {num_epochs} epochs …")
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -85,7 +81,7 @@ class TrainingOrchestrator:
         plt.figure()
         plt.plot(epochs, mse, marker="o")
         plt.xlabel("Epoch")
-        plt.ylabel("MSE Loss")
+        plt.ylabel("Loss")
         plt.title("Calibration Report — Learning Curve")
         plt.tight_layout()
         plt.savefig(output_path)
@@ -95,7 +91,7 @@ class TrainingOrchestrator:
         approve = len(mse) >= 2 and mse[-1] < mse[0]
         return LearningPlot(mse=mse, number_of_epochs=epochs, approve=approve, set_epochs=False)
 
-    # alias for backward compatibility
+    # alias
     def generate_learning_curve(self, X_train, y_train, output_path, num_epochs=10):
         return self.generate_calibration_report(X_train, y_train, output_path, num_epochs)
 
@@ -111,8 +107,9 @@ class TrainingOrchestrator:
         model_path: str,
     ) -> Classifier:
         """
-        Trains one MLPRegressor, computes MAE on train and validation sets,
-        and persists the model to disk with joblib.
+        Trains one MLPClassifier with the currently set hyper-parameters.
+        Error metric: classification error (1 - accuracy) on integer scores {1..5}.
+        Persists the model to disk with joblib.
         """
         print(f"[TrainingOrchestrator] Training '{classifier_id}' …")
         os.makedirs(os.path.dirname(model_path), exist_ok=True)
@@ -120,17 +117,14 @@ class TrainingOrchestrator:
         mlp = self._build_mlp()
         mlp.fit(X_train.values, y_train)
 
-        train_preds = _predict_scores(mlp, X_train.values)
-        val_preds   = _predict_scores(mlp, X_val.values)
-
-        training_error   = mean_absolute_error(y_train, train_preds)
-        validation_error = mean_absolute_error(y_val,   val_preds)
+        training_error   = 1.0 - mlp.score(X_train.values, y_train)
+        validation_error = 1.0 - mlp.score(X_val.values,   y_val)
 
         joblib.dump(mlp, model_path)
 
         print(
             f"[TrainingOrchestrator] '{classifier_id}' — "
-            f"train_MAE={training_error:.4f}, val_MAE={validation_error:.4f}"
+            f"train_err={training_error:.4f}, val_err={validation_error:.4f}"
         )
         return Classifier(
             classifier_id=classifier_id,

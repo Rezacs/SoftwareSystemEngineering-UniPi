@@ -15,24 +15,24 @@ from src.learningPlotView import LearningPlotView
 from src.validationReportView import ValidationReportView
 from src.testingReportView import TestingReportView
 from src.communicationController import CommunicationController
-from src.config import (
-    STATUS_FILE_PATH,
-    CLASSIFIER_FOLDER,
-    LEARNING_CURVE_PATH,
-    VALIDATION_REPORT_PATH,
-    TESTING_REPORT_PATH,
-    USER_INPUT_PATH,
-    FEATURE_COLS,
-    OVERFITTING_THRESHOLD,
-    GENERALIZATION_THRESHOLD,
-    MAX_OUTER_ITERATIONS,
-    DEFAULT_MAX_ITER,
-)
+
+# ── Config file location (the only hardcoded path in the system) ───────────
+CONFIG_PATH = os.path.join("Data", "configs", "config.json")
 
 
-def _sessions_to_frames(sessions):
+def _load_config() -> dict:
+    if not os.path.isfile(CONFIG_PATH):
+        raise FileNotFoundError(
+            f"Configuration file not found: {CONFIG_PATH}\n"
+            f"Make sure Data/configs/config.json exists before running."
+        )
+    with open(CONFIG_PATH, "r", encoding="UTF-8") as f:
+        return json.load(f)
+
+
+def _sessions_to_frames(sessions, feature_cols: List[str]):
     X = pd.DataFrame(
-        [{col: getattr(s, col) for col in FEATURE_COLS} for s in sessions]
+        [{col: getattr(s, col) for col in feature_cols} for s in sessions]
     )
     y = [s.label for s in sessions]
     return X, y
@@ -41,6 +41,7 @@ def _sessions_to_frames(sessions):
 class DevelopmentSystemOrchestrator:
     """
     State-machine orchestrator for the Development System.
+    Loads ALL configuration from Data/configs/config.json at startup.
     Every public method name matches its BPMN task label exactly.
 
     Phase → BPMN method mapping:
@@ -51,53 +52,91 @@ class DevelopmentSystemOrchestrator:
         "Testing"          → generate_test_report()
         "Results"          → test_passed()
 
-    All thresholds and paths are loaded from Data/configs/config.json.
+    testing_mode=False  →  Stop&Go: pauses at each phase, human edits user_input.json
+    testing_mode=True   →  Automated: simulates human decisions from report files,
+                           never calls sys.exit(), but still waits for real HTTP data
     """
 
     def __init__(
         self,
         learning_set: LearningSet,
         hyper_param_configs: List[HyperParameters],
-        overfitting_threshold: float = OVERFITTING_THRESHOLD,
-        generalization_threshold: float = GENERALIZATION_THRESHOLD,
-        max_outer_iterations: int = MAX_OUTER_ITERATIONS,
         testing_mode: bool = False,
     ) -> None:
-        self._learning_set             = learning_set
-        self._hyper_param_configs      = hyper_param_configs
-        self._overfitting_threshold    = overfitting_threshold
-        self._generalization_threshold = generalization_threshold
-        self._max_outer_iterations     = max_outer_iterations
-        self._testing_mode             = testing_mode
+        # ── load config ────────────────────────────────────────────────
+        cfg = _load_config()
 
+        net  = cfg["network"]
+        pth  = cfg["paths"]
+        mdl  = cfg["model"]
+        pipe = cfg["pipeline"]
+
+        # paths
+        self._status_file_path       = pth["status_file"]
+        self._classifier_folder      = pth["classifier_folder"]
+        self._learning_curve_path    = pth["learning_curve"]
+        self._validation_report_path = pth["validation_report"]
+        self._testing_report_path    = pth["testing_report"]
+        self._user_input_path        = pth["user_input"]
+
+        # model
+        self._feature_cols = mdl["feature_cols"]
+        self._score_min    = int(mdl["score_min"])
+        self._score_max    = int(mdl["score_max"])
+
+        # pipeline thresholds
+        self._overfitting_threshold    = float(pipe["overfitting_threshold"])
+        self._generalization_threshold = float(pipe["generalization_threshold"])
+        self._max_outer_iterations     = int(pipe["max_outer_iterations"])
+        self._default_max_iter         = int(pipe["default_max_iter"])
+
+        # domain objects
+        self._learning_set        = learning_set
+        self._hyper_param_configs = hyper_param_configs
+        self._testing_mode        = testing_mode
         self._start_time: Optional[int] = None
-        self._status: Dict[str, Any]    = self._load_status()
 
+        # persisted state
+        self._status: Dict[str, Any] = self._load_status()
+
+        # views
         self._learning_plot_view     = LearningPlotView()
         self._validation_report_view = ValidationReportView()
         self._testing_report_view    = TestingReportView()
-        self._comm                   = CommunicationController()
+
+        # communication (all network params from config)
+        self._comm = CommunicationController(
+            listen_host         = net["listen_host"],
+            listen_port         = int(net["listen_port"]),
+            segregation_ip      = net["segregation_system"]["ip"],
+            segregation_port    = int(net["segregation_system"]["port"]),
+            production_ip       = net["production_system"]["ip"],
+            production_port     = int(net["production_system"]["port"]),
+            production_endpoint = net["production_system"]["endpoint"],
+            received_data_path  = pth["received_data"],
+            rejected_report_path= pth["rejected_report"],
+        )
 
     # ── status persistence ─────────────────────────────────────────────
 
     def _default_status(self) -> Dict[str, Any]:
         return {
             "phase":                "Starting",
-            "max_iter":             DEFAULT_MAX_ITER,
+            "max_iter":             self._default_max_iter,
             "avg_params":           {},
             "best_classifier_data": None,
             "iteration":            0,
         }
 
     def _load_status(self) -> Dict[str, Any]:
-        if os.path.isfile(STATUS_FILE_PATH):
-            with open(STATUS_FILE_PATH, "r", encoding="UTF-8") as f:
+        if os.path.isfile(self._status_file_path):
+            with open(self._status_file_path, "r", encoding="UTF-8") as f:
                 return json.load(f)
         return self._default_status()
 
     def _save_status(self) -> None:
-        os.makedirs(os.path.dirname(STATUS_FILE_PATH), exist_ok=True)
-        with open(STATUS_FILE_PATH, "w", encoding="UTF-8") as f:
+        os.makedirs(os.path.dirname(self._status_file_path), exist_ok=True)
+        with open(self._status_file_path, "w", encoding="UTF-8") as f:
             json.dump(self._status, f, indent="\t")
 
     def _update_status(self, updates: Dict[str, Any]) -> None:
@@ -111,18 +150,19 @@ class DevelopmentSystemOrchestrator:
     # ── user input ─────────────────────────────────────────────────────
 
     def _write_user_input_template(self) -> None:
+        """Write a phase-specific template to user_input.json."""
         phase    = self._status["phase"]
         existing: dict = {}
-        if os.path.isfile(USER_INPUT_PATH):
+        if os.path.isfile(self._user_input_path):
             try:
-                with open(USER_INPUT_PATH, "r", encoding="UTF-8") as f:
+                with open(self._user_input_path, "r", encoding="UTF-8") as f:
                     existing = json.load(f)
             except (json.JSONDecodeError, OSError):
                 existing = {}
 
         if phase == "LearningCurve":
             payload = {
-                "max_iter":      existing.get("max_iter", self._status.get("max_iter", DEFAULT_MAX_ITER)),
+                "max_iter":      existing.get("max_iter", self._status.get("max_iter", self._default_max_iter)),
                 "good_max_iter": False,
             }
         elif phase == "ValidationReport":
@@ -132,36 +172,41 @@ class DevelopmentSystemOrchestrator:
         else:
             payload = existing
 
-        os.makedirs(os.path.dirname(USER_INPUT_PATH), exist_ok=True)
-        with open(USER_INPUT_PATH, "w", encoding="UTF-8") as f:
+        os.makedirs(os.path.dirname(self._user_input_path), exist_ok=True)
+        with open(self._user_input_path, "w", encoding="UTF-8") as f:
             json.dump(payload, f, indent="\t")
 
     def _get_user_input(self) -> dict:
+        """
+        testing_mode=False → reads user_input.json (human decision)
+        testing_mode=True  → simulates decision from report files
+        """
         if self._testing_mode:
             return self._simulate_user_input()
         try:
-            with open(USER_INPUT_PATH, "r", encoding="UTF-8") as f:
+            with open(self._user_input_path, "r", encoding="UTF-8") as f:
                 return json.load(f)
         except FileNotFoundError:
-            print(f"[Orchestrator] ERROR: {USER_INPUT_PATH} not found.")
+            print(f"[Orchestrator] ERROR: {self._user_input_path} not found.")
             sys.exit(1)
         except json.JSONDecodeError:
-            print(f"[Orchestrator] ERROR: {USER_INPUT_PATH} contains invalid JSON.")
+            print(f"[Orchestrator] ERROR: {self._user_input_path} contains invalid JSON.")
             sys.exit(1)
 
     def _simulate_user_input(self) -> dict:
+        """Auto-generate a plausible human decision (testing mode only)."""
         phase = self._status["phase"]
         if phase == "LearningCurve":
             return {"max_iter": 300, "good_max_iter": True}
         elif phase == "ValidationReport":
-            with open(VALIDATION_REPORT_PATH, "r", encoding="UTF-8") as f:
+            with open(self._validation_report_path, "r", encoding="UTF-8") as f:
                 report = json.load(f)
             index = next(
                 (item["index"] for item in report["best_classifiers"] if item["valid"]), 0
             )
             return {"best_model": index}
         elif phase == "Results":
-            with open(TESTING_REPORT_PATH, "r", encoding="UTF-8") as f:
+            with open(self._testing_report_path, "r", encoding="UTF-8") as f:
                 report = json.load(f)
             return {"approved": report["errors"]["passed"]}
         return {}
@@ -169,24 +214,34 @@ class DevelopmentSystemOrchestrator:
     # ── stop&go helper ─────────────────────────────────────────────────
 
     def _stop(self, message: str) -> None:
+        """Write template, print instructions, exit. Only in Stop&Go mode."""
         self._write_user_input_template()
         print(f"\n[Orchestrator] STOP — {message}")
-        print(f"  → Edit {USER_INPUT_PATH}")
+        print(f"  → Edit {self._user_input_path}")
         print(f"  → Then re-run main.py to continue.\n")
         sys.exit(0)
 
     # ── internal helpers ───────────────────────────────────────────────
 
     def _get_frames(self, split: str):
-        return _sessions_to_frames(getattr(self._learning_set, split))
+        return _sessions_to_frames(
+            getattr(self._learning_set, split), self._feature_cols
+        )
 
     def _retrieve_classifier_data(self, model_index: int) -> Optional[dict]:
-        with open(VALIDATION_REPORT_PATH, "r", encoding="UTF-8") as f:
+        with open(self._validation_report_path, "r", encoding="UTF-8") as f:
             report = json.load(f)
         entry = next(
             (item for item in report["best_classifiers"] if item["index"] == model_index), None
         )
         return entry if (entry and entry["valid"]) else None
+
+    def _make_training_orchestrator(self) -> TrainingOrchestrator:
+        return TrainingOrchestrator(
+            feature_cols=self._feature_cols,
+            score_min=self._score_min,
+            score_max=self._score_max,
+        )
 
     # ── state machine entry point ──────────────────────────────────────
 
@@ -227,16 +282,12 @@ class DevelopmentSystemOrchestrator:
     # ── BPMN tasks ─────────────────────────────────────────────────────
 
     def set_average_hyperparams(self) -> None:
-        """
-        BPMN Task: SET AVERAGE HYPERPARAMS
-        Computes mean num_layers / num_neurons across all HP configs
-        and persists them as the baseline for calibration.
-        """
+        """BPMN Task: SET AVERAGE HYPERPARAMS"""
         val_orch   = ValidationOrchestrator(
             hp_configs=self._hyper_param_configs,
-            classifier_folder=CLASSIFIER_FOLDER,
-            report_path=VALIDATION_REPORT_PATH,
-            training_orchestrator=TrainingOrchestrator(),
+            classifier_folder=self._classifier_folder,
+            report_path=self._validation_report_path,
+            training_orchestrator=self._make_training_orchestrator(),
             overfitting_threshold=self._overfitting_threshold,
         )
         avg_params = val_orch.retrieve_average_parameters()
@@ -246,7 +297,7 @@ class DevelopmentSystemOrchestrator:
         if not self._testing_mode:
             self._stop(
                 f"BPMN: DATA SCIENTIST: SET #ITERATIONS — "
-                f"set 'max_iter' in {USER_INPUT_PATH}."
+                f"set 'max_iter' in {self._user_input_path}."
             )
         else:
             self._execute_development()
@@ -254,14 +305,14 @@ class DevelopmentSystemOrchestrator:
     def set_iterations(self) -> None:
         """
         BPMN Tasks:
-          • DATA SCIENTIST: SET #ITERATIONS       (user edits max_iter)
-          • CALIBRATE                             (fits MLP for N epochs)
-          • GENERATE CALIBRATION REPORT           (saves loss_curve_ PNG)
-          • DATA SCIENTIST: CHECK CALIBRATION PLOT (user approves)
+          • DATA SCIENTIST: SET #ITERATIONS
+          • CALIBRATE
+          • GENERATE CALIBRATION REPORT
+          • DATA SCIENTIST: CHECK CALIBRATION PLOT
 
         BPMN Gateway: #ITERATIONS FINE?
-          NO  → regenerates calibration report with updated max_iter
-          YES → advances to generate_validation_report()
+          NO  → regenerate calibration report with updated max_iter
+          YES → advance to generate_validation_report()
         """
         user_input = self._get_user_input()
         good_iter  = user_input.get("good_max_iter", False)
@@ -272,18 +323,18 @@ class DevelopmentSystemOrchestrator:
             print(f"[Orchestrator] CALIBRATE — {max_iter} epochs …")
 
             X_train, y_train = self._get_frames("training_set")
-            to = TrainingOrchestrator()
+            to = self._make_training_orchestrator()
             params = dict(self._status.get("avg_params", {}))
             params["max_iter"] = max_iter
             to.set_parameters(params)
 
-            plot = to.generate_calibration_report(X_train, y_train, LEARNING_CURVE_PATH)
+            plot = to.generate_calibration_report(X_train, y_train, self._learning_curve_path)
             self._learning_plot_view.display_learning_plot(plot)
 
             if not self._testing_mode:
                 self._stop(
                     f"BPMN: DATA SCIENTIST: CHECK CALIBRATION PLOT — "
-                    f"inspect {LEARNING_CURVE_PATH}. "
+                    f"inspect {self._learning_curve_path}. "
                     f"Adjust 'max_iter' if needed, then set 'good_max_iter': true."
                 )
             else:
@@ -296,23 +347,21 @@ class DevelopmentSystemOrchestrator:
     def generate_validation_report(self) -> None:
         """
         BPMN Tasks:
-          • SET HYPERPARAMS             (one config per grid-search entry)
-          • GENERATE VALIDATION REPORT  (trains all configs, writes JSON)
-
-        Followed by BPMN stop:
+          • SET HYPERPARAMS
+          • GENERATE VALIDATION REPORT
           • DATA SCIENTIST: CHECK VALIDATION RESULTS
         """
         print("[Orchestrator] SET HYPERPARAMS & GENERATE VALIDATION REPORT …")
         X_train, y_train = self._get_frames("training_set")
         X_val,   y_val   = self._get_frames("validation_set")
 
-        to = TrainingOrchestrator()
+        to = self._make_training_orchestrator()
         to.set_parameters({"max_iter": self._status["max_iter"]})
 
         val_orch = ValidationOrchestrator(
             hp_configs=self._hyper_param_configs,
-            classifier_folder=CLASSIFIER_FOLDER,
-            report_path=VALIDATION_REPORT_PATH,
+            classifier_folder=self._classifier_folder,
+            report_path=self._validation_report_path,
             training_orchestrator=to,
             overfitting_threshold=self._overfitting_threshold,
         )
@@ -323,7 +372,7 @@ class DevelopmentSystemOrchestrator:
         if not self._testing_mode:
             self._stop(
                 f"BPMN: DATA SCIENTIST: CHECK VALIDATION RESULTS — "
-                f"inspect {VALIDATION_REPORT_PATH}. "
+                f"inspect {self._validation_report_path}. "
                 f"Set 'best_model' to chosen index (0 = reject all)."
             )
         else:
@@ -343,15 +392,14 @@ class DevelopmentSystemOrchestrator:
             if iteration >= self._max_outer_iterations:
                 print(
                     f"[Orchestrator] Max outer iterations "
-                    f"({self._max_outer_iterations}) reached — CONFIGURATION SENT."
+                    f"({self._max_outer_iterations}) reached — saving rejected report."
                 )
-                self._comm.send_testing_report(TESTING_REPORT_PATH)
+                self._comm.save_rejected_report(self._testing_report_path)
                 self._reset_status()
                 return
             print(
                 f"[Orchestrator] No valid classifier — "
-                f"retry {iteration}/{self._max_outer_iterations}. "
-                f"Looping back to SET AVERAGE HYPERPARAMS."
+                f"retry {iteration}/{self._max_outer_iterations}."
             )
             self._update_status({"phase": "Ready", "iteration": iteration})
             self._execute_development()
@@ -361,7 +409,7 @@ class DevelopmentSystemOrchestrator:
         if classifier_data is None:
             print(f"[Orchestrator] Model index {best_model_index} is not valid.")
             if not self._testing_mode:
-                self._stop(f"Choose a valid index from {VALIDATION_REPORT_PATH}.")
+                self._stop(f"Choose a valid index from {self._validation_report_path}.")
             else:
                 sys.exit(1)
 
@@ -372,18 +420,18 @@ class DevelopmentSystemOrchestrator:
     def generate_test_report(self) -> None:
         """
         BPMN Tasks:
-          • GENERATE TEST REPORT                (runs model on test set, writes JSON)
-          • DATA SCIENTIST: CHECK TEST RESULTS  (user inspects, sets approved flag)
+          • GENERATE TEST REPORT
+          • DATA SCIENTIST: CHECK TEST RESULTS
         """
         print("[Orchestrator] GENERATE TEST REPORT …")
         best_data  = self._status["best_classifier_data"]
         cl_id      = best_data["index"]
-        model_path = os.path.join(CLASSIFIER_FOLDER, f"model_{cl_id}.sav")
+        model_path = os.path.join(self._classifier_folder, f"model_{cl_id}.sav")
 
         X_test, y_test = self._get_frames("test_set")
 
         test_orch = TestingOrchestrator(
-            report_path=TESTING_REPORT_PATH,
+            report_path=self._testing_report_path,
             generalization_threshold=self._generalization_threshold,
         )
         report = test_orch.test_classifier(model_path, best_data, X_test, y_test)
@@ -393,7 +441,7 @@ class DevelopmentSystemOrchestrator:
         if not self._testing_mode:
             self._stop(
                 f"BPMN: DATA SCIENTIST: CHECK TEST RESULTS — "
-                f"inspect {TESTING_REPORT_PATH}. "
+                f"inspect {self._testing_report_path}. "
                 f"Set 'approved': true to accept, false to reject."
             )
         else:
@@ -402,23 +450,23 @@ class DevelopmentSystemOrchestrator:
     def test_passed(self) -> None:
         """
         BPMN Gateway: TEST PASSED?
-          YES → CLASSIFIER SENT  (to Classification System)
-          NO  → CONFIGURATION SENT  (testing report to Messaging System)
+          YES → CLASSIFIER SENT  to Production System
+          NO  → report saved locally (no external messaging system)
         """
         approved   = self._get_user_input().get("approved", False)
         best_data  = self._status["best_classifier_data"]
         cl_id      = best_data["index"]
-        model_path = os.path.join(CLASSIFIER_FOLDER, f"model_{cl_id}.sav")
+        model_path = os.path.join(self._classifier_folder, f"model_{cl_id}.sav")
 
         if self._testing_mode and self._start_time is not None:
             elapsed_ns = time.time_ns() - self._start_time
-            print(f"[Orchestrator] ⏱  Total cycle time: {elapsed_ns / 1e9:.3f} s")
+            print(f"[Orchestrator] Total cycle time: {elapsed_ns / 1e9:.3f} s")
 
         if approved:
-            print("[Orchestrator] TEST PASSED — CLASSIFIER SENT to Classification System.")
+            print("[Orchestrator] TEST PASSED — CLASSIFIER SENT to Production System.")
             self._comm.send_classifier(model_path)
         else:
-            print("[Orchestrator] TEST NOT PASSED — CONFIGURATION SENT to Messaging System.")
-            self._comm.send_testing_report(TESTING_REPORT_PATH)
+            print("[Orchestrator] TEST NOT PASSED — saving rejected report locally.")
+            self._comm.save_rejected_report(self._testing_report_path)
 
         self._reset_status()

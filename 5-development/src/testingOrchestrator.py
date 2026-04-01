@@ -2,27 +2,23 @@ import json
 import os
 
 import joblib
-import numpy as np
 import pandas as pd
-from sklearn.metrics import mean_absolute_error
 
 from Data.testingReport import TestingReport
 from Data.hyperParameters import HyperParameters
 
-SCORE_MIN, SCORE_MAX = 1, 5
-
-
-def _predict_scores(mlp, X: np.ndarray) -> np.ndarray:
-    raw = mlp.predict(X)
-    return np.clip(np.round(raw), SCORE_MIN, SCORE_MAX).astype(int)
-
 
 class TestingOrchestrator:
+    """
+    BPMN Task: GENERATE TEST REPORT
+    Evaluates the selected MLPClassifier on the test set.
+    Error metric: classification error (1 - accuracy).
+    """
 
     def __init__(
         self,
         report_path: str,
-        generalization_threshold: float = 0.5,  # MAE threshold: avg error < 0.5 score points
+        generalization_threshold: float = 0.15,
     ) -> None:
         self._report_path              = report_path
         self._generalization_threshold = generalization_threshold
@@ -35,25 +31,24 @@ class TestingOrchestrator:
         y_test: list,
     ) -> TestingReport:
         clf_id = classifier_data.get("classifier_id", "?")
-        print(f"[TestingOrchestrator] Testing '{clf_id}' …")
+        print(f"[TestingOrchestrator] GENERATE TEST REPORT for '{clf_id}' …")
 
         mlp           = joblib.load(model_path)
-        preds         = _predict_scores(mlp, X_test.values)
-        testing_error = mean_absolute_error(y_test, preds)
+        testing_error = 1.0 - mlp.score(X_test.values, y_test)
         passed        = testing_error <= self._generalization_threshold
 
         os.makedirs(os.path.dirname(self._report_path), exist_ok=True)
         with open(self._report_path, "w", encoding="UTF-8") as f:
             json.dump({
                 "classifier_id":            clf_id,
-                "metric":                   "MAE (rounded predictions)",
+                "metric":                   "classification_error (1 - accuracy)",
                 "testing_error":            round(testing_error, 4),
                 "generalization_threshold": self._generalization_threshold,
                 "errors": {"passed": passed},
             }, f, indent="\t")
 
         print(
-            f"[TestingOrchestrator] MAE={testing_error:.4f}, "
+            f"[TestingOrchestrator] error={testing_error:.4f}, "
             f"threshold={self._generalization_threshold}, passed={passed}"
         )
         return TestingReport(

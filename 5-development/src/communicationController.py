@@ -1,16 +1,15 @@
 """
 CommunicationController
 =======================
-Handles all network I/O for the Development System.
-All addresses, ports and endpoints are read from config.json
-via src.config — edit that file to change network settings.
+INBOUND  — Flask REST server receives the learning-set payload
+           from the Segregation System.
 
-  INBOUND  — Flask REST server receives the learning-set payload
-             from the Segregation System.
+OUTBOUND — Two operations only:
+             • send_classifier()     → POST .sav to Production System (test passes)
+             • save_rejected_report()→ saves testing report locally as JSON (test fails)
 
-  OUTBOUND — Two targeted POST operations only:
-               • send_classifier()      → Production System (test passes)
-               • send_testing_report()  → Messaging System  (test fails)
+All network configuration is read from config.json, which is loaded
+by DevelopmentSystemOrchestrator and passed in at construction time.
 """
 
 import json
@@ -21,29 +20,45 @@ from typing import Callable, Optional
 import requests
 from flask import Flask, Response, jsonify, request
 
-from src.config import (
-    LISTEN_HOST, LISTEN_PORT,
-    SEGREGATION_SYSTEM_IP, SEGREGATION_SYSTEM_PORT,
-    PRODUCTION_SYSTEM_IP, PRODUCTION_SYSTEM_PORT, PRODUCTION_ENDPOINT,
-    MESSAGING_SYSTEM_IP, MESSAGING_SYSTEM_PORT, MESSAGING_ENDPOINT,
-    RECEIVED_DATA_PATH,
-)
-
 
 class CommunicationController:
     """
-    Manages inbound and outbound HTTP communication.
-
-    Inbound : Flask REST server on LISTEN_HOST:LISTEN_PORT.
-    Outbound: targeted POSTs to Production System or Messaging System.
+    Parameters
+    ----------
+    listen_host          : interface to bind the Flask server on
+    listen_port          : port for the Flask server
+    segregation_ip       : IP of the system sending the payload (for logging)
+    segregation_port     : port of the sender (for logging)
+    production_ip        : IP of the Production System (classifier destination)
+    production_port      : port of the Production System
+    production_endpoint  : endpoint on the Production System
+    received_data_path   : where incoming payloads are saved to disk
+    rejected_report_path : where the testing report is saved when test fails
     """
 
     def __init__(
         self,
-        received_data_path: str = RECEIVED_DATA_PATH,
+        listen_host: str,
+        listen_port: int,
+        segregation_ip: str,
+        segregation_port: int,
+        production_ip: str,
+        production_port: int,
+        production_endpoint: str,
+        received_data_path: str,
+        rejected_report_path: str,
     ) -> None:
-        self._received_data_path             = received_data_path
-        self._app: Flask                     = Flask(__name__)
+        self._listen_host          = listen_host
+        self._listen_port          = listen_port
+        self._segregation_ip       = segregation_ip
+        self._segregation_port     = segregation_port
+        self._production_ip        = production_ip
+        self._production_port      = production_port
+        self._production_endpoint  = production_endpoint
+        self._received_data_path   = received_data_path
+        self._rejected_report_path = rejected_report_path
+
+        self._app: Flask = Flask(__name__)
         self._on_data_received: Optional[Callable[[dict], None]] = None
         self._register_routes()
 
@@ -64,7 +79,7 @@ class CommunicationController:
 
             print(
                 f"[CommunicationController] Payload received from "
-                f"{SEGREGATION_SYSTEM_IP}:{SEGREGATION_SYSTEM_PORT} "
+                f"{self._segregation_ip}:{self._segregation_port} "
                 f"→ saved to {self._received_data_path}"
             )
 
@@ -83,8 +98,8 @@ class CommunicationController:
 
         thread = threading.Thread(
             target=lambda: self._app.run(
-                host=LISTEN_HOST,
-                port=LISTEN_PORT,
+                host=self._listen_host,
+                port=self._listen_port,
                 debug=False,
                 use_reloader=False,
             ),
@@ -93,77 +108,62 @@ class CommunicationController:
         thread.start()
         print(
             f"[CommunicationController] Listening on "
-            f"http://{LISTEN_HOST}:{LISTEN_PORT}  "
-            f"(expecting sender: {SEGREGATION_SYSTEM_IP}:{SEGREGATION_SYSTEM_PORT})"
+            f"http://{self._listen_host}:{self._listen_port}  "
+            f"(expecting sender: {self._segregation_ip}:{self._segregation_port})"
         )
 
-    # ── OUTBOUND — low-level helpers ───────────────────────────────────
-
-    @staticmethod
-    def _post_json(url: str, payload: dict, timeout: int = 10) -> bool:
-        try:
-            r = requests.post(
-                url,
-                json=payload,
-                headers={"Content-Type": "application/json"},
-                timeout=timeout,
-            )
-            r.raise_for_status()
-            print(f"[CommunicationController] JSON sent → {url} ({r.status_code})")
-            return True
-        except requests.exceptions.RequestException as exc:
-            print(f"[CommunicationController] POST failed → {url}: {exc}")
-            return False
-
-    @staticmethod
-    def _post_file(url: str, file_path: str, field: str, mime: str, timeout: int = 30) -> bool:
-        try:
-            with open(file_path, "rb") as fh:
-                r = requests.post(
-                    url,
-                    files={field: (os.path.basename(file_path), fh, mime)},
-                    timeout=timeout,
-                )
-            r.raise_for_status()
-            print(f"[CommunicationController] File sent → {url} ({r.status_code})")
-            return True
-        except FileNotFoundError:
-            print(f"[CommunicationController] File not found: {file_path}")
-            return False
-        except requests.exceptions.RequestException as exc:
-            print(f"[CommunicationController] POST failed → {url}: {exc}")
-            return False
-
-    # ── OUTBOUND — public API ──────────────────────────────────────────
+    # ── OUTBOUND ───────────────────────────────────────────────────────
 
     def send_classifier(self, model_path: str) -> bool:
         """
         BPMN: CLASSIFIER SENT
         POST the trained .sav file to the Production System.
-        Called when test_passed() → YES.
+        Called by test_passed() when approved = True.
         """
-        url = f"http://{PRODUCTION_SYSTEM_IP}:{PRODUCTION_SYSTEM_PORT}{PRODUCTION_ENDPOINT}"
+        url = (
+            f"http://{self._production_ip}:{self._production_port}"
+            f"{self._production_endpoint}"
+        )
         print(
             f"[CommunicationController] CLASSIFIER SENT → "
-            f"{PRODUCTION_SYSTEM_IP}:{PRODUCTION_SYSTEM_PORT} …"
-        )
-        return self._post_file(url, model_path, field="classifier", mime="application/octet-stream")
-
-    def send_testing_report(self, report_path: str) -> bool:
-        """
-        BPMN: CONFIGURATION SENT
-        POST the testing report JSON to the Messaging System.
-        Called when test_passed() → NO.
-        """
-        url = f"http://{MESSAGING_SYSTEM_IP}:{MESSAGING_SYSTEM_PORT}{MESSAGING_ENDPOINT}"
-        print(
-            f"[CommunicationController] CONFIGURATION SENT → "
-            f"{MESSAGING_SYSTEM_IP}:{MESSAGING_SYSTEM_PORT} …"
+            f"{self._production_ip}:{self._production_port} …"
         )
         try:
+            with open(model_path, "rb") as fh:
+                r = requests.post(
+                    url,
+                    files={"classifier": (os.path.basename(model_path), fh, "application/octet-stream")},
+                    timeout=30,
+                )
+            r.raise_for_status()
+            print(f"[CommunicationController] Classifier sent successfully ({r.status_code})")
+            return True
+        except FileNotFoundError:
+            print(f"[CommunicationController] Model file not found: {model_path}")
+            return False
+        except requests.exceptions.RequestException as exc:
+            print(f"[CommunicationController] POST failed: {exc}")
+            return False
+
+    def save_rejected_report(self, report_path: str) -> bool:
+        """
+        BPMN: CONFIGURATION SENT (no external messaging system)
+        Saves the testing report JSON locally so it can be reviewed.
+        Called by test_passed() when approved = False.
+        """
+        try:
             with open(report_path, "r", encoding="UTF-8") as f:
-                payload = json.load(f)
+                report = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError) as exc:
             print(f"[CommunicationController] Cannot read report: {exc}")
             return False
-        return self._post_json(url, payload)
+
+        os.makedirs(os.path.dirname(self._rejected_report_path), exist_ok=True)
+        with open(self._rejected_report_path, "w", encoding="UTF-8") as f:
+            json.dump(report, f, indent="\t")
+
+        print(
+            f"[CommunicationController] Rejected report saved → "
+            f"{self._rejected_report_path}"
+        )
+        return True

@@ -136,13 +136,34 @@ if __name__ == "__main__":
         received_event   = threading.Event()
         received_payload: dict = {}
 
+       # -- Inside the main block of main.py --
+
         def handle_message(payload: dict) -> None:
-            """Save payload to disk then unblock the main thread."""
-            os.makedirs(os.path.dirname(learning_sets_path), exist_ok=True)
-            with open(learning_sets_path, "w", encoding="UTF-8") as f:
-                json.dump(payload, f, indent="\t")
-            received_payload.update(payload)
-            received_event.set()
+            """
+            Deep validation and persistence. 
+            Triggered only if CommunicationController passed structural checks.
+            """
+            try:
+                # 1. Attempt to parse - this validates data types and logic
+                # parse_learning_set and parse_hyper_parameters are your existing functions
+                parse_learning_set(payload)
+                parse_hyper_parameters(payload)
+
+                # 2. If parsing succeeded, persist as the "Clean/Valid" version
+                os.makedirs(os.path.dirname(learning_sets_path), exist_ok=True)
+                with open(learning_sets_path, "w", encoding="UTF-8") as f:
+                    json.dump(payload, f, indent="\t")
+
+                # 3. Update memory and unblock the pipeline
+                received_payload.update(payload)
+                received_event.set()
+                print("[Main] Payload deeply validated and persisted to learning_sets.json")
+
+            except Exception as e:
+                # This catches things like 'NoneType' errors or missing sub-keys
+                # within the sessions (e.g., a session missing 'skillOverall')
+                print(f"[Main] Logic Validation Error: {e}")
+                print("[Main] Pipeline will continue waiting for a VALID payload.")
 
         # Spin up a temporary Flask server just to receive the payload.
         # The orchestrator's CommunicationController will use its own

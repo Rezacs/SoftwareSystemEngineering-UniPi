@@ -64,8 +64,9 @@ class CommunicationController:
 
     # ── INBOUND — Flask server ─────────────────────────────────────────
 
-    def _register_routes(self) -> None:
+    # -- Inside CommunicationController._register_routes --
 
+    def _register_routes(self) -> None:
         @self._app.route("/data", methods=["POST"])
         def receive_data() -> Response:
             if not request.is_json:
@@ -73,24 +74,38 @@ class CommunicationController:
 
             payload: dict = request.get_json(force=True)
 
+            # --- NEW VALIDATION STEP ---
+            try:
+                self._validate_payload_structure(payload)
+            except ValueError as e:
+                print(f"[CommunicationController] Validation Failed: {e}")
+                return jsonify({"error": str(e)}), 400
+            # ---------------------------
+
+            # Save RAW data for audit/debugging
             os.makedirs(os.path.dirname(self._received_data_path), exist_ok=True)
             with open(self._received_data_path, "w", encoding="UTF-8") as f:
                 json.dump(payload, f, indent="\t")
-
-            print(
-                f"[CommunicationController] Payload received from "
-                f"{self._segregation_ip}:{self._segregation_port} "
-                f"→ saved to {self._received_data_path}"
-            )
 
             if self._on_data_received is not None:
                 self._on_data_received(payload)
 
             return jsonify({"status": "ok"}), 200
 
-        @self._app.route("/health", methods=["GET"])
-        def health() -> Response:
-            return jsonify({"status": "running"}), 200
+    def _validate_payload_structure(self, payload: dict) -> None:
+        """Structural validation: check for required keys and types."""
+        if "learning_set" not in payload:
+            raise ValueError("Missing 'learning_set' in payload")
+        
+        ls = payload["learning_set"]
+        for split in ["training_set", "validation_set", "test_set"]:
+            if split not in ls:
+                raise ValueError(f"Missing '{split}' in learning_set")
+            if not isinstance(ls[split], list):
+                raise ValueError(f"'{split}' must be a list")
+
+        if "hyper_parameters" not in payload:
+            raise ValueError("Missing 'hyper_parameters' in payload")
 
     def start_server(self, on_data_received: Callable[[dict], None]) -> None:
         """Start the Flask server in a daemon thread."""

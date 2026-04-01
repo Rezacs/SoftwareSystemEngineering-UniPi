@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "required": ["classifier_id", "model_filename"],
+  "properties": {
+    "classifier_id": {
+      "type": "string"
+    },
+    "model_filename": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string"
+    }
+  }
+}

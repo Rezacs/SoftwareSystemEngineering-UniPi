@@ -66,6 +66,32 @@ class CommunicationController:
 
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
+        # =========================
+        # Dashboard Status Endpoint
+        # =========================
+        @self.app.route("/status", methods=["GET"])
+        def get_status():
+            import json
+            from src.config import (
+                LATEST_CLASSIFIER_PATH,
+                LATEST_SESSION_PATH,
+                LATEST_LABEL_PATH,
+                LOG_PATH
+            )
+
+            def read_json(path, default):
+                try:
+                    with open(path, "r", encoding="utf-8") as f:
+                        return json.load(f)
+                except:
+                    return default
+
+            return jsonify({
+                "classifier": read_json(LATEST_CLASSIFIER_PATH, {}),
+                "session": read_json(LATEST_SESSION_PATH, {}),
+                "label": read_json(LATEST_LABEL_PATH, {}),
+                "logs": read_json(LOG_PATH, [])
+            })
 
     # =========================
     # BPMN: Label Sent → Client-side

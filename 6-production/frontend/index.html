@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Production System Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+        }
+
+```
+    h1 {
+        margin-top: 20px;
+    }
+
+    .container {
+        margin-top: 40px;
+    }
+
+    .step {
+        padding: 15px;
+        margin: 10px auto;
+        width: 60%;
+        border-radius: 10px;
+        background: #1e293b;
+        opacity: 0.5;
+        transition: 0.3s;
+    }
+
+    .active {
+        background: #22c55e;
+        opacity: 1;
+        font-weight: bold;
+    }
+
+    .buttons {
+        margin-top: 30px;
+    }
+
+    button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background: #3b82f6;
+        color: white;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #2563eb;
+    }
+</style>
+```
+
+</head>
+<body>
+
+<h1>Production System Flow</h1>
+
+<div class="container">
+
+```
+<div class="step" id="step1">Waiting for Classifier</div>
+<div class="step" id="step2">Classifier Received</div>
+<div class="step" id="step3">Classifier Deployed</div>
+
+<div class="step" id="step4">Waiting for Session</div>
+<div class="step" id="step5">Session Received</div>
+<div class="step" id="step6">Classified</div>
+
+<div class="step" id="step7">Label Sent to Client</div>
+<div class="step" id="step8">Evaluation Phase</div>
+```
+
+</div>
+
+<div class="buttons">
+    <button onclick="nextStep()">Next Step</button>
+    <button onclick="autoRun()">Auto Run</button>
+</div>
+
+<script>
+    let currentStep = 0;
+    const steps = [
+        "step1","step2","step3",
+        "step4","step5","step6",
+        "step7","step8"
+    ];
+
+    function nextStep() {
+        if (currentStep > 0) {
+            document.getElementById(steps[currentStep - 1]).classList.remove("active");
+        }
+
+        if (currentStep < steps.length) {
+            document.getElementById(steps[currentStep]).classList.add("active");
+            currentStep++;
+        }
+    }
+
+    function autoRun() {
+        currentStep = 0;
+        let interval = setInterval(() => {
+            if (currentStep >= steps.length) {
+                clearInterval(interval);
+            } else {
+                nextStep();
+            }
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>

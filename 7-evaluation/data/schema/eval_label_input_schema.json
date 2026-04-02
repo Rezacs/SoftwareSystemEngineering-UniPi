@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Football Player Label Input Schema",
+  "type": "object",
+  "properties": {
+    "player_id": {
+      "type": ["string", "number"]
+    },
+    "source": {
+      "type": "string",
+      "enum": ["expert", "classifier"]
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    },
+
+    "classifier_id": { "type": "string" }
+  },
+  "required": ["player_id", "source", "rating"]
+}

@@ -1,0 +1,88 @@
+{
+    "status": "prepared_sessions_sent",
+    "target_url": "http://127.0.0.1:5002/prepared-sessions",
+    "sent_count": 8,
+    "all_succeeded": true,
+    "results": [
+        {
+            "file": "prepared_session_01.json",
+            "status_code": 200,
+            "ok": true,
+            "response": {
+                "input_path": "/Users/gabrielecaioli/Downloads/Uni/SSE/SoftwareSystemEngineering-UniPi/4-segregation/data/input/prepared_session.json",
+                "status": "prepared_session_received",
+                "stored_in_db": true
+            }
+        },
+        {
+            "file": "prepared_session_02.json",
+            "status_code": 200,
+            "ok": true,
+            "response": {
+                "input_path": "/Users/gabrielecaioli/Downloads/Uni/SSE/SoftwareSystemEngineering-UniPi/4-segregation/data/input/prepared_session.json",
+                "status": "prepared_session_received",
+                "stored_in_db": true
+            }
+        },
+        {
+            "file": "prepared_session_03.json",
+            "status_code": 200,
+            "ok": true,
+            "response": {
+                "input_path": "/Users/gabrielecaioli/Downloads/Uni/SSE/SoftwareSystemEngineering-UniPi/4-segregation/data/input/prepared_session.json",
+                "status": "prepared_session_received",
+                "stored_in_db": true
+            }
+        },
+        {
+            "file": "prepared_session_04.json",
+            "status_code": 200,
+            "ok": true,
+            "response": {
+                "input_path": "/Users/gabrielecaioli/Downloads/Uni/SSE/SoftwareSystemEngineering-UniPi/4-segregation/data/input/prepared_session.json",
+                "status": "prepared_session_received",
+                "stored_in_db": true
+            }
+        },
+        {
+            "file": "prepared_session_05.json",
+            "status_code": 200,
+            "ok": true,
+            "response": {
+                "input_path": "/Users/gabrielecaioli/Downloads/Uni/SSE/SoftwareSystemEngineering-UniPi/4-segregation/data/input/prepared_session.json",
+                "status": "prepared_session_received",
+                "stored_in_db": true
+            }
+        },
+        {
+            "file": "prepared_session_06.json",
+            "status_code": 200,
+            "ok": true,
+            "response": {
+                "input_path": "/Users/gabrielecaioli/Downloads/Uni/SSE/SoftwareSystemEngineering-UniPi/4-segregation/data/input/prepared_session.json",
+                "status": "prepared_session_received",
+                "stored_in_db": true
+            }
+        },
+        {
+            "file": "prepared_session_07.json",
+            "status_code": 200,
+            "ok": true,
+            "response": {
+                "input_path": "/Users/gabrielecaioli/Downloads/Uni/SSE/SoftwareSystemEngineering-UniPi/4-segregation/data/input/prepared_session.json",
+                "status": "prepared_session_received",
+                "stored_in_db": true
+            }
+        },
+        {
+            "file": "prepared_session_08.json",
+            "status_code": 200,
+            "ok": true,
+            "response": {
+                "input_path": "/Users/gabrielecaioli/Downloads/Uni/SSE/SoftwareSystemEngineering-UniPi/4-segregation/data/input/prepared_session.json",
+                "status": "prepared_session_received",
+                "stored_in_db": true
+            }
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "required": [
+    "session_uuid",
+    "skillOverall",
+    "socialInfluence",
+    "injuriesImpact"
+  ],
+  "properties": {
+    "session_uuid": {
+      "type": "string"
+    },
+    "skillOverall": {
+      "type": "number"
+    },
+    "socialInfluence": {
+      "type": "number"
+    },
+    "injuriesImpact": {
+      "type": "number"
+    },
+    "timestamp": {
+      "type": "string"
+    }
+  }
+}

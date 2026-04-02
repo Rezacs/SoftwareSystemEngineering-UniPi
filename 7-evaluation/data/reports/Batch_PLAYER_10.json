@@ -1,0 +1,78 @@
+{
+    "batch_id": "Batch_PLAYER_10",
+    "classifier_id": "RandomForest_v3",
+    "timestamp": "2026-03-31 22:42:40",
+    "system_recommendation": "ACCEPT",
+    "metrics": {
+        "tolerance_used": 0.5,
+        "total_errors": 2,
+        "total_errors_threshold": 4,
+        "max_consecutive_errors": 1,
+        "max_consecutive_errors_threshold": 3
+    },
+    "details": [
+        {
+            "player_id": "PLAYER_01",
+            "expert_rating": 4.0,
+            "classifier_rating": 4.5,
+            "difference": 0.5,
+            "status": "MATCH"
+        },
+        {
+            "player_id": "PLAYER_02",
+            "expert_rating": 3.5,
+            "classifier_rating": 3.0,
+            "difference": 0.5,
+            "status": "MATCH"
+        },
+        {
+            "player_id": "PLAYER_03",
+            "expert_rating": 5.0,
+            "classifier_rating": 2.5,
+            "difference": 2.5,
+            "status": "ERROR"
+        },
+        {
+            "player_id": "PLAYER_04",
+            "expert_rating": 2.0,
+            "classifier_rating": 2.0,
+            "difference": 0.0,
+            "status": "MATCH"
+        },
+        {
+            "player_id": "PLAYER_05",
+            "expert_rating": 3.0,
+            "classifier_rating": 4.5,
+            "difference": 1.5,
+            "status": "ERROR"
+        },
+        {
+            "player_id": "PLAYER_06",
+            "expert_rating": 4.5,
+            "classifier_rating": 4.0,
+            "difference": 0.5,
+            "status": "MATCH"
+        },
+        {
+            "player_id": "PLAYER_07",
+            "expert_rating": 1.5,
+            "classifier_rating": 2.0,
+            "difference": 0.5,
+            "status": "MATCH"
+        },
+        {
+            "player_id": "PLAYER_08",
+            "expert_rating": 3.0,
+            "classifier_rating": 3.5,
+            "difference": 0.5,
+            "status": "MATCH"
+        },
+        {
+            "player_id": "PLAYER_09",
+            "expert_rating": 4.0,
+            "classifier_rating": 4.0,
+            "difference": 0.0,
+            "status": "MATCH"
+        }
+    ]
+}

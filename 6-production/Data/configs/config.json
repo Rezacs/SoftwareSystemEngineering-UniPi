@@ -1,0 +1,47 @@
+{
+  "production_system": {
+    "host": "127.0.0.1",
+    "port": 6000
+  },
+
+  "endpoints": {
+    "classifier_received": "/classifier",
+    "prepared_session_received": "/session"
+  },
+
+  "client_side_system": {
+    "host": "127.0.0.1",
+    "port": 7000,
+    "label_endpoint": "/label"
+  },
+
+  "evaluation_system": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "label_endpoint": "/evaluation"
+  },
+
+  "messaging_system": {
+    "host": "127.0.0.1",
+    "port": 9000,
+    "configuration_endpoint": "/config"
+  },
+
+  "paths": {
+    "classifiers_dir": "Data/classifiers/",
+    "latest_classifier": "Data/internal/latest_classifier.json",
+    "latest_session": "Data/internal/latest_session.json",
+    "status": "Data/internal/status.json",
+    "latest_label": "Data/outputs/latest_label.json",
+    "evaluation_payload": "Data/outputs/evaluation_payload.json",
+    "log": "Data/reports/production_log.json"
+  },
+
+  "classification": {
+    "feature_columns": ["skillOverall", "socialInfluence", "injuriesImpact"]
+  },
+
+  "evaluation": {
+    "enabled": true
+  }
+}

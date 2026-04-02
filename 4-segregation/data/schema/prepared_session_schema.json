@@ -1,0 +1,36 @@
+{
+    "type": "object",
+    "required": [
+        "session_id",
+        "player_id",
+        "skill_overall",
+        "social_influence_score",
+        "injuries_impact_score"
+    ],
+    "properties": {
+        "session_id": {
+            "type": "string"
+        },
+        "player_id": {
+            "type": [
+                "integer",
+                "string"
+            ]
+        },
+        "label": {
+            "type": [
+                "string",
+                "null"
+            ]
+        },
+        "skill_overall": {
+            "type": "number"
+        },
+        "social_influence_score": {
+            "type": "number"
+        },
+        "injuries_impact_score": {
+            "type": "number"
+        }
+    }
+}

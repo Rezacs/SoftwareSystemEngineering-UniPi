@@ -27,10 +27,15 @@ class ClassifierController:
         with open(LATEST_CLASSIFIER_PATH, "r", encoding="utf-8") as file:
             metadata = json.load(file)
 
+        # ✅ SAFE CHECK
+        if "classifier_path" not in metadata:
+            return
+
         classifier_path = Path(metadata["classifier_path"])
+
         if classifier_path.exists():
             self.active_classifier_path = classifier_path
-            self.active_classifier_id = metadata["classifier_id"]
+            self.active_classifier_id = metadata.get("classifier_id")
             self.model = joblib.load(classifier_path)
 
     def save_classifier(self, source_model_path: str, classifier_id: str, model_filename: str):

@@ -214,12 +214,24 @@ class DevelopmentSystemOrchestrator:
     # ── stop&go helper ─────────────────────────────────────────────────
 
     def _stop(self, message: str) -> None:
-        """Write template, print instructions, exit. Only in Stop&Go mode."""
+        # stop helper to handle different stopping points in the BPMN
         self._write_user_input_template()
-        print(f"\n[Orchestrator] STOP — {message}")
-        print(f"  → Edit {self._user_input_path}")
-        print(f"  → Then re-run main.py to continue.\n")
-        sys.exit(0)
+        print(f"\n[Orchestrator] {message}")
+        print(f"  → 1. Edit: {self._user_input_path}")
+        
+        if not self._testing_mode:
+            
+            while True:
+                choice = input(f"  → Have you saved your decisions in the JSON? (y/n): ").strip().lower()
+                if choice == 'y':
+                   
+                    self._execute_development()
+                    break
+                else:
+                    print("  [Waiting...] Please update the file before continuing.")
+        else:
+           
+            self._execute_development()
 
     # ── internal helpers ───────────────────────────────────────────────
 
@@ -450,23 +462,24 @@ class DevelopmentSystemOrchestrator:
     def test_passed(self) -> None:
         """
         BPMN Gateway: TEST PASSED?
-          YES → CLASSIFIER SENT  to Production System
-          NO  → report saved locally (no external messaging system)
+            NO  → save rejected report, reset to IDLE
+            YES → send classifier to production, reset to IDLE
         """
-        approved   = self._get_user_input().get("approved", False)
-        best_data  = self._status["best_classifier_data"]
-        cl_id      = best_data["index"]
+        approved = self._get_user_input().get("approved", False)
+        best_data = self._status["best_classifier_data"]
+        cl_id = best_data["index"]
         model_path = os.path.join(self._classifier_folder, f"model_{cl_id}.sav")
 
-        if self._testing_mode and self._start_time is not None:
-            elapsed_ns = time.time_ns() - self._start_time
-            print(f"[Orchestrator] Total cycle time: {elapsed_ns / 1e9:.3f} s")
-
         if approved:
-            print("[Orchestrator] TEST PASSED — CLASSIFIER SENT to Production System.")
+            print("\n" + "!" * 60)
+            print("[Orchestrator] SUCCESS: CLASSIFIER SENT TO PRODUCTION.")
+            print("!" * 60 + "\n")
             self._comm.send_classifier(model_path)
+           
+            self._reset_status()
+            
         else:
-            print("[Orchestrator] TEST NOT PASSED — saving rejected report locally.")
+            print("\n[Orchestrator] TEST REJECTED: Saving report and resetting to IDLE.")
             self._comm.save_rejected_report(self._testing_report_path)
-
-        self._reset_status()
+            self._reset_status()
+           

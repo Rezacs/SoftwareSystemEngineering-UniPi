@@ -1,19 +1,5 @@
 """
 Entry point for the Development System.
-
-On startup the user is asked which mode to run:
-
-  [1] Stop&Go (interactive)
-        Waits for a POST /data payload, then pauses at each phase
-        so the user can inspect outputs and edit user_input.json.
-
-  [2] Testing (automated)
-        Also waits for a real POST /data payload (no synthetic data).
-        User decisions are simulated automatically from report files.
-        The pipeline runs end-to-end without stopping.
-
-All configuration is loaded from Data/configs/config.json by the
-DevelopmentSystemOrchestrator — main.py only handles startup logic.
 """
 
 import json
@@ -102,85 +88,75 @@ def launch_pipeline(payload: dict, testing_mode: bool) -> None:
     )
     orchestrator.run()
 
-
-# ── Entry point ────────────────────────────────────────────────────────────
-
 if __name__ == "__main__":
     testing_mode = ask_testing_mode()
-    cfg          = _read_config()
+    cfg = _read_config()
 
-    status_path      = cfg["paths"]["status_file"]
+    status_path = cfg["paths"]["status_file"]
     learning_sets_path = cfg["paths"]["learning_sets"]
     received_data_path = cfg["paths"]["received_data"]
-    listen_port      = int(cfg["network"]["listen_port"])
+    listen_port = int(cfg["network"]["listen_port"])
 
-    # ── Check whether we are resuming a stopped pipeline ──────────────
-    resuming = (
-        os.path.isfile(status_path)
-        and json.load(open(status_path, encoding="UTF-8"))
-                .get("phase", "Starting") != "Starting"
+    # ── Setup Persistence Events ───────────────────────────────────────────
+    received_event = threading.Event()
+    received_payload: dict = {}
+
+    def handle_message(payload: dict) -> None:
+        """Triggered by CommunicationController when POST /data arrives."""
+        try:
+            # Deep validate before accepting
+            parse_learning_set(payload)
+            parse_hyper_parameters(payload)
+
+            # Persist to disk so orchestrator can reload if interrupted
+            os.makedirs(os.path.dirname(learning_sets_path), exist_ok=True)
+            with open(learning_sets_path, "w", encoding="UTF-8") as f:
+                json.dump(payload, f, indent="\t")
+
+            received_payload.clear()
+            received_payload.update(payload)
+            received_event.set() # Unblock the main loop
+            print("\n[Main] Valid payload received. Unblocking pipeline...")
+        except Exception as e:
+            print(f"[Main] Logic Validation Error: {e}")
+
+    # ── Start persistent background server ─────────────────────────────────
+    comm = CommunicationController(
+        listen_host=cfg["network"]["listen_host"],
+        listen_port=listen_port,
+        segregation_ip=cfg["network"]["segregation_system"]["ip"],
+        segregation_port=int(cfg["network"]["segregation_system"]["port"]),
+        production_ip=cfg["network"]["production_system"]["ip"],
+        production_port=int(cfg["network"]["production_system"]["port"]),
+        production_endpoint=cfg["network"]["production_system"]["endpoint"],
+        received_data_path=received_data_path,
+        rejected_report_path=cfg["paths"]["rejected_report"],
     )
+    comm.start_server(handle_message)
 
-    if resuming:
-        # Resume: reload the persisted learning set — no network needed
-        print("[Main] Resuming pipeline from persisted phase …")
-        with open(learning_sets_path, "r", encoding="UTF-8") as f:
-            payload = json.load(f)
-        launch_pipeline(payload, testing_mode)
-
-    else:
-        # Fresh start: wait for a real POST /data payload
-        print(f"[Main] Waiting for learning-set payload via POST /data …")
-        print(f"[Main] Listening on port {listen_port} …\n")
-
-        received_event   = threading.Event()
-        received_payload: dict = {}
-
-       # -- Inside the main block of main.py --
-
-        def handle_message(payload: dict) -> None:
-            """
-            Deep validation and persistence. 
-            Triggered only if CommunicationController passed structural checks.
-            """
-            try:
-                # 1. Attempt to parse - this validates data types and logic
-                # parse_learning_set and parse_hyper_parameters are your existing functions
-                parse_learning_set(payload)
-                parse_hyper_parameters(payload)
-
-                # 2. If parsing succeeded, persist as the "Clean/Valid" version
-                os.makedirs(os.path.dirname(learning_sets_path), exist_ok=True)
-                with open(learning_sets_path, "w", encoding="UTF-8") as f:
-                    json.dump(payload, f, indent="\t")
-
-                # 3. Update memory and unblock the pipeline
-                received_payload.update(payload)
-                received_event.set()
-                print("[Main] Payload deeply validated and persisted to learning_sets.json")
-
-            except Exception as e:
-                # This catches things like 'NoneType' errors or missing sub-keys
-                # within the sessions (e.g., a session missing 'skillOverall')
-                print(f"[Main] Logic Validation Error: {e}")
-                print("[Main] Pipeline will continue waiting for a VALID payload.")
-
-        # Spin up a temporary Flask server just to receive the payload.
-        # The orchestrator's CommunicationController will use its own
-        # server instance for the rest of the pipeline if needed.
-        comm = CommunicationController(
-            listen_host         = cfg["network"]["listen_host"],
-            listen_port         = listen_port,
-            segregation_ip      = cfg["network"]["segregation_system"]["ip"],
-            segregation_port    = int(cfg["network"]["segregation_system"]["port"]),
-            production_ip       = cfg["network"]["production_system"]["ip"],
-            production_port     = int(cfg["network"]["production_system"]["port"]),
-            production_endpoint = cfg["network"]["production_system"]["endpoint"],
-            received_data_path  = received_data_path,
-            rejected_report_path= cfg["paths"]["rejected_report"],
+    # ── THE CONTINUOUS LOOP ────────────────────────────────────────────────
+    while True:
+        # Check if we are resuming a saved state
+        resuming = (
+            os.path.isfile(status_path)
+            and json.load(open(status_path, encoding="UTF-8")).get("phase", "Starting") != "Starting"
         )
-        comm.start_server(handle_message)
 
-        received_event.wait()   # block until POST /data arrives
-        print("[Main] Payload received — starting pipeline.\n")
-        launch_pipeline(received_payload, testing_mode)
+        if resuming:
+            print("[Main] RESUMING: Found existing status. Loading persisted learning set...")
+            with open(learning_sets_path, "r", encoding="UTF-8") as f:
+                current_payload = json.load(f)
+        else:
+            print(f"\n[Main] IDLE: Waiting for new payload on port {listen_port}...")
+            received_event.wait() # Pause main thread until handle_message sets event
+            current_payload = received_payload.copy()
+            received_event.clear() # Reset for the next message arrival
+
+        # Execute Pipeline
+        try:
+            launch_pipeline(current_payload, testing_mode)
+            print("\n[Main] Pipeline cycle finished. Returning to listening state.")
+        except Exception as e:
+            print(f"[Main] Error during execution: {e}")
+            # If a crash happens, we reset the status file to avoid an infinite crash-loop
+            if os.path.exists(status_path): os.remove(status_path)

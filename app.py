@@ -3,7 +3,7 @@ from flask import Flask, jsonify, render_template
 from client_side.service import ClientSideService
 from ingestion.orchestrator import IngestionSystemOrchestrator
 from preparation.orchestrator import PreparationSystemOrchestrator
-from segregation.orchestrator import SegregationSystemOrchestrator
+from segregation_system import SegregationSystemOrchestrator
 from development.orchestrator import DevelopmentSystemOrchestrator
 from production.orchestrator import ProductionSystemOrchestrator
 from evaluation.orchestrator import EvaluationSystemOrchestrator

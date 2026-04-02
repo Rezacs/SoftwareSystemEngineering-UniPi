@@ -1,20 +1,109 @@
 from preparation.raw_session_receiver import RawSessionReceiver
 from preparation.prepared_session_creator import PreparedSessionCreator
-from preparation.prepared_session_sender import PreparedSessionSender
+from preparation.preparation_system_config import PreparationSystemConfiguration
+
+from flask import Flask, request, jsonify
 
 
 class PreparationSystemOrchestrator:
-    def __init__(self):
-        self.receiver = RawSessionReceiver()
-        self.creator = PreparedSessionCreator()
-        self.sender = PreparedSessionSender()
+    """
+    Orchestrator for the preparation system, receive the raw sessions, process them, and creates
+    the prepared session, then it sends them to segregation system or classification system, depending
+    in which phase is running.
 
-    def run(
-        self,
-        input_path="data/outputs/raw_session.json",
-        output_path="data/outputs/prepared_session.json"
-    ):
-        raw_session = self.receiver.receive_raw_session(input_path)
-        prepared_session = self.creator.create_prepared_session(raw_session)
-        self.sender.send_prepared_session(prepared_session, output_path)
-        return prepared_session
+    Args:
+        config_file_path (str): the configuration file in which are specified all the parameters to run
+                                the system.
+    """
+
+    def __init__(self,config_file_path : str = "config/preparationConfig.json"):
+        
+        print(f"[INFO] Preparation system orchestrator initialization...")
+
+        self.preparation_system_config = PreparationSystemConfiguration(config_file_path)
+
+        print(f"""
+               --- Preparation System Configuration ---
+               Phase:             {self.preparation_system_config.phase}
+               Classification System: {self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}
+               Segregation System: {self.preparation_system_config.segregation_system_ip}:{self.preparation_system_config.segregation_system_port}
+               --------------------------------------
+        """)
+
+        self.raw_session_receiver = RawSessionReceiver()
+
+        print(f"[INFO] Raw session receiver initialized")
+
+        self.prepared_session_creator = PreparedSessionCreator()
+
+        print(f"[INFO] Prepared session creator initialized")
+
+        self.app = Flask(__name__)
+
+        self.app.add_url_rule('/run', methods=['POST'], view_func=self.run)
+
+        print(f"[INFO] Flask service started initialized")
+
+
+    def run(self):
+
+        #Receive raw session
+        raw_session = self.raw_session_receiver.receive_raw_session()
+
+        if raw_session == None:
+
+            return jsonify({"Message": "Raw session received has an invalid schema"}), 400
+
+        #Create prepared session
+        raw_session = self.prepared_session_creator.parse_raw_session(raw_session)
+
+        #Correct missing samples
+        raw_session = self.prepared_session_creator.correct_missing_samples(raw_session)
+
+        #Correct outliers
+        raw_session = self.prepared_session_creator.correct_absolute_outliers(raw_session)
+
+        #Extract features
+        batch_prepared_session=self.prepared_session_creator.extract_features(raw_session)
+
+        #LOGIC TO DECOMPOSE THE BATCH
+        features=batch_prepared_session.get("features")
+        prepared_sessions=[]
+        for d in features:
+            prepared_session={
+                "UUID" : batch_prepared_session.get("UUID"),
+                "playerID" : d.get("player_id"),
+                "skillOverall" : d.get("skillOverall"),
+                "social_influence_score" : d.get("social_influence_score"),
+                "injuries_impact_score" : d.get("injuries_impact_score"),
+                "label" : d.get("label")
+            }
+            prepared_sessions.append(prepared_session)
+
+        if self.preparation_system_config.phase==0:
+            for p in prepared_sessions:
+                #Development phase
+                #Send to segregation system
+                url = f"http://{self.preparation_system_config.segregation_system_ip}:{self.preparation_system_config.segregation_system_port}"
+                risp = request.post(url, json=p)
+                print(risp)
+            return jsonify({"Message": "Prepared session correctly sent to segregation system"}), 200
+
+        for p in prepared_sessions:
+            #Evaluation phase send to classification system
+            url = f"http://{self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}"
+            risp = request.post(url, json=p)
+            print(risp)
+        return jsonify({"Message": "Prepared session correctly sent to classification system"}), 200
+
+        
+    
+    def start(self):
+        """
+        Start Flask server
+
+        """
+
+        print("Starting Flask server...")
+
+        self.app.run(host=self.preparation_system_config.hosting_ip, port=self.preparation_system_config.hosting_port)

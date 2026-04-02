@@ -41,7 +41,12 @@ env/
 .DS_Store
 Thumbs.db
 
-# Runtime outputs (optional - uncomment if needed)
-# data/output/*.db
-# data/output/*.json
-# data/output/*.png
+# Runtime outputs - generated during tests and execution
+data/output/*.db
+data/output/*.json
+data/output/*.png
+
+# Runtime inputs - test data that changes during execution
+data/input/prepared_session*.json
+data/input/balancing_decision.json
+data/input/coverage_decision.json

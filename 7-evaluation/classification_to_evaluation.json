@@ -1,62 +1,6 @@
-[
-  {
-    "player_id": "PLAYER_01",
-    "rating": 4.5,
-    "source": "classifier",
-    "classifier_id": "RandomForest_v3"
-  },
-  {
-    "player_id": "PLAYER_02",
-    "rating": 3.0,
-    "source": "classifier",
-    "classifier_id": "RandomForest_v3"
-  },
-  {
-    "player_id": "PLAYER_03",
-    "rating": 2.5,
-    "source": "classifier",
-    "classifier_id": "RandomForest_v3"
-  },
-  {
-    "player_id": "PLAYER_04",
-    "rating": 2.0,
-    "source": "classifier",
-    "classifier_id": "RandomForest_v3"
-  },
-  {
-    "player_id": "PLAYER_05",
-    "rating": 4.5,
-    "source": "classifier",
-    "classifier_id": "RandomForest_v3"
-  },
-  {
-    "player_id": "PLAYER_06",
-    "rating": 4.0,
-    "source": "classifier",
-    "classifier_id": "RandomForest_v3"
-  },
-  {
-    "player_id": "PLAYER_07",
-    "rating": 2.0,
-    "source": "classifier",
-    "classifier_id": "RandomForest_v3"
-  },
-  {
-    "player_id": "PLAYER_08",
-    "rating": 3.5,
-    "source": "classifier",
-    "classifier_id": "RandomForest_v3"
-  },
-  {
-    "player_id": "PLAYER_09",
-    "rating": 4.0,
-    "source": "classifier",
-    "classifier_id": "RandomForest_v3"
-  },
-  {
-    "player_id": "PLAYER_10",
-    "rating": 3.0,
-    "source": "classifier",
-    "classifier_id": "RandomForest_v3"
-  }
-]
+{
+  "player_id": "PLAYER_03",
+  "rating": 4.0,
+  "source": "classifier",
+  "classifier_id": "RandomForest_v3"
+}

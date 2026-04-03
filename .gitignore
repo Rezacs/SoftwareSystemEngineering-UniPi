@@ -22,3 +22,11 @@ env/
 # OS specific
 .DS_Store
 Thumbs.db
+
+# Wrapper modules (link to numbered directories)
+/client_side/
+/ingestion/
+/preparation/
+/development/
+/production/
+/evaluation/

@@ -14,7 +14,7 @@ class SessionRepository:
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     session_id TEXT NOT NULL,
                     player_id INTEGER NOT NULL,
-                    label TEXT,
+                    label INTEGER,
                     skill_overall REAL NOT NULL,
                     social_influence_score REAL NOT NULL,
                     injuries_impact_score REAL NOT NULL,

@@ -19,18 +19,29 @@
         },
         "label": {
             "type": [
-                "string",
+                "integer",
+                "null"
+            ],
+            "minimum": 1,
+            "maximum": 5
+        },
+        "skill_overall": {
+            "type": [
+                "integer",
                 "null"
             ]
         },
-        "skill_overall": {
-            "type": "number"
-        },
         "social_influence_score": {
-            "type": "number"
+            "type": [
+                "number",
+                "null"
+            ]
         },
         "injuries_impact_score": {
-            "type": "number"
+            "type": [
+                "number",
+                "null"
+            ]
         }
     }
 }

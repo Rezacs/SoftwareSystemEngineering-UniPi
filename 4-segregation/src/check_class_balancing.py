@@ -5,7 +5,7 @@ class CheckClassBalancing:
         class_statistics = []
 
         for label, num_samples in distribution.items():
-            class_label = int(label.split("_")[0])
+            class_label = int(label)
             missing_samples = max(0, int(round(average - num_samples)))
             excessive_samples = max(0, int(round(num_samples - average)))
             class_statistics.append(
@@ -19,16 +19,16 @@ class CheckClassBalancing:
 
         return class_statistics
 
-    def retrieveLabels(self, labels: list[str]) -> list[str]:
+    def retrieveLabels(self, labels: list[int]) -> list[int]:
         return [label for label in labels if label is not None]
 
-    def generatePlotData(self, labels: list[str], tolerance: float = 0.05) -> dict:
+    def generatePlotData(self, labels: list[int], tolerance: float = 0.05) -> dict:
         distribution = {
-            "1_star": 0,
-            "2_star": 0,
-            "3_star": 0,
-            "4_star": 0,
-            "5_star": 0
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+            5: 0
         }
 
         for label in labels:

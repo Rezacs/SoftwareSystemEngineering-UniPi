@@ -1,6 +1,8 @@
 from src.config import ensure_directories
 from src.productionSystemOrchestrator import ProductionSystemOrchestrator
 from src.communicationController import CommunicationController
+import webbrowser
+import os
 
 
 def main():
@@ -10,6 +12,10 @@ def main():
     ensure_directories()
 
     # Initialize core components
+
+    # Open dashboard automatically
+    dashboard_path = os.path.abspath("frontend/dashboard.html")
+    webbrowser.open(f"file://{dashboard_path}")
     orchestrator = ProductionSystemOrchestrator()
     communication_controller = CommunicationController(orchestrator)
 

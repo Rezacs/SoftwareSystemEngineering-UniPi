@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Production System Dashboard</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: white;
+            margin: 0;
+        }
+
+        header {
+            background: #020617;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background: #3b82f6;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #38bdf8;
+        }
+
+        pre {
+            background: #020617;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 200px;
+        }
+
+        .status {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .green { background: #22c55e; }
+        .yellow { background: #eab308; }
+        .red { background: #ef4444; }
+    </style>
+</head>
+
+<body>
+
+<header>🚀 Production System Dashboard</header>
+
+<div class="controls">
+    <button onclick="fetchData()">Refresh</button>
+    <button onclick="autoRefresh()">Auto Refresh</button>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Classifier</h2>
+        <div id="classifierStatus" class="status yellow">Waiting...</div>
+        <pre id="classifier">{}</pre>
+    </div>
+
+    <div class="card">
+        <h2>Prepared Session</h2>
+        <div id="sessionStatus" class="status yellow">Waiting...</div>
+        <pre id="session">{}</pre>
+    </div>
+
+    <div class="card">
+        <h2>Prediction Result</h2>
+        <div id="labelStatus" class="status yellow">Waiting...</div>
+        <pre id="label">{}</pre>
+    </div>
+
+    <div class="card">
+        <h2>Logs (last 5)</h2>
+        <pre id="logs">[]</pre>
+    </div>
+
+</div>
+
+<script>
+
+const API = "http://127.0.0.1:6000/status";
+
+function fetchData() {
+    fetch(API)
+    .then(res => res.json())
+    .then(data => {
+
+        // CLASSIFIER
+        document.getElementById("classifier").textContent =
+            JSON.stringify(data.classifier, null, 2);
+
+        updateStatus("classifierStatus", data.classifier.classifier_id);
+
+        // SESSION
+        document.getElementById("session").textContent =
+            JSON.stringify(data.session, null, 2);
+
+        updateStatus("sessionStatus", data.session.session_uuid);
+
+        // LABEL
+        document.getElementById("label").textContent =
+            JSON.stringify(data.label, null, 2);
+
+        updateStatus("labelStatus", data.label.predicted_label);
+
+        // LOGS
+        document.getElementById("logs").textContent =
+            JSON.stringify(data.logs.slice(-5), null, 2);
+
+    })
+    .catch(err => {
+        console.error("Error:", err);
+    });
+}
+
+function updateStatus(elementId, value) {
+    const el = document.getElementById(elementId);
+
+    if (value !== undefined && value !== null) {
+        el.className = "status green";
+        el.textContent = "OK";
+    } else {
+        el.className = "status yellow";
+        el.textContent = "Waiting...";
+    }
+}
+
+function autoRefresh() {
+    setInterval(fetchData, 2000);
+}
+
+</script>
+
+</body>
+</html>

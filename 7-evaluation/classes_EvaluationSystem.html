@@ -19,45 +19,32 @@
             max_consecutive_errors_th : int
             n_errors_th : int
             report_folder : str
-            generate_human_report(batch_name)
-          }
-          class EvaluationReportController {
-            db_path : str
-            report_folder : str
-            generate_human_report(player_id)
+            generate_human_report(batch_name, eval_config)
           }
           class EvaluationSystemOrchestrator {
             config : NoneType
+            current_pending_batch : NoneType, str
             evaluation_report_controller
             ip_config : NoneType
             player_store_controller
             server : NoneType
             service_mode : bool
+            waiting_for_human : bool
             create_tables()
+            handle_human_decision_payload(decision_dict)
             handle_message(label_dict)
             load_config()
             load_ip_config()
             run()
             start_server()
-            submit_human_decision(player_id, classifier_is_good)
-          }
-          class EvaluationSystemOrchestrator {
-            config : NoneType
-            evaluation_report_controller
-            ip_config : NoneType
-            player_store_controller
-            server : NoneType
-            service_mode : bool
-            create_tables()
-            handle_message(label_dict)
-            load_config()
-            load_ip_config()
-            run()
-            start_server()
-            submit_human_decision(player_id, classifier_is_good)
+            submit_human_decision(batch_id, classifier_is_good)
           }
           class FileReceptionAPI {
             filepath
+            post()
+          }
+          class HumanDecisionApi {
+            handler
             post()
           }
           class PlayerStore {
@@ -75,16 +62,6 @@
             remove_labels(player_id)
             save_label_prompt_eval(label_dict, eval_config)
           }
-          class PlayerStoreController {
-            db_semaphore : Semaphore
-            enough_total_labels : bool
-            num_labels_from_classifier : int
-            num_labels_from_expert : int
-            report
-            store
-            remove_labels(player_id)
-            save_label_prompt_eval(label_dict, eval_config)
-          }
           class ReceiveJsonApi {
             handle_request : Optional[Callable[[dict], None]]
             json_schema_path : Optional[str]
@@ -96,15 +73,10 @@
             run(host, port, debug)
           }
           ServerREST --* EvaluationSystemOrchestrator : server
-          ServerREST --* EvaluationSystemOrchestrator : server
           DatabaseController --* PlayerStore : db
           EvaluationReportController --* EvaluationSystemOrchestrator : evaluation_report_controller
-          EvaluationReportController --* EvaluationSystemOrchestrator : evaluation_report_controller
-          EvaluationReportController --* PlayerStoreController : report
           EvaluationReportController --* PlayerStoreController : report
           PlayerStore --* PlayerStoreController : store
-          PlayerStore --* PlayerStoreController : store
-          PlayerStoreController --* EvaluationSystemOrchestrator : player_store_controller
           PlayerStoreController --* EvaluationSystemOrchestrator : player_store_controller
   
        </div>

@@ -18,17 +18,11 @@
           }
           class evaluation_report_controller {
           }
-          class evaluation_report_controller_backup {
-          }
           class evaluation_system_orchestrator {
-          }
-          class evaluation_system_orchestrator_backup {
           }
           class player_store {
           }
           class player_store_controller {
-          }
-          class player_store_controller_backup {
           }
           class utility {
           }
@@ -41,29 +35,18 @@
           eval_ambient_flags_loader --> utility
           eval_ambient_flags_loader --> json_validation
           evaluation_report_controller --> utility
-          evaluation_report_controller_backup --> utility
           evaluation_system_orchestrator --> comms
           evaluation_system_orchestrator --> json_transfer_api
           evaluation_system_orchestrator --> evaluation_report_controller
           evaluation_system_orchestrator --> player_store_controller
           evaluation_system_orchestrator --> utility
           evaluation_system_orchestrator --> json_validation
-          evaluation_system_orchestrator_backup --> comms
-          evaluation_system_orchestrator_backup --> json_transfer_api
-          evaluation_system_orchestrator_backup --> evaluation_report_controller
-          evaluation_system_orchestrator_backup --> player_store_controller
-          evaluation_system_orchestrator_backup --> utility
-          evaluation_system_orchestrator_backup --> json_validation
           player_store --> db_sqlite3
           player_store --> eval_ambient_flags_loader
           player_store_controller --> eval_ambient_flags_loader
           player_store_controller --> evaluation_report_controller
           player_store_controller --> player_store
           player_store_controller --> utility
-          player_store_controller_backup --> eval_ambient_flags_loader
-          player_store_controller_backup --> evaluation_report_controller
-          player_store_controller_backup --> player_store
-          player_store_controller_backup --> utility
           json_validation --> utility
   
        </div>

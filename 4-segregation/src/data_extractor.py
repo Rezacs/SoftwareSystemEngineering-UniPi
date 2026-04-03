@@ -26,7 +26,7 @@ class DataExtractor:
             if row["label"] is not None
         }
 
-    def extract_labels(self, db_path: str) -> list[str]:
+    def extract_labels(self, db_path: str) -> list[int]:
         with self._connect(db_path) as connection:
             rows = connection.execute(
                 """

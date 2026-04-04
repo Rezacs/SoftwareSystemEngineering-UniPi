@@ -1,54 +1,42 @@
 import requests
-import json
-import time
 
-DESTINATION_URL = "http://127.0.0.1:5000/data"
+DESTINATION_URL = "http://127.0.0.1:5003/data"
 
 def send_mock_payload():
-    print(f" Preparing to send mock payload to {DESTINATION_URL}...")
-    
-    # This structure matches your 'parse_learning_set' and 'parse_hyper_parameters' logic
+    print(f"Preparing to send mock payload to {DESTINATION_URL}...")
+
     mock_payload = {
-        "hyper_parameters": [
-            {"classifier_id": "manual_alpha", "num_layers": 2, "num_neurons": 16, "num_iterations": 100},
-            {"classifier_id": "manual_beta", "num_layers": 3, "num_neurons": 32, "num_iterations": 150}
+        "training_set": [
+            {"session_id": "s-001", "player_id": 1, "skill_overall": 0.8, "social_influence_score": 0.2, "injuries_impact_score": 0.1, "label": 4},
+            {"session_id": "s-002", "player_id": 2, "skill_overall": 0.4, "social_influence_score": 0.5, "injuries_impact_score": 0.6, "label": 2},
+            {"session_id": "s-003", "player_id": 3, "skill_overall": 0.6, "social_influence_score": 0.3, "injuries_impact_score": 0.3, "label": 3},
+            {"session_id": "s-004", "player_id": 4, "skill_overall": 0.2, "social_influence_score": 0.8, "injuries_impact_score": 0.4, "label": 1},
+            {"session_id": "s-005", "player_id": 5, "skill_overall": 0.9, "social_influence_score": 0.1, "injuries_impact_score": 0.0, "label": 5},
         ],
-        "learning_set": {
-            "training_set": [
-                {"UUID": "1", "idPlayer": "P1", "skillOverall": 0.8, "socialInfluence": 0.2, "injuriesImpact": 0.1, "label": 4},
-                {"UUID": "2", "idPlayer": "P2", "skillOverall": 0.4, "socialInfluence": 0.5, "injuriesImpact": 0.6, "label": 2}
-            ],
-            "validation_set": [
-                {"UUID": "3", "idPlayer": "P3", "skillOverall": 0.9, "socialInfluence": 0.1, "injuriesImpact": 0.0, "label": 5}
-            ],
-            "test_set": [
-                {"UUID": "4", "idPlayer": "P4", "skillOverall": 0.1, "socialInfluence": 0.1, "injuriesImpact": 0.9, "label": 1}
-            ]
-        },
-        "config": {
-            "overfitting_threshold": 0.25,
-            "generalization_threshold": 0.45,
-            "max_outer_iterations": 2
-        }
+        "validation_set": [
+            {"session_id": "s-006", "player_id": 6, "skill_overall": 0.7, "social_influence_score": 0.4, "injuries_impact_score": 0.2, "label": 4},
+            {"session_id": "s-007", "player_id": 7, "skill_overall": 0.3, "social_influence_score": 0.6, "injuries_impact_score": 0.5, "label": 2},
+        ],
+        "test_set": [
+            {"session_id": "s-008", "player_id": 8, "skill_overall": 0.5, "social_influence_score": 0.5, "injuries_impact_score": 0.3, "label": 3},
+            {"session_id": "s-009", "player_id": 9, "skill_overall": 0.1, "social_influence_score": 0.9, "injuries_impact_score": 0.8, "label": 1},
+        ],
     }
 
     try:
         response = requests.post(
-            DESTINATION_URL, 
-            json=mock_payload, 
+            DESTINATION_URL,
+            json=mock_payload,
             headers={"Content-Type": "application/json"}
         )
-        
         if response.status_code == 200:
             print("✅ Success! Data accepted by Development System.")
             print(f"Response: {response.text}")
         else:
-            print(f"❌ Failed. Server returned status: {response.status_code}")
+            print(f"❌ Failed. Status: {response.status_code}")
             print(f"Detail: {response.text}")
-            
     except requests.exceptions.ConnectionError:
-        print("❌ Connection Error: Is your Development System actually running and listening?")
+        print("❌ Connection Error: Is the Development System running?")
 
 if __name__ == "__main__":
-    # Give the user a moment to switch windows if needed
     send_mock_payload()

@@ -94,19 +94,14 @@ class CommunicationController:
 
     def _validate_payload_structure(self, payload: dict) -> None:
         """Structural validation: check for required keys and types."""
-        if "learning_set" not in payload:
-            raise ValueError("Missing 'learning_set' in payload")
-        
-        ls = payload["learning_set"]
         for split in ["training_set", "validation_set", "test_set"]:
-            if split not in ls:
-                raise ValueError(f"Missing '{split}' in learning_set")
-            if not isinstance(ls[split], list):
+            if split not in payload:
+                raise ValueError(f"Missing '{split}' in payload")
+            if not isinstance(payload[split], list):
                 raise ValueError(f"'{split}' must be a list")
-
-        if "hyper_parameters" not in payload:
-            raise ValueError("Missing 'hyper_parameters' in payload")
-
+            if len(payload[split]) == 0:
+                raise ValueError(f"'{split}' must not be empty")
+            
     def start_server(self, on_data_received: Callable[[dict], None]) -> None:
         """Start the Flask server in a daemon thread."""
         self._on_data_received = on_data_received

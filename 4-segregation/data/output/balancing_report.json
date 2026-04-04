@@ -5,11 +5,11 @@
     "tolerance": 0.05,
     "toleranceUsed": 0.05,
     "distribution": {
-        "1_star": 1,
-        "2_star": 2,
-        "3_star": 1,
-        "4_star": 2,
-        "5_star": 2
+        "1": 1,
+        "2": 2,
+        "3": 1,
+        "4": 2,
+        "5": 2
     },
     "average": 1.6,
     "averageSamplesPerClass": 1.6,

@@ -5,16 +5,9 @@ import joblib
 import pandas as pd
 
 from Data.testingReport import TestingReport
-from Data.hyperParameters import HyperParameters
 
 
 class TestingOrchestrator:
-    """
-    BPMN Task: GENERATE TEST REPORT
-    Evaluates the selected MLPClassifier on the test set.
-    Error metric: classification error (1 - accuracy).
-    """
-
     def __init__(
         self,
         report_path: str,
@@ -52,7 +45,7 @@ class TestingOrchestrator:
             f"threshold={self._generalization_threshold}, passed={passed}"
         )
         return TestingReport(
-            classifier=HyperParameters(classifier_id=clf_id),
+            classifier_id=clf_id,
             testing_error=testing_error,
             generalization_threshold=self._generalization_threshold,
             result=passed,

@@ -112,10 +112,7 @@ class ValidationOrchestrator:
         )
         return ValidationReport(
             overfitting_threshold=self._overfitting_threshold,
-            candidates=[
-                HyperParameters(classifier_id=c["classifier_id"])
-                for c in candidates if c["valid"]
-            ],
+            candidates=[c["classifier_id"] for c in candidates if c["valid"]],
             selected_classifier=selected_id,
             approve=approved,
         )

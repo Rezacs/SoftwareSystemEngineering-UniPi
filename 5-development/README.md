@@ -38,3 +38,5 @@ Test Passed: The model is sent to the Production System.
 Test Failed: A rejected report is saved locally (Data/reports/testing_report.json).
 
 Auto-Reset: In both cases, the orchestrator calls _reset_status(). The terminal will return to the IDLE state, waiting for the next POST /data payload without needing a restart.
+
+If you're testing the system, launch, after main.py, the file in .../src/segregation_system_simulation.py

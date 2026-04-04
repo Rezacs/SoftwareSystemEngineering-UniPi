@@ -60,7 +60,6 @@ class DevelopmentSystemOrchestrator:
     def __init__(
         self,
         learning_set: LearningSet,
-        hyper_param_configs: List[HyperParameters],
         testing_mode: bool = False,
     ) -> None:
         # ── load config ────────────────────────────────────────────────
@@ -92,7 +91,7 @@ class DevelopmentSystemOrchestrator:
 
         # domain objects
         self._learning_set        = learning_set
-        self._hyper_param_configs = hyper_param_configs
+        self._hyper_param_configs = self._build_hyper_param_configs(cfg)
         self._testing_mode        = testing_mode
         self._start_time: Optional[int] = None
 
@@ -254,7 +253,26 @@ class DevelopmentSystemOrchestrator:
             score_min=self._score_min,
             score_max=self._score_max,
         )
-
+    """Missing parts:
+    Check better how to configure HyperParameters
+    Re check all the calls to the contructor of developmentSystemOrchestrator and remove the hyper_param_configs argument, since now it is built internally from config.json
+    Check again all the classes that use HyperParameters and update them if needed to work with the new way of handling hyperparameters configuration
+    Once Hyperparameter attribute 1_star is modified in integer, update the code for parsing"""
+def _build_hyper_param_configs(self, cfg: dict) -> List[HyperParameters]:
+    """
+    Construct HyperParameters internally from config.
+    Config section 'hyperparameters' replaces the old external JSON list.
+    """
+    hp_list = cfg.get("hyperparameters", [])
+    return [
+        HyperParameters(
+            classifier_id  = hp["classifier_id"],
+            num_layers     = int(hp["num_layers"]),
+            num_neurons    = int(hp["num_neurons"]),
+            num_iterations = int(hp["num_iterations"]),
+        )
+        for hp in hp_list
+    ]
     # ── state machine entry point ──────────────────────────────────────
 
     def run(self) -> None:

@@ -41,7 +41,7 @@ class SessionRepository:
                 (
                     prepared_session.get("session_id"),
                     prepared_session.get("player_id"),
-                    prepared_session.get("label"),
+                    int(prepared_session.get("label")) if prepared_session.get("label") is not None else None,
                     float(prepared_session.get("skill_overall", 0) or 0),
                     float(prepared_session.get("social_influence_score", 0) or 0),
                     float(prepared_session.get("injuries_impact_score", 0) or 0),

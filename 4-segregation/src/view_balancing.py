@@ -7,7 +7,7 @@ from .utils.png_canvas import PngCanvas
 class ViewBalancing:
     def showPlot(self, balancing_report: dict, plot_path: str):
         distribution = balancing_report.get("distribution", {})
-        labels = ["1_star", "2_star", "3_star", "4_star", "5_star"]
+        labels = [1, 2, 3, 4, 5]
         values = [distribution.get(label, 0) for label in labels]
         max_value = max(values) if values else 0
 

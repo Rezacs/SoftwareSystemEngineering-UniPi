@@ -2,11 +2,11 @@
     "balanced": false,
     "tolerance": 0.05,
     "distribution": {
-        "1_star": 0,
-        "2_star": 0,
-        "3_star": 2,
-        "4_star": 5,
-        "5_star": 0
+        "1": 0,
+        "2": 0,
+        "3": 2,
+        "4": 5,
+        "5": 0
     },
     "average": 1.4
 }

@@ -253,18 +253,14 @@ class DevelopmentSystemOrchestrator:
             score_min=self._score_min,
             score_max=self._score_max,
         )
-    """Missing parts:
-    Check better how to configure HyperParameters
-    Re check all the calls to the contructor of developmentSystemOrchestrator and remove the hyper_param_configs argument, since now it is built internally from config.json
-    Check again all the classes that use HyperParameters and update them if needed to work with the new way of handling hyperparameters configuration
-    Once Hyperparameter attribute 1_star is modified in integer, update the code for parsing"""
-def _build_hyper_param_configs(self, cfg: dict) -> List[HyperParameters]:
-    """
+    
+    def _build_hyper_param_configs(self, cfg: dict) -> List[HyperParameters]:
+        """
     Construct HyperParameters internally from config.
     Config section 'hyperparameters' replaces the old external JSON list.
-    """
-    hp_list = cfg.get("hyperparameters", [])
-    return [
+        """
+        hp_list = cfg.get("hyperparameters", [])
+        return [
         HyperParameters(
             classifier_id  = hp["classifier_id"],
             num_layers     = int(hp["num_layers"]),

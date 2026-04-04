@@ -49,20 +49,19 @@ def parse_learning_set(payload: dict) -> LearningSet:
     def parse_split(sessions: list) -> list:
         return [
             PreparedSession(
-                UUID=s.get("UUID", ""),
-                idPlayer=s.get("idPlayer", ""),
-                skillOverall=float(s.get("skillOverall", 0.0)),
-                socialInfluence=float(s.get("socialInfluence", 0.0)),
-                injuriesImpact=float(s.get("injuriesImpact", 0.0)),
+                UUID=s.get("session_id", ""),
+                idPlayer=str(s.get("player_id", "")),
+                skillOverall=float(s.get("skill_overall", 0.0)),
+                socialInfluence=float(s.get("social_influence_score", 0.0)),
+                injuriesImpact=float(s.get("injuries_impact_score", 0.0)),
                 label=int(s.get("label", 0)),
             )
             for s in sessions
         ]
-    ls = payload["learning_set"]
     return LearningSet(
-        training_set=parse_split(ls.get("training_set", [])),
-        validation_set=parse_split(ls.get("validation_set", [])),
-        test_set=parse_split(ls.get("test_set", [])),
+        training_set=parse_split(payload.get("training_set", [])),
+        validation_set=parse_split(payload.get("validation_set", [])),
+        test_set=parse_split(payload.get("test_set", [])),
     )
 
 
@@ -83,7 +82,6 @@ def parse_hyper_parameters(payload: dict) -> list:
 def launch_pipeline(payload: dict, testing_mode: bool) -> None:
     orchestrator = DevelopmentSystemOrchestrator(
         learning_set=parse_learning_set(payload),
-        hyper_param_configs=parse_hyper_parameters(payload),
         testing_mode=testing_mode,
     )
     orchestrator.run()
@@ -102,20 +100,16 @@ if __name__ == "__main__":
     received_payload: dict = {}
 
     def handle_message(payload: dict) -> None:
-        """Triggered by CommunicationController when POST /data arrives."""
         try:
-            # Deep validate before accepting
-            parse_learning_set(payload)
-            parse_hyper_parameters(payload)
+            parse_learning_set(payload)  # only this remains for validation
 
-            # Persist to disk so orchestrator can reload if interrupted
             os.makedirs(os.path.dirname(learning_sets_path), exist_ok=True)
             with open(learning_sets_path, "w", encoding="UTF-8") as f:
                 json.dump(payload, f, indent="\t")
 
             received_payload.clear()
             received_payload.update(payload)
-            received_event.set() # Unblock the main loop
+            received_event.set()
             print("\n[Main] Valid payload received. Unblocking pipeline...")
         except Exception as e:
             print(f"[Main] Logic Validation Error: {e}")

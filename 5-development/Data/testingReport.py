@@ -1,10 +1,8 @@
 from dataclasses import dataclass
-from typing import Optional
-from Data.hyperParameters import HyperParameters
 
 @dataclass
 class TestingReport:
-    classifier: Optional[HyperParameters]
+    classifier_id: str
     testing_error: float
     generalization_threshold: float
     result: bool

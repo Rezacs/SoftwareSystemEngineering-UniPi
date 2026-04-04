@@ -6,17 +6,18 @@ Questo sistema:
 - genera `balancing_report` e `coverage_report`
 - produce un `calibration_set` finale
 
-## Simulazione locale
+## Modalità di Esecuzione
 
-Per simulare il sistema in locale servono 4 terminali:
-- `mock_upstream_system.py`: simula il sistema precedente su `127.0.0.1:5001`
-- `api.py`: avvia il Segregation System su `127.0.0.1:5002`
-- `mock_downstream_system.py`: simula il sistema successivo su `127.0.0.1:5003`
-- un terminale operativo per `curl`, `main.py` e decisioni manuali
+Il sistema supporta due modalità:
 
-## Ambiente Python
+1. **Stop & Go**: Modalità interattiva per revisione manuale dei report
+2. **Testing**: Modalità automatica con decisioni simulate (70% accettazione, 30% rifiuto)
 
-Va bene qualsiasi ambiente Python, purché tutti i terminali usino lo stesso interprete e abbiano le dipendenze installate.
+## Setup
+
+### Ambiente Python
+
+Configurare l'ambiente Python con le dipendenze necessarie.
 
 Con `venv`:
 
@@ -34,7 +35,7 @@ conda activate segregation-test
 pip install -r 4-segregation/requirements.txt
 ```
 
-## Config
+### Configurazione
 
 In [config.json](4-segregation/config/config.json) imposta:
 
@@ -42,43 +43,82 @@ In [config.json](4-segregation/config/config.json) imposta:
 "developmentSystemEndpoint": "http://127.0.0.1:5003/calibration-set"
 ```
 
-## Workflow rapido
+## Workflow di Esecuzione
 
-Apri 4 terminali nella cartella [4-segregation](4-segregation) e attiva in tutti lo stesso ambiente Python.
+### 🚀 Metodo Rapido (Consigliato)
 
-**Terminale 2**
+Usa gli script launcher per avviare tutto automaticamente:
+
+```bash
+# 1. Prima volta - avvia tutti i servizi
+./launcher.sh
+
+# 2. Lancia il sistema principale
+python3 main.py
+
+# 3. Scegli modalità [1] Stop&Go o [2] Testing
+```
+
+**Vantaggi:**
+- ✅ Avvia automaticamente tutti i mock systems
+- ✅ Controlla se sono già attivi
+- ✅ Invia le prepared sessions
+- ✅ Un solo comando invece di 4 terminali
+
+Per maggiori dettagli vedi [LAUNCHER_GUIDE.md](LAUNCHER_GUIDE.md)
+
+### 📋 Metodo Manuale (4 Terminali)
+
+Se preferisci il controllo completo, puoi avviare ogni servizio manualmente.
+
+### Setup Iniziale (una volta)
+
+Apri 3 terminali nella cartella [4-segregation](4-segregation) e attiva in tutti lo stesso ambiente Python.
+
+**Terminale 1 - Mock Upstream (Preparation System)**
 
 ```bash
 python3 mock_upstream_system.py
 ```
 
-**Terminale 3**
+**Terminale 2 - REST API (riceve sessioni)**
 
 ```bash
 python3 api.py
 ```
 
-**Terminale 4**
+**Terminale 3 - Mock Downstream (Development System)**
 
 ```bash
 python3 mock_downstream_system.py
 ```
 
-**Terminale 1 (operativo)**
+### Lancio del Sistema
+
+Apri un 4° terminale (operativo) e:
 
 ```bash
+# Reset stato (solo se necessario)
 python3 -m src.utils.reset_runtime_state
-```
 
-Poi, nello stesso terminale:
-
-```bash
+# Verifica health dei sistemi
 curl http://127.0.0.1:5001/health
 curl http://127.0.0.1:5002/health
 curl http://127.0.0.1:5003/health
+
+# Avvia il sistema principale
+python3 main.py
 ```
 
-Invia il batch di input:
+**Importante**: La modalità viene chiesta **una sola volta all'avvio**. Il sistema manterrà la modalità selezionata per l'intero workflow fino al ritorno in idle.
+
+Il sistema ti chiederà di scegliere la modalità:
+- `[1]` Stop & Go: modalità interattiva (si ferma ad ogni checkpoint)
+- `[2]` Testing: modalità automatica (prosegue fino alla fine del workflow)
+
+### Invio Dati
+
+Una volta avviato il sistema, invia le sessioni:
 
 ```bash
 curl -X POST http://127.0.0.1:5001/prepared-sessions/send \
@@ -86,43 +126,104 @@ curl -X POST http://127.0.0.1:5001/prepared-sessions/send \
   -d '{"delay_seconds": 1.0}'
 ```
 
-Avanza il workflow:
+## Modalità Stop & Go (Interattiva)
+
+In questa modalità, il sistema **processa l'intero workflow** fermandosi ai checkpoint di decisione. La modalità viene selezionata all'avvio e mantenuta fino al completamento o rifiuto del workflow.
+
+### Workflow:
+
+1. **Avvio iniziale**: Scegli modalità [1] Stop & Go
+2. **Sistema genera balancing report** → si ferma
+3. **Tu decidi** (modifica JSON o usa script helper)
+4. **Rilancia** `python3 main.py` → il sistema riprende in modalità Stop & Go
+5. **Sistema genera coverage report** (se balancing approvato) → si ferma
+6. **Tu decidi** (modifica JSON o usa script helper)
+7. **Rilancia** `python3 main.py` → il sistema finalizza
+8. **Completamento** → sistema torna in idle
+
+### Checkpoint e Decisioni:
+
+1. **Dopo Balancing Report**: 
+   - Esamina `data/output/balancing_report.json` e `balancing_plot.png`
+   - Modifica `data/input/balancing_decision.json`:
+     ```json
+     {"approved": true}
+     ```
+     oppure
+     ```json
+     {"approved": false}
+     ```
+   - Rilancia `python3 main.py` per continuare
+
+2. **Dopo Coverage Report** (se balancing approvato):
+   - Esamina `data/output/coverage_report.json` e `coverage_plot.png`
+   - Modifica `data/input/coverage_decision.json`:
+     ```json
+     {"approved": true}
+     ```
+     oppure
+     ```json
+     {"approved": false}
+     ```
+   - Rilancia `python3 main.py` per finalizzare
+
+### Script Helper per Decisioni Manuali
+
+Puoi usare gli script helper invece di modificare manualmente i JSON:
 
 ```bash
-python3 main.py
+# Approva balancing
 python3 manual_set_balancing_decision.py true
-python3 main.py
+
+# Rifiuta balancing
+python3 manual_set_balancing_decision.py false
+
+# Approva coverage
 python3 manual_set_coverage_decision.py true
-python3 main.py
+
+# Rifiuta coverage
+python3 manual_set_coverage_decision.py false
 ```
 
-Verifica output finale:
+## Modalità Testing (Automatica)
 
-```bash
-curl http://127.0.0.1:5003/last-calibration-set/status
-```
+In questa modalità:
+- Il sistema elabora automaticamente le sessioni in arrivo
+- Le decisioni sono simulate con:
+  - **70% probabilità di accettazione**
+  - **30% probabilità di rifiuto**
+- Il ciclo si ripete continuamente
+- Non richiede intervento manuale
 
-## Decisioni manuali
+Ideale per:
+- Test automatici
+- Simulazione di carico
+- Validazione del workflow completo
 
-Le decisioni umane non passano via API. Vengono lette da questi file:
-- [balancing_decision.json](4-segregation/data/input/balancing_decision.json)
-- [coverage_decision.json](4-segregation/data/input/coverage_decision.json)
+## Flusso Completo
 
-Puoi scriverli a mano oppure usare:
+1. Le sessioni arrivano via REST API (`api.py` in ascolto)
+2. Quando ci sono abbastanza sessioni (`sufficientSessionNumber` da config)
+3. Il sistema genera il `balancing_report`
+4. **CHECKPOINT 1**: Decisione su bilanciamento classi
+   - ✅ Approvato → genera `coverage_report`
+   - ❌ Rifiutato → reset, attende nuove sessioni
+5. **CHECKPOINT 2**: Decisione su copertura features
+   - ✅ Approvato → genera e invia `calibration_set` al Development System
+   - ❌ Rifiutato → reset, attende nuove sessioni
+6. Il sistema si resetta automaticamente e torna in attesa
 
-```bash
-python3 manual_set_balancing_decision.py true
-python3 manual_set_coverage_decision.py true
-```
+## File di Output
 
-## Input e output utili
+- **Reports**: `data/output/balancing_report.json`, `coverage_report.json`
+- **Plots**: `data/output/balancing_plot.png`, `coverage_plot.png`
+- **Calibration Set**: `data/output/calibration_set.json`
+- **Stato Workflow**: `data/output/segregation_workflow_state.json`
+- **Database**: `data/output/segregationDB.db`
 
-Input di test:
-- [4-segregation/data/input](4-segregation/data/input)
+## File di Input (Decisioni)
 
-Output principali:
-- [balancing_report.json](4-segregation/data/output/balancing_report.json)
-- [coverage_report.json](4-segregation/data/output/coverage_report.json)
-- [calibration_set.json](4-segregation/data/output/calibration_set.json)
-- [segregation_workflow_state.json](4-segregation/data/output/segregation_workflow_state.json)
-- [segregationDB.db](4-segregation/data/output/segregationDB.db)
+- **Balancing Decision**: `data/input/balancing_decision.json`
+- **Coverage Decision**: `data/input/coverage_decision.json`
+
+Questi file sono usati solo in modalità Stop & Go. In modalità Testing vengono generati automaticamente dal sistema.

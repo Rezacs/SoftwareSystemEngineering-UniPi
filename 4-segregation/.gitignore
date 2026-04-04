@@ -1,0 +1,5 @@
+
+# Launcher temporary files
+.launcher_pids
+stop_launcher.sh
+nohup.out

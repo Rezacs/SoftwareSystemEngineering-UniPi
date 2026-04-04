@@ -1,5 +1,6 @@
 """Coordinates the Segregation System workflow, including storage, checks, stop-and-go decisions, and final set generation."""
 
+import random
 from typing import Optional
 
 from .utils.json_io import JsonIO
@@ -25,7 +26,7 @@ from .view_coverage import ViewCoverage
 
 
 class SegregationSystemOrchestrator:
-    def __init__(self):
+    def __init__(self, testing_mode: bool = False):
         self.session_repository = SessionRepository()
         self.data_extractor = DataExtractor()
         self.calibration_set_provider = CalibrationSetProvider()
@@ -33,6 +34,7 @@ class SegregationSystemOrchestrator:
         self.coverage_checker = CheckInputCoverage()
         self.view_balancing = ViewBalancing()
         self.view_coverage = ViewCoverage()
+        self.testing_mode = testing_mode
 
     def load_state(self, path: str) -> dict:
         try:
@@ -45,6 +47,10 @@ class SegregationSystemOrchestrator:
         JsonIO.save(path, state)
         return state
 
+    def reset_state(self, path: str = SEGREGATION_WORKFLOW_STATE_PATH) -> None:
+        """Reset workflow state to idle for a new cycle."""
+        self.save_state("idle", path)
+
     def load_decision(self, path: str) -> Optional[dict]:
         try:
             decision = JsonIO.load(path)
@@ -52,6 +58,53 @@ class SegregationSystemOrchestrator:
             return None
 
         return decision if isinstance(decision, dict) else None
+
+    def _simulate_decision(self, decision_type: str) -> dict:
+        """
+        Simulate user decision in testing mode with specified acceptance rates.
+        
+        Args:
+            decision_type: 'balancing' or 'coverage'
+        
+        Returns:
+            Decision dict with 70% chance of approval, 30% rejection
+        """
+        # 70% acceptance rate for both checks
+        approved = random.random() < 0.70
+        decision = {
+            "approved": approved,
+            "simulated": True,
+            "decision_type": decision_type
+        }
+        print(f"[Orchestrator] Simulated {decision_type} decision: {'APPROVED' if approved else 'REJECTED'} (Testing mode)")
+        return decision
+
+    def _stop_and_ask(self, message: str, decision_path: str, report_path: str, plot_path: str = None) -> None:
+        """
+        Stop execution and wait for user decision in Stop&Go mode.
+        In testing mode, simulate the decision automatically.
+        
+        Args:
+            message: Message to display to user
+            decision_path: Path to decision file
+            report_path: Path to report file
+            plot_path: Path to plot file (optional)
+        """
+        print(f"\n[Orchestrator] {message}")
+        print(f"  → Report: {report_path}")
+        if plot_path:
+            print(f"  → Plot: {plot_path}")
+        print(f"  → Decision file: {decision_path}")
+        
+        if not self.testing_mode:
+            print("\n  Please review the report and update the decision file.")
+            print("  Then run the system again to continue.")
+            # In Stop&Go mode, we exit and wait for the user to manually continue
+            return
+        else:
+            # In testing mode, we simulate the decision automatically
+            print("  (Testing mode: simulating decision automatically)")
+            # Decision will be simulated in the next run() call
 
     def run(
         self,
@@ -66,134 +119,242 @@ class SegregationSystemOrchestrator:
         balancing_report_decision_path=BALANCING_REPORT_DECISION_PATH,
         coverage_report_decision_path=COVERAGE_REPORT_DECISION_PATH,
     ):
+        """
+        Main entry point for the segregation workflow.
+        Executes the workflow based on current state and mode (Stop&Go or Testing).
+        """
+        print("=" * 60)
+        print("SegregationSystemOrchestrator: run()")
+        
         config = JsonIO.load(config_path)
         self.session_repository.initialize(segregation_db_path)
         state = self.load_state(workflow_state_path)
-
-        if state["phase"] == "waiting_balancing_decision":
-            balancing_decision = self.load_decision(
-                balancing_report_decision_path
-            )
-            if balancing_decision is None:
-                return {
-                    "status": "waiting_balancing_decision",
-                    "state": state,
-                    "decision_path": balancing_report_decision_path,
-                    "report_path": balancing_report_output_path
-                }
-
-            if not balancing_decision.get("approved", False):
-                self.session_repository.mark_all_to_process(segregation_db_path)
-                self.save_state(
-                    "idle",
-                    workflow_state_path,
-                    balancing_decision=balancing_decision
-                )
-                return {
-                    "status": "balancing_rejected",
-                    "balancing_decision": balancing_decision,
-                    "report_path": balancing_report_output_path
-                }
-
-            feature_map = self.data_extractor.extract_features(segregation_db_path)
-            statistics = self.coverage_checker.retrieveStatistics(feature_map)
-            coverage_report = self.coverage_checker.generatePlotData(
-                statistics,
-                config["coverageThreshold"]
-            )
-            JsonIO.save(coverage_report_output_path, coverage_report)
-            self.view_coverage.showPlot(coverage_report, coverage_plot_output_path)
-            self.save_state("waiting_coverage_decision", workflow_state_path)
-            return {
-                "status": "coverage_report_generated",
-                "coverage_report": coverage_report,
-                "report_path": coverage_report_output_path,
-                "plot_path": coverage_plot_output_path,
-                "decision_path": coverage_report_decision_path
-            }
-
-        if state["phase"] == "waiting_coverage_decision":
-            coverage_decision = self.load_decision(
-                coverage_report_decision_path
-            )
-            if coverage_decision is None:
-                return {
-                    "status": "waiting_coverage_decision",
-                    "state": state,
-                    "decision_path": coverage_report_decision_path,
-                    "report_path": coverage_report_output_path
-                }
-
-            if not coverage_decision.get("approved", False):
-                self.session_repository.mark_all_to_process(segregation_db_path)
-                self.save_state(
-                    "idle",
-                    workflow_state_path,
-                    coverage_decision=coverage_decision
-                )
-                return {
-                    "status": "coverage_rejected",
-                    "coverage_decision": coverage_decision,
-                    "report_path": coverage_report_output_path
-                }
-
-            active_sessions = self.data_extractor.extract_all(segregation_db_path)
-            calibration_set = self.calibration_set_provider.generateCalibrationSets(
-                active_sessions
-            )
-            self.calibration_set_provider.sendCalibrationSets(
-                calibration_set,
-                calibration_set_output_path
-            )
-            self.session_repository.delete_processed_sessions(segregation_db_path)
-            self.session_repository.promote_pending_sessions(segregation_db_path)
-            self.save_state("completed", workflow_state_path)
-            return {
-                "status": "calibration_sets_sent",
-                "calibration_set": calibration_set,
-                "output_path": calibration_set_output_path
-            }
-
+        
+        print(f"  Phase resumed : '{state['phase']}'")
+        print(f"  Testing mode  : {self.testing_mode}")
+        print("=" * 60)
+        
+        # Store paths for use in helper methods
+        self._paths = {
+            "segregation_db": segregation_db_path,
+            "calibration_set_output": calibration_set_output_path,
+            "balancing_report_output": balancing_report_output_path,
+            "balancing_plot_output": balancing_plot_output_path,
+            "coverage_report_output": coverage_report_output_path,
+            "coverage_plot_output": coverage_plot_output_path,
+            "workflow_state": workflow_state_path,
+            "balancing_decision": balancing_report_decision_path,
+            "coverage_decision": coverage_report_decision_path,
+        }
+        self._config = config
+        
+        # Execute the workflow based on current phase
+        return self._execute_segregation()
+    
+    def _execute_segregation(self):
+        """Routes current phase to its handler."""
+        state = self.load_state(self._paths["workflow_state"])
+        phase = state["phase"]
+        
+        dispatch = {
+            "idle": self._handle_idle,
+            "sessions_not_sufficient": self._handle_idle,  # Treat as idle
+            "waiting_balancing_decision": self._handle_balancing_decision,
+            "waiting_coverage_decision": self._handle_coverage_decision,
+            "completed": self._handle_completed,
+        }
+        
+        handler = dispatch.get(phase, self._handle_idle)
+        return handler()
+    
+    def _handle_idle(self):
+        """Check if we have sufficient sessions and generate balancing report."""
         active_sessions_count = self.session_repository.sessions_count(
-            segregation_db_path
+            self._paths["segregation_db"]
         )
-        if active_sessions_count < config["sufficientSessionNumber"]:
+        
+        if active_sessions_count < self._config["sufficientSessionNumber"]:
             self.save_state(
                 "sessions_not_sufficient",
-                workflow_state_path,
+                self._paths["workflow_state"],
                 stored_sessions=active_sessions_count,
-                required_sessions=config["sufficientSessionNumber"]
+                required_sessions=self._config["sufficientSessionNumber"]
             )
+            print(f"[Orchestrator] Not enough sessions: {active_sessions_count}/{self._config['sufficientSessionNumber']}")
             return {
                 "status": "sessions_not_sufficient",
                 "stored_sessions": active_sessions_count,
-                "required_sessions": config["sufficientSessionNumber"]
+                "required_sessions": self._config["sufficientSessionNumber"]
             }
-
-        active_sessions = self.session_repository.receive(segregation_db_path)
+        
+        # Generate balancing report
+        print("[Orchestrator] Generating balancing report...")
+        active_sessions = self.session_repository.receive(self._paths["segregation_db"])
         labels = self.balancing_checker.retrieveLabels(
-            self.data_extractor.extract_labels(segregation_db_path)
+            self.data_extractor.extract_labels(self._paths["segregation_db"])
         )
         balancing_report = self.balancing_checker.generatePlotData(
             labels,
-            config["balancingTolerance"]
+            self._config["balancingTolerance"]
         )
-        JsonIO.save(balancing_report_output_path, balancing_report)
-        self.view_balancing.showPlot(balancing_report, balancing_plot_output_path)
+        JsonIO.save(self._paths["balancing_report_output"], balancing_report)
+        self.view_balancing.showPlot(balancing_report, self._paths["balancing_plot_output"])
         self.save_state(
             "waiting_balancing_decision",
-            workflow_state_path,
+            self._paths["workflow_state"],
             latest_session_id=(
                 active_sessions[-1].get("session_id")
                 if active_sessions
                 else None
             )
         )
-
+        
+        self._stop_and_ask(
+            "BALANCING REPORT GENERATED — Review and decide",
+            self._paths["balancing_decision"],
+            self._paths["balancing_report_output"],
+            self._paths["balancing_plot_output"]
+        )
+        
+        if self.testing_mode:
+            # Continue automatically in testing mode
+            return self._execute_segregation()
+        
         return {
             "status": "balancing_report_generated",
             "balancing_report": balancing_report,
-            "report_path": balancing_report_output_path,
-            "plot_path": balancing_plot_output_path,
-            "decision_path": balancing_report_decision_path
+            "report_path": self._paths["balancing_report_output"],
+            "plot_path": self._paths["balancing_plot_output"],
+            "decision_path": self._paths["balancing_decision"]
+        }
+    
+    def _handle_balancing_decision(self):
+        """Process balancing decision and proceed accordingly."""
+        balancing_decision = self.load_decision(self._paths["balancing_decision"])
+        
+        # In testing mode, simulate decision if not present
+        if balancing_decision is None and self.testing_mode:
+            balancing_decision = self._simulate_decision("balancing")
+            JsonIO.save(self._paths["balancing_decision"], balancing_decision)
+        
+        if balancing_decision is None:
+            print("[Orchestrator] Waiting for balancing decision...")
+            return {
+                "status": "waiting_balancing_decision",
+                "decision_path": self._paths["balancing_decision"],
+                "report_path": self._paths["balancing_report_output"]
+            }
+        
+        if not balancing_decision.get("approved", False):
+            print("[Orchestrator] Balancing REJECTED — Resetting to idle")
+            self.session_repository.mark_all_to_process(self._paths["segregation_db"])
+            self.reset_state(self._paths["workflow_state"])
+            
+            if self.testing_mode:
+                # Auto-reset and wait for new data
+                print("[Orchestrator] Auto-reset complete. Ready for new sessions.")
+            
+            return {
+                "status": "balancing_rejected",
+                "balancing_decision": balancing_decision,
+                "report_path": self._paths["balancing_report_output"]
+            }
+        
+        # Balancing approved - generate coverage report
+        print("[Orchestrator] Balancing APPROVED — Generating coverage report...")
+        feature_map = self.data_extractor.extract_features(self._paths["segregation_db"])
+        statistics = self.coverage_checker.retrieveStatistics(feature_map)
+        coverage_report = self.coverage_checker.generatePlotData(
+            statistics,
+            self._config["coverageThreshold"]
+        )
+        JsonIO.save(self._paths["coverage_report_output"], coverage_report)
+        self.view_coverage.showPlot(coverage_report, self._paths["coverage_plot_output"])
+        self.save_state("waiting_coverage_decision", self._paths["workflow_state"])
+        
+        self._stop_and_ask(
+            "COVERAGE REPORT GENERATED — Review and decide",
+            self._paths["coverage_decision"],
+            self._paths["coverage_report_output"],
+            self._paths["coverage_plot_output"]
+        )
+        
+        if self.testing_mode:
+            # Continue automatically in testing mode
+            return self._execute_segregation()
+        
+        return {
+            "status": "coverage_report_generated",
+            "coverage_report": coverage_report,
+            "report_path": self._paths["coverage_report_output"],
+            "plot_path": self._paths["coverage_plot_output"],
+            "decision_path": self._paths["coverage_decision"]
+        }
+    
+    def _handle_coverage_decision(self):
+        """Process coverage decision and finalize or reject."""
+        coverage_decision = self.load_decision(self._paths["coverage_decision"])
+        
+        # In testing mode, simulate decision if not present
+        if coverage_decision is None and self.testing_mode:
+            coverage_decision = self._simulate_decision("coverage")
+            JsonIO.save(self._paths["coverage_decision"], coverage_decision)
+        
+        if coverage_decision is None:
+            print("[Orchestrator] Waiting for coverage decision...")
+            return {
+                "status": "waiting_coverage_decision",
+                "decision_path": self._paths["coverage_decision"],
+                "report_path": self._paths["coverage_report_output"]
+            }
+        
+        if not coverage_decision.get("approved", False):
+            print("[Orchestrator] Coverage REJECTED — Resetting to idle")
+            self.session_repository.mark_all_to_process(self._paths["segregation_db"])
+            self.reset_state(self._paths["workflow_state"])
+            
+            if self.testing_mode:
+                # Auto-reset and wait for new data
+                print("[Orchestrator] Auto-reset complete. Ready for new sessions.")
+            
+            return {
+                "status": "coverage_rejected",
+                "coverage_decision": coverage_decision,
+                "report_path": self._paths["coverage_report_output"]
+            }
+        
+        # Coverage approved - generate calibration set
+        print("[Orchestrator] Coverage APPROVED — Generating calibration set...")
+        active_sessions = self.data_extractor.extract_all(self._paths["segregation_db"])
+        calibration_set = self.calibration_set_provider.generateCalibrationSets(
+            active_sessions
+        )
+        self.calibration_set_provider.sendCalibrationSets(
+            calibration_set,
+            self._paths["calibration_set_output"]
+        )
+        self.session_repository.delete_processed_sessions(self._paths["segregation_db"])
+        self.session_repository.promote_pending_sessions(self._paths["segregation_db"])
+        self.save_state("completed", self._paths["workflow_state"])
+        
+        print("[Orchestrator] Calibration set sent successfully!")
+        
+        if self.testing_mode:
+            # Auto-reset after completion
+            print("[Orchestrator] Workflow complete. Resetting for next cycle...")
+            self.reset_state(self._paths["workflow_state"])
+        
+        return {
+            "status": "calibration_sets_sent",
+            "calibration_set": calibration_set,
+            "output_path": self._paths["calibration_set_output"]
+        }
+    
+    def _handle_completed(self):
+        """Handle completed state - reset for next cycle."""
+        print("[Orchestrator] Workflow already completed. Resetting...")
+        self.reset_state(self._paths["workflow_state"])
+        return {
+            "status": "reset_complete",
+            "message": "Ready for new sessions"
         }

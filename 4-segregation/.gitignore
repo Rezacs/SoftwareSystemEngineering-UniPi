@@ -3,3 +3,7 @@
 .launcher_pids
 stop_launcher.sh
 nohup.out
+
+# E2E test temporary files
+.e2e_pids
+stop_e2e.sh

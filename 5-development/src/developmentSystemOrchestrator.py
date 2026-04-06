@@ -257,7 +257,6 @@ class DevelopmentSystemOrchestrator:
     def _build_hyper_param_configs(self, cfg: dict) -> List[HyperParameters]:
         """
     Construct HyperParameters internally from config.
-    Config section 'hyperparameters' replaces the old external JSON list.
         """
         hp_list = cfg.get("hyperparameters", [])
         return [

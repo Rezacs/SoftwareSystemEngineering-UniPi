@@ -1,0 +1,42 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 5000
+  },
+
+  "evaluation": {
+    "batch_size": 4,
+    "error_threshold": 1,
+    "max_errors": 4,
+    "max_consecutive_errors": 3,
+    "reset_after_batch": true
+  },
+
+  "paths": {
+    "database": "data/evaluation.db",
+    "output_dir": "output"
+  },
+
+  "system": {
+    "accept_requests": true
+  },
+
+  "external_systems": {
+    "ingestion": {
+      "ip": "127.0.0.1",
+      "port": 5001,
+      "endpoint": "/run"
+    },
+    "classification": {
+      "ip": "127.0.0.1",
+      "port": 6000,
+      "endpoint": "/prediction"
+    },
+    "messaging": {
+      "enabled": true,
+      "ip": "127.0.0.1",
+      "port": 7000,
+      "endpoint": "/classifier-alert"
+    }
+  }
+}

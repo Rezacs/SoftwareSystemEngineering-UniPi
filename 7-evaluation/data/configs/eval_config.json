@@ -1,6 +1,0 @@
-{
-  "min_labels_opinionated": 8,
-  "max_conflicting_labels_threshold": 4,
-  "max_consecutive_conflicting_labels_threshold": 3,
-  "evaluation_batch_size": 5
-}

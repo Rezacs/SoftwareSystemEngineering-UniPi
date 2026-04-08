@@ -1,6 +1,6 @@
 import requests
 
-DESTINATION_URL = "http://127.0.0.1:5003/data"
+DESTINATION_URL = "http://127.0.0.1:5005/data"
 
 def send_mock_payload():
     print(f"Preparing to send mock payload to {DESTINATION_URL}...")

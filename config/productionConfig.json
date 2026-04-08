@@ -1,7 +1,7 @@
 {
   "production_system": {
     "host": "127.0.0.1",
-    "port": 5004
+    "port": 5006
   },
 
   "endpoints": {
@@ -18,7 +18,7 @@
 
   "evaluation_system": {
     "host": "127.0.0.1",
-    "port": 5006,
+    "port": 5007,
     "classifier_label_endpoint": "/evaluation/classifier-labels"
   },
 

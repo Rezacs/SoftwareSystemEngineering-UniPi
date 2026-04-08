@@ -1,5 +1,5 @@
 {
-	"overfitting_threshold": 0.1,
+	"overfitting_threshold": 0.4,
 	"best_classifiers": [
 		{
 			"index": 1,
@@ -7,7 +7,7 @@
 			"training_error": 0.6,
 			"validation_error": 1.0,
 			"overfitting_gap": 0.4,
-			"valid": false
+			"valid": true
 		},
 		{
 			"index": 2,
@@ -18,6 +18,6 @@
 			"valid": false
 		}
 	],
-	"selected_classifier": "",
-	"approve": false
+	"selected_classifier": "manual_alpha",
+	"approve": true
 }

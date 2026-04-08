@@ -18,14 +18,19 @@ from src.utils.json_io import JsonIO
 
 
 RESET_JSON_CONTENT = {
-    BALANCING_REPORT_DECISION_PATH: {"approved": False},
-    COVERAGE_REPORT_DECISION_PATH: {"approved": False},
     CALIBRATION_SET_OUTPUT_PATH: {
         "training_set": [],
         "validation_set": [],
         "test_set": [],
     },
 }
+
+# Decision files should be deleted, not reset to a default value
+# This allows testing mode to properly simulate decisions
+FILES_TO_DELETE_DECISIONS = [
+    BALANCING_REPORT_DECISION_PATH,
+    COVERAGE_REPORT_DECISION_PATH,
+]
 
 FILES_TO_DELETE = [
     SEGREGATION_DB_PATH,
@@ -60,6 +65,9 @@ def main():
         delete_file(path)
 
     for path in FILES_TO_RESET:
+        delete_file(path)
+    
+    for path in FILES_TO_DELETE_DECISIONS:
         delete_file(path)
 
     for path, payload in RESET_JSON_CONTENT.items():

@@ -230,12 +230,13 @@ class SegregationSystemOrchestrator:
     
     def _handle_balancing_decision(self):
         """Process balancing decision and proceed accordingly."""
-        balancing_decision = self.load_decision(self._paths["balancing_decision"])
-        
-        # In testing mode, simulate decision if not present
-        if balancing_decision is None and self.testing_mode:
+        # In testing mode, always simulate decision (don't read file)
+        if self.testing_mode:
             balancing_decision = self._simulate_decision("balancing")
             JsonIO.save(self._paths["balancing_decision"], balancing_decision)
+        else:
+            # In stop&go mode, read decision from file
+            balancing_decision = self.load_decision(self._paths["balancing_decision"])
         
         if balancing_decision is None:
             print("[Orchestrator] Waiting for balancing decision...")
@@ -293,12 +294,13 @@ class SegregationSystemOrchestrator:
     
     def _handle_coverage_decision(self):
         """Process coverage decision and finalize or reject."""
-        coverage_decision = self.load_decision(self._paths["coverage_decision"])
-        
-        # In testing mode, simulate decision if not present
-        if coverage_decision is None and self.testing_mode:
+        # In testing mode, always simulate decision (don't read file)
+        if self.testing_mode:
             coverage_decision = self._simulate_decision("coverage")
             JsonIO.save(self._paths["coverage_decision"], coverage_decision)
+        else:
+            # In stop&go mode, read decision from file
+            coverage_decision = self.load_decision(self._paths["coverage_decision"])
         
         if coverage_decision is None:
             print("[Orchestrator] Waiting for coverage decision...")

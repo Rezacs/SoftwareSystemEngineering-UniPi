@@ -4,6 +4,6 @@
     "coverageThreshold": 0.8,
     "targetIP": "192.168.1.1",
     "segregationSystemIpAddress": "127.0.0.1",
-    "segregationSystemPort": 5002,
-    "developmentSystemEndpoint": "http://127.0.0.1:5003/data"
+    "segregationSystemPort": 5003,
+    "developmentSystemEndpoint": "http://127.0.0.1:5005/data"
 }

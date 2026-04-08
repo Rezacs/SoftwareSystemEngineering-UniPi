@@ -5,5 +5,5 @@
     "classification_system_port" : 5004,
     "classification_system_ip"    : "0.0.0.0", 
     "segregation_system_port"   : 5003,        
-    "segregation_system_ip"      : "0.0.0.0"    
+    "segregation_system_ip"      : "127.0.0.1"    
 }

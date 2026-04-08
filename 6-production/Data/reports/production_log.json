@@ -1015,5 +1015,463 @@
                 "evaluation_response_code": 200
             }
         }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T16:45:10.359457",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "D:\\SSE_Project\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T16:45:10.359182",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T16:45:54.386297",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "D:\\SSE_Project\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T16:45:54.386138",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T16:47:09.694323",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "D:\\SSE_Project\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T16:47:09.694168",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T16:53:25.837151",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "D:\\SSE_Project\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T16:53:25.836995",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:54:31.915561",
+        "data": {
+            "player_id": 11,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:54:34.101555",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E13900E10>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:54:34.128271",
+        "data": {
+            "player_id": 12,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:54:36.176822",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E1387B950>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:54:36.206050",
+        "data": {
+            "player_id": 13,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:54:38.242731",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138F1010>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:54:38.271670",
+        "data": {
+            "player_id": 14,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:54:40.323165",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D9040>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:54:40.349165",
+        "data": {
+            "player_id": 15,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:54:42.400845",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D96A0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:54:42.426269",
+        "data": {
+            "player_id": 16,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:54:44.461499",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138DA360>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:54:59.174232",
+        "data": {
+            "player_id": 16,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:55:01.218794",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138DA030>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:55:01.247457",
+        "data": {
+            "player_id": 17,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:55:03.286787",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D9D00>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:55:03.312499",
+        "data": {
+            "player_id": 18,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:55:05.360547",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D87C0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:55:05.387108",
+        "data": {
+            "player_id": 19,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:55:07.419546",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D98C0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:55:07.444558",
+        "data": {
+            "player_id": 20,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:55:09.501243",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D9370>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:55:09.532071",
+        "data": {
+            "player_id": 21,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:55:11.590584",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D86B0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:57:27.354717",
+        "data": {
+            "player_id": 22,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:57:29.426156",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D98C0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:57:29.453613",
+        "data": {
+            "player_id": 23,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:57:31.499007",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D87C0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:57:31.526507",
+        "data": {
+            "player_id": 24,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:57:33.589349",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D9D00>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:57:33.618060",
+        "data": {
+            "player_id": 25,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:57:36.094770",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D99D0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:57:36.125852",
+        "data": {
+            "player_id": 26,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:57:38.168130",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D99D0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:57:38.194670",
+        "data": {
+            "player_id": 27,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:57:40.246962",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000023E138D9E10>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
     }
 ]

@@ -1,7 +1,7 @@
 {
   "hosting_ip": "127.0.0.1",
   "hosting_port": 5001,
-  "phase": 0,
+  "phase": 1,
   "missing_samples_treshold": 2,
   "sufficient_records_treshold": 6,
   "evaluation_system_port": 5007,

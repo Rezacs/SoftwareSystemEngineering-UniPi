@@ -4,17 +4,17 @@
 		{
 			"index": 1,
 			"classifier_id": "manual_alpha",
-			"training_error": 0.1667,
-			"validation_error": 0.3333,
-			"overfitting_gap": 0.1667,
+			"training_error": 0.125,
+			"validation_error": 0.0,
+			"overfitting_gap": -0.125,
 			"valid": true
 		},
 		{
 			"index": 2,
 			"classifier_id": "manual_beta",
-			"training_error": 0.0833,
-			"validation_error": 0.3333,
-			"overfitting_gap": 0.25,
+			"training_error": 0.125,
+			"validation_error": 0.0,
+			"overfitting_gap": -0.125,
 			"valid": true
 		}
 	],

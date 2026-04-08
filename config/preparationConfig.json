@@ -1,9 +1,9 @@
 {
-    "hosting_ip" : "127.0.0.1",
-    "hosting_port" : 5002,
-    "phase" : 1,        
-    "classification_system_port" : 5006,
-    "classification_system_ip"    : "127.0.0.1", 
-    "segregation_system_port"   : 5003,        
-    "segregation_system_ip"      : "127.0.0.1"    
+  "hosting_ip": "127.0.0.1",
+  "hosting_port": 5002,
+  "phase": 1,
+  "classification_system_port": 5006,
+  "classification_system_ip": "127.0.0.1",
+  "segregation_system_port": 5003,
+  "segregation_system_ip": "127.0.0.1"
 }

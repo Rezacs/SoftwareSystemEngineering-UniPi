@@ -68,3 +68,27 @@ class ProductionSystemOrchestrator:
 
         with open(LOG_PATH, "w", encoding="utf-8") as f:
             json.dump(logs, f, indent=4)
+    def process_existing_session_if_available(self, communication_controller):
+        if not LATEST_SESSION_PATH.exists():
+            print("[ProductionSystemOrchestrator] No existing session file found.")
+            return
+
+        try:
+            with open(LATEST_SESSION_PATH, "r", encoding="utf-8") as f:
+                session = json.load(f)
+
+            if not session:
+                print("[ProductionSystemOrchestrator] Existing session file is empty.")
+                return
+
+            print("[ProductionSystemOrchestrator] Existing session found. Starting classification...")
+
+            classification_result = self.handle_session_received(session)
+            delivery_result = self.process_classification_result(classification_result, communication_controller)
+
+            print("[ProductionSystemOrchestrator] Classification completed.")
+            print(f"[ProductionSystemOrchestrator] Result: {classification_result}")
+            print(f"[ProductionSystemOrchestrator] Delivery: {delivery_result}")
+
+        except Exception as e:
+            print(f"[ProductionSystemOrchestrator] Failed to process existing session: {e}")

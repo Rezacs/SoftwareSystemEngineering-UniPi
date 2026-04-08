@@ -30,7 +30,6 @@ class ClassifierController:
             return
 
         classifier_path = Path(classifier_path_value)
-
         if classifier_path.exists():
             self.active_classifier_path = classifier_path
             self.active_classifier_id = metadata.get("classifier_id")
@@ -78,13 +77,17 @@ class ClassifierController:
         if self.model is None:
             raise RuntimeError("No deployed classifier available.")
 
-        input_row = {feature: prepared_session[feature] for feature in FEATURE_COLUMNS}
-        input_frame = pd.DataFrame([input_row])
+        input_row = {
+            "skillOverall": prepared_session["skillOverall"],
+            "social_influence_score": prepared_session["social_influence_score"],
+            "injuries_impact_score": prepared_session["injuries_impact_score"]
+        }
 
+        input_frame = pd.DataFrame([input_row])
         predicted_rating = float(self.model.predict(input_frame)[0])
 
         return {
-            "player_id": prepared_session["player_id"],
+            "player_id": prepared_session["playerID"],
             "source": "classifier",
             "rating": predicted_rating,
             "classifier_id": self.active_classifier_id,

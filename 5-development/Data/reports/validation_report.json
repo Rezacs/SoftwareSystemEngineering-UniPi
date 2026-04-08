@@ -4,20 +4,20 @@
 		{
 			"index": 1,
 			"classifier_id": "manual_alpha",
-			"training_error": 0.625,
-			"validation_error": 1.0,
-			"overfitting_gap": 0.375,
+			"training_error": 0.25,
+			"validation_error": 0.0,
+			"overfitting_gap": -0.25,
 			"valid": true
 		},
 		{
 			"index": 2,
 			"classifier_id": "manual_beta",
-			"training_error": 0.25,
-			"validation_error": 0.0,
-			"overfitting_gap": -0.25,
+			"training_error": 0.375,
+			"validation_error": 0.5,
+			"overfitting_gap": 0.125,
 			"valid": true
 		}
 	],
-	"selected_classifier": "manual_beta",
+	"selected_classifier": "manual_alpha",
 	"approve": true
 }

@@ -1,5 +1,5 @@
 {
     "approved": true,
     "simulated": false,
-    "decision_type": "balancing"
+    "decision_type": "coverage"
 }

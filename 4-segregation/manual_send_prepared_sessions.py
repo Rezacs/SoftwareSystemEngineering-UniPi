@@ -9,7 +9,8 @@ from src import PREPARED_SESSIONS_ENDPOINT
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-CONFIG_PATH = PROJECT_ROOT / "config" / "config.json"
+REPO_ROOT = PROJECT_ROOT.parent
+CONFIG_PATH = REPO_ROOT / "config" / "segregationConfig.json"
 INPUT_DIR = PROJECT_ROOT / "data" / "input"
 
 

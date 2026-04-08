@@ -7,6 +7,7 @@ import json
 import os
 import threading
 import time
+from typing import Optional
 
 from src.orchestrator import SegregationSystemOrchestrator
 from src.communication_controller import CommunicationController
@@ -70,6 +71,19 @@ def launch_pipeline(testing_mode: bool) -> dict:
     return result
 
 
+def wait_for_decision_confirmation(decision_path: Optional[str]):
+    """Block until user confirms decision file update in Stop&Go mode."""
+    if decision_path:
+        print(f"[Main] Decision file to update: {decision_path}")
+    while True:
+        user_input = input("[Main] Press Enter when decision file is updated (q to quit): ").strip().lower()
+        if user_input == "":
+            return
+        if user_input in {"q", "quit", "exit"}:
+            raise KeyboardInterrupt
+        print("[Main] Invalid input. Press Enter to continue or 'q' to quit.")
+
+
 if __name__ == "__main__":
     # Ask mode only once at startup
     testing_mode = ask_testing_mode()
@@ -94,9 +108,10 @@ if __name__ == "__main__":
     
     # ── THE CONTINUOUS LOOP ────────────────────────────────────────────────
     # The system processes sessions continuously with the selected mode.
-    # In Stop&Go mode, it processes one step at a time (exits after each checkpoint).
-    # In Testing mode, it runs continuously until interrupted.
+    # In both modes, it runs continuously until interrupted (Ctrl+C).
     
+    insufficient_sessions_logged = False
+
     while True:
         try:
             result = launch_pipeline(testing_mode)
@@ -105,14 +120,18 @@ if __name__ == "__main__":
             if status == "sessions_not_sufficient":
                 # Not enough sessions yet, wait a bit
                 if testing_mode:
-                    print("[Main] Not enough sessions yet, checking again in 5 seconds...")
+                    if not insufficient_sessions_logged:
+                        print("[Main] Not enough sessions yet. Waiting for incoming sessions...")
+                        insufficient_sessions_logged = True
                     time.sleep(5)
                 else:
-                    print("[Main] Not enough sessions. Waiting for more data...")
-                    print("[Main] The system will check again when you run it next time.")
-                    break  # In Stop&Go, we exit and wait for user to restart
+                    if not insufficient_sessions_logged:
+                        print("[Main] Not enough sessions. Waiting for more data...")
+                        insufficient_sessions_logged = True
+                    time.sleep(5)
             
             elif status == "balancing_report_generated":
+                insufficient_sessions_logged = False
                 # Balancing report created, now waiting for decision
                 print(f"\n[Main] Status: Balancing report generated")
                 if testing_mode:
@@ -120,15 +139,15 @@ if __name__ == "__main__":
                     print("[Main] Continuing to decision phase...")
                     time.sleep(1)
                 else:
-                    # In Stop&Go mode, exit and wait for user decision
+                    # In Stop&Go mode, keep running and wait for user decision
                     print(f"[Main] Please review the report and provide your decision.")
                     print(f"  → Report: {result.get('report_path')}")
                     print(f"  → Plot: {result.get('plot_path')}")
                     print(f"  → Decision file: {result.get('decision_path')}")
-                    print(f"\n[Main] After updating the decision file, run 'python main.py' again.")
-                    break
+                    wait_for_decision_confirmation(result.get("decision_path"))
             
             elif status == "coverage_report_generated":
+                insufficient_sessions_logged = False
                 # Coverage report created, now waiting for decision
                 print(f"\n[Main] Status: Coverage report generated")
                 if testing_mode:
@@ -136,15 +155,15 @@ if __name__ == "__main__":
                     print("[Main] Continuing to decision phase...")
                     time.sleep(1)
                 else:
-                    # In Stop&Go mode, exit and wait for user decision
+                    # In Stop&Go mode, keep running and wait for user decision
                     print(f"[Main] Please review the report and provide your decision.")
                     print(f"  → Report: {result.get('report_path')}")
                     print(f"  → Plot: {result.get('plot_path')}")
                     print(f"  → Decision file: {result.get('decision_path')}")
-                    print(f"\n[Main] After updating the decision file, run 'python main.py' again.")
-                    break
+                    wait_for_decision_confirmation(result.get("decision_path"))
                     
             elif status in ["waiting_balancing_decision", "waiting_coverage_decision"]:
+                insufficient_sessions_logged = False
                 # Waiting for decision (should only happen in Stop&Go after restart)
                 print(f"\n[Main] Status: {status.replace('_', ' ')}")
                 if testing_mode:
@@ -154,50 +173,47 @@ if __name__ == "__main__":
                 else:
                     # In Stop&Go mode, decision file not found yet
                     print(f"[Main] Waiting for decision file: {result.get('decision_path')}")
-                    print(f"[Main] Run again after providing your decision.")
-                    break
+                    wait_for_decision_confirmation(result.get("decision_path"))
                     
             elif status == "balancing_rejected" or status == "coverage_rejected":
+                insufficient_sessions_logged = False
                 # Workflow rejected, reset complete
                 print(f"\n[Main] Status: {status.replace('_', ' ')}")
                 if testing_mode:
                     print("[Main] System reset. Checking for new sessions...")
                     time.sleep(2)
                 else:
-                    print("[Main] System reset. Run again when ready to process new sessions.")
-                    break
+                    print("[Main] System reset. Waiting for new sessions...")
+                    time.sleep(2)
                     
             elif status == "calibration_sets_sent":
+                insufficient_sessions_logged = False
                 # Workflow complete!
                 print("\n[Main] Status: Calibration set sent successfully!")
                 if testing_mode:
                     print("[Main] System reset. Ready for next batch...")
                     time.sleep(5)  # Wait before next cycle in testing mode
                 else:
-                    print("[Main] Returning to idle. Run again to process new sessions.")
-                    break
+                    print("[Main] Returning to idle. Waiting for next sessions...")
+                    time.sleep(2)
                     
             elif status == "reset_complete":
+                insufficient_sessions_logged = False
                 # Already completed, was reset
                 print("[Main] Status: System is idle")
                 print("[Main] Checking for sessions...")
                 time.sleep(5)
                 
             else:
+                insufficient_sessions_logged = False
                 # Any other status - just log and continue/exit based on mode
                 print(f"[Main] Status: {status}")
-                if testing_mode:
-                    time.sleep(2)
-                else:
-                    break
+                time.sleep(2)
                     
         except KeyboardInterrupt:
             print("\n[Main] Shutdown requested by user.")
             break
         except Exception as e:
             print(f"[Main] Error during execution: {e}")
-            if testing_mode:
-                print("[Main] Waiting 10 seconds before retry...")
-                time.sleep(10)
-            else:
-                break
+            print("[Main] Waiting 10 seconds before retry...")
+            time.sleep(10)

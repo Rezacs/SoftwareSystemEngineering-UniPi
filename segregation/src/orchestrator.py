@@ -123,16 +123,8 @@ class SegregationSystemOrchestrator:
         Main entry point for the segregation workflow.
         Executes the workflow based on current state and mode (Stop&Go or Testing).
         """
-        print("=" * 60)
-        print("SegregationSystemOrchestrator: run()")
-        
         config = JsonIO.load(config_path)
         self.session_repository.initialize(segregation_db_path)
-        state = self.load_state(workflow_state_path)
-        
-        print(f"  Phase resumed : '{state['phase']}'")
-        print(f"  Testing mode  : {self.testing_mode}")
-        print("=" * 60)
         
         # Store paths for use in helper methods
         self._paths = {
@@ -180,7 +172,6 @@ class SegregationSystemOrchestrator:
                 stored_sessions=active_sessions_count,
                 required_sessions=self._config["sufficientSessionNumber"]
             )
-            print(f"[Orchestrator] Not enough sessions: {active_sessions_count}/{self._config['sufficientSessionNumber']}")
             return {
                 "status": "sessions_not_sufficient",
                 "stored_sessions": active_sessions_count,

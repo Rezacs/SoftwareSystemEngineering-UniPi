@@ -101,6 +101,13 @@ class CommunicationController:
                 SEGREGATION_DB_PATH,
                 to_process=batch_is_open,
             )
+            to_process_count = self.session_repository.sessions_count(
+                SEGREGATION_DB_PATH,
+                to_process_only=True,
+            )
+            print(
+                f"[API] Prepared session received. to_process sessions counter: {to_process_count}"
+            )
             JsonIO.save(PREPARED_SESSION_INPUT_PATH, payload)
             return jsonify(
                 {

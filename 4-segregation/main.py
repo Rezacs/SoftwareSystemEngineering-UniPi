@@ -49,7 +49,7 @@ def ask_testing_mode() -> bool:
 
 # ── Main execution ─────────────────────────────────────────────────────────
 
-def launch_pipeline(testing_mode: bool) -> None:
+def launch_pipeline(testing_mode: bool) -> dict:
     """Execute the segregation orchestrator."""
     orchestrator = SegregationSystemOrchestrator(testing_mode=testing_mode)
     result = orchestrator.run()
@@ -77,7 +77,19 @@ if __name__ == "__main__":
     
     workflow_state_path = os.path.join("data", "output", "segregation_workflow_state.json")
     
-    print(f"\n[Main] Segregation System started in {'Testing' if testing_mode else 'Stop & Go'} mode")
+    # ── Start persistent background server ─────────────────────────────────
+    print("[Main] Starting REST API server in background...")
+    comm = CommunicationController()
+    
+    def start_server():
+        comm.start_server()
+    
+    server_thread = threading.Thread(target=start_server, daemon=True)
+    server_thread.start()
+    time.sleep(2)  # Give the server time to start
+    
+    print(f"[Main] REST API listening on {cfg['segregationSystemIpAddress']}:{cfg['segregationSystemPort']}")
+    print(f"[Main] Segregation System started in {'Testing' if testing_mode else 'Stop & Go'} mode")
     print(f"[Main] Waiting for sessions to accumulate...\n")
     
     # ── THE CONTINUOUS LOOP ────────────────────────────────────────────────

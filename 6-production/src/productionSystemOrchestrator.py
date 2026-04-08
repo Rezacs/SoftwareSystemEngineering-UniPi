@@ -20,11 +20,14 @@ class ProductionSystemOrchestrator:
         )
 
         self._log_event("classifier_deployed", deployment_info)
+        print(f"[ProductionSystemOrchestrator] Classifier deployed: {deployment_info}")
         return deployment_info
 
     def handle_session_received(self, session: dict):
         with open(LATEST_SESSION_PATH, "w", encoding="utf-8") as f:
             json.dump(session, f, indent=4)
+
+        print(f"[ProductionSystemOrchestrator] Session stored: {session}")
 
         classification_result = self.classifier_controller.classify(session)
 
@@ -32,21 +35,22 @@ class ProductionSystemOrchestrator:
             json.dump(classification_result, f, indent=4)
 
         self._log_event("session_classified", classification_result)
+        print(f"[ProductionSystemOrchestrator] Session classified: {classification_result}")
         return classification_result
 
     def process_classification_result(self, classification_result: dict, communication_controller):
         client_response = communication_controller.send_label_to_client(classification_result)
         evaluation_response = self.evaluation_sender.send_label_to_evaluation(classification_result)
 
-        self._log_event("label_sent", {
-            "client": client_response,
-            "evaluation": evaluation_response
-        })
-
-        return {
+        delivery_info = {
             "client": client_response,
             "evaluation": evaluation_response
         }
+
+        self._log_event("label_sent", delivery_info)
+        print(f"[ProductionSystemOrchestrator] Outputs sent: {delivery_info}")
+
+        return delivery_info
 
     def _log_event(self, event_type: str, data: dict):
         log_entry = {
@@ -68,27 +72,3 @@ class ProductionSystemOrchestrator:
 
         with open(LOG_PATH, "w", encoding="utf-8") as f:
             json.dump(logs, f, indent=4)
-    def process_existing_session_if_available(self, communication_controller):
-        if not LATEST_SESSION_PATH.exists():
-            print("[ProductionSystemOrchestrator] No existing session file found.")
-            return
-
-        try:
-            with open(LATEST_SESSION_PATH, "r", encoding="utf-8") as f:
-                session = json.load(f)
-
-            if not session:
-                print("[ProductionSystemOrchestrator] Existing session file is empty.")
-                return
-
-            print("[ProductionSystemOrchestrator] Existing session found. Starting classification...")
-
-            classification_result = self.handle_session_received(session)
-            delivery_result = self.process_classification_result(classification_result, communication_controller)
-
-            print("[ProductionSystemOrchestrator] Classification completed.")
-            print(f"[ProductionSystemOrchestrator] Result: {classification_result}")
-            print(f"[ProductionSystemOrchestrator] Delivery: {delivery_result}")
-
-        except Exception as e:
-            print(f"[ProductionSystemOrchestrator] Failed to process existing session: {e}")

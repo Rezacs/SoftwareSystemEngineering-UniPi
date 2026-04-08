@@ -19,7 +19,8 @@ class EvaluationSender:
     def build_payload(self, classification_result: dict):
         payload = {
             "player_id": classification_result["player_id"],
-            "label": classification_result["rating"],
+            "source": "classifier",
+            "rating": classification_result["rating"],
             "classifier_id": classification_result["classifier_id"]
         }
 
@@ -37,7 +38,7 @@ class EvaluationSender:
         print(f"[EvaluationSender] Sending label to Evaluation: {payload}")
 
         try:
-            response = requests.post(EVALUATION_CLASSIFIER_LABEL_URL, json=payload)
+            response = requests.post(EVALUATION_CLASSIFIER_LABEL_URL, json=payload, timeout=10)
             print(f"[EvaluationSender] Label sent to Evaluation ({response.status_code})")
             return {
                 "status": "sent",

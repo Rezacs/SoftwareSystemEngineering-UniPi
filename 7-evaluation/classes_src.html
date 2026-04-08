@@ -1,0 +1,68 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class BatchManager {
+            batch_size
+            get_batch(matched_pairs)
+            is_ready(matched_pairs)
+          }
+          class Config {
+            all()
+            get(key, default)
+          }
+          class Orchestrator {
+            batch_mgr
+            config
+            eval_cfg
+            external_cfg
+            last_batch : NoneType
+            last_metrics : NoneType
+            metrics_engine
+            paths_cfg
+            repo
+            state
+            visual
+            human_decision(decision)
+            process(data)
+          }
+          class ReportMetrics {
+            compute(batch, tolerance)
+          }
+          class Repository {
+            store
+            clear()
+            count_matched()
+            delete_used(batch)
+            get_matched_pairs()
+            save_label(data)
+          }
+          class SQLiteStore {
+            conn
+            clear()
+            count_matched()
+            delete(player_id)
+            fetch_all_raw()
+            fetch_matched()
+            insert(player_id, label, source)
+          }
+          class SchemaValidator {
+            schema
+            validate(data)
+          }
+          class StateManager {
+            current_batch : NoneType
+            clear_batch()
+            get_batch()
+            is_waiting_decision()
+            set_batch(batch)
+          }
+          class VisualReport {
+            generate(batch, config)
+          }
+  
+       </div>
+  </body>
+</html>

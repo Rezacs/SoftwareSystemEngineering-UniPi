@@ -81,5 +81,939 @@
                 "message": "HTTPConnectionPool(host='127.0.0.1', port=5007): Max retries exceeded with url: /classifier-label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5007): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
             }
         }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T15:36:40.858741",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T15:36:40.858601",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T15:50:37.625653",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T15:50:37.625180",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T15:54:58.483644",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T15:54:58.483528",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T15:58:02.305907",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T15:58:02.303553",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T15:58:08.112166",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T15:58:08.111843",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T16:09:08.665749",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T16:09:08.665587",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T16:13:22.369519",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T16:13:22.369285",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T16:13:32.839321",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T16:13:32.838585",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:19:49.849302",
+        "data": {
+            "player_id": 25,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:19:49.848235"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:19:51.984315",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:19:52.045593",
+        "data": {
+            "player_id": 26,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:19:52.038795"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:19:54.125938",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:19:54.167029",
+        "data": {
+            "player_id": 27,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:19:54.165657"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:19:56.236241",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:19:56.276941",
+        "data": {
+            "player_id": 28,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:19:56.274224"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:19:58.353995",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:19:58.397884",
+        "data": {
+            "player_id": 29,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:19:58.395319"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:00.507558",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:00.547459",
+        "data": {
+            "player_id": 30,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:00.544934"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:02.629081",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:09.887936",
+        "data": {
+            "player_id": 1,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:09.886998"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:11.953342",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:11.986308",
+        "data": {
+            "player_id": 2,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:11.985445"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:14.049059",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:14.306552",
+        "data": {
+            "player_id": 3,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:14.279041"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:16.523866",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:16.563532",
+        "data": {
+            "player_id": 4,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:16.561419"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:18.624665",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:18.668653",
+        "data": {
+            "player_id": 5,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:18.665016"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:20.730142",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:20.768972",
+        "data": {
+            "player_id": 6,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:20.766477"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:22.872093",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:30.254669",
+        "data": {
+            "player_id": 6,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:30.252248"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:32.328306",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:32.366276",
+        "data": {
+            "player_id": 7,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:32.365227"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:34.464282",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:34.500379",
+        "data": {
+            "player_id": 8,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:34.498478"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:36.584032",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:36.619082",
+        "data": {
+            "player_id": 9,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:36.617730"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:38.688301",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:38.725476",
+        "data": {
+            "player_id": 10,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:38.723446"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:40.812542",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:20:40.925678",
+        "data": {
+            "player_id": 11,
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T16:20:40.922295"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:20:43.107739",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 400
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:17.350006",
+        "data": {
+            "player_id": 11,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:19.436276",
+        "data": {
+            "player_id": 12,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:21.516069",
+        "data": {
+            "player_id": 13,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:23.615865",
+        "data": {
+            "player_id": 14,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:25.721222",
+        "data": {
+            "player_id": 15,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:27.774237",
+        "data": {
+            "player_id": 16,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:37.342710",
+        "data": {
+            "player_id": 16,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:39.398252",
+        "data": {
+            "player_id": 17,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:41.548741",
+        "data": {
+            "player_id": 18,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:43.716546",
+        "data": {
+            "player_id": 19,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:45.821829",
+        "data": {
+            "player_id": 20,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:22:47.916151",
+        "data": {
+            "player_id": 21,
+            "source": "classifier",
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:28.007380",
+        "data": {
+            "player_id": 21,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:30.092150",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:30.150346",
+        "data": {
+            "player_id": 22,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:32.216986",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:32.254675",
+        "data": {
+            "player_id": 23,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:34.337174",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:34.383879",
+        "data": {
+            "player_id": 24,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:36.482667",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:36.518655",
+        "data": {
+            "player_id": 25,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:38.634143",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:38.673837",
+        "data": {
+            "player_id": 26,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:40.762827",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:46.927682",
+        "data": {
+            "player_id": 26,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:49.004456",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:49.063788",
+        "data": {
+            "player_id": 27,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:51.167626",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:51.209373",
+        "data": {
+            "player_id": 28,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:53.297698",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:53.335067",
+        "data": {
+            "player_id": 29,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:55.399910",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:55.433167",
+        "data": {
+            "player_id": 30,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:57.522738",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T16:26:57.572431",
+        "data": {
+            "player_id": 31,
+            "label": 3.0,
+            "classifier_id": "model_1"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T16:26:59.668907",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "sent",
+                "evaluation_response_code": 200
+            }
+        }
     }
 ]

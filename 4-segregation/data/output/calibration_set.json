@@ -1,31 +1,15 @@
 {
     "training_set": [
         {
-            "session_id": "5df90629-ea2d-4f2d-9f3f-cfecbb1e09a2",
-            "player_id": 76,
+            "session_id": "c8cb14c1-393e-4215-b6d5-c0510d1de39f",
+            "player_id": 78,
             "label": -1,
             "skill_overall": 60.0,
-            "social_influence_score": 426.0,
-            "injuries_impact_score": 102.69999999999999
-        },
-        {
-            "session_id": "5df90629-ea2d-4f2d-9f3f-cfecbb1e09a2",
-            "player_id": 77,
-            "label": 3,
-            "skill_overall": 82.0,
-            "social_influence_score": 816.0,
-            "injuries_impact_score": 52.4
-        },
-        {
-            "session_id": "5df90629-ea2d-4f2d-9f3f-cfecbb1e09a2",
-            "player_id": 78,
-            "label": 3,
-            "skill_overall": 64.0,
             "social_influence_score": 382.0,
             "injuries_impact_score": 18.299999999999997
         },
         {
-            "session_id": "5df90629-ea2d-4f2d-9f3f-cfecbb1e09a2",
+            "session_id": "c8cb14c1-393e-4215-b6d5-c0510d1de39f",
             "player_id": 79,
             "label": 3,
             "skill_overall": 64.0,
@@ -33,7 +17,7 @@
             "injuries_impact_score": 102.39999999999999
         },
         {
-            "session_id": "5df90629-ea2d-4f2d-9f3f-cfecbb1e09a2",
+            "session_id": "c8cb14c1-393e-4215-b6d5-c0510d1de39f",
             "player_id": 80,
             "label": 3,
             "skill_overall": 86.0,
@@ -41,51 +25,47 @@
             "injuries_impact_score": 56.4
         },
         {
-            "session_id": "5df90629-ea2d-4f2d-9f3f-cfecbb1e09a2",
+            "session_id": "c8cb14c1-393e-4215-b6d5-c0510d1de39f",
             "player_id": 81,
             "label": 3,
             "skill_overall": 64.0,
-            "social_influence_score": 0.0,
-            "injuries_impact_score": 0.0
-        },
-        {
-            "session_id": "198d3893-16b8-4b43-bd70-449f3b9b8d8d",
-            "player_id": 81,
-            "label": -1,
-            "skill_overall": 60.0,
             "social_influence_score": 619.0999999999999,
             "injuries_impact_score": 29.599999999999998
         },
         {
-            "session_id": "198d3893-16b8-4b43-bd70-449f3b9b8d8d",
+            "session_id": "c8cb14c1-393e-4215-b6d5-c0510d1de39f",
             "player_id": 82,
             "label": 3,
             "skill_overall": 64.0,
             "social_influence_score": 585.3,
             "injuries_impact_score": 167.6
-        }
-    ],
-    "validation_set": [
+        },
         {
-            "session_id": "198d3893-16b8-4b43-bd70-449f3b9b8d8d",
+            "session_id": "c8cb14c1-393e-4215-b6d5-c0510d1de39f",
             "player_id": 83,
             "label": 3,
             "skill_overall": 85.0,
+            "social_influence_score": 0.0,
+            "injuries_impact_score": 0.0
+        },
+        {
+            "session_id": "5deaf830-aec5-42bb-a0f5-58f1fdb1f969",
+            "player_id": 83,
+            "label": -1,
+            "skill_overall": 60.0,
             "social_influence_score": 500.69999999999993,
             "injuries_impact_score": 157.8
         },
         {
-            "session_id": "198d3893-16b8-4b43-bd70-449f3b9b8d8d",
+            "session_id": "5deaf830-aec5-42bb-a0f5-58f1fdb1f969",
             "player_id": 84,
             "label": 3,
             "skill_overall": 64.0,
             "social_influence_score": 691.5,
             "injuries_impact_score": 97.2
-        }
-    ],
-    "test_set": [
+        },
         {
-            "session_id": "198d3893-16b8-4b43-bd70-449f3b9b8d8d",
+            "session_id": "5deaf830-aec5-42bb-a0f5-58f1fdb1f969",
             "player_id": 85,
             "label": 3,
             "skill_overall": 64.0,
@@ -93,8 +73,76 @@
             "injuries_impact_score": 8.7
         },
         {
-            "session_id": "198d3893-16b8-4b43-bd70-449f3b9b8d8d",
+            "session_id": "5deaf830-aec5-42bb-a0f5-58f1fdb1f969",
             "player_id": 86,
+            "label": 3,
+            "skill_overall": 64.0,
+            "social_influence_score": 436.69999999999993,
+            "injuries_impact_score": 61.0
+        },
+        {
+            "session_id": "5deaf830-aec5-42bb-a0f5-58f1fdb1f969",
+            "player_id": 87,
+            "label": 3,
+            "skill_overall": 64.0,
+            "social_influence_score": 547.5,
+            "injuries_impact_score": 55.199999999999996
+        },
+        {
+            "session_id": "5deaf830-aec5-42bb-a0f5-58f1fdb1f969",
+            "player_id": 88,
+            "label": 3,
+            "skill_overall": 64.0,
+            "social_influence_score": 0.0,
+            "injuries_impact_score": 0.0
+        }
+    ],
+    "validation_set": [
+        {
+            "session_id": "ff3b3e82-ec97-4808-b965-04accc06ba1d",
+            "player_id": 88,
+            "label": -1,
+            "skill_overall": 60.0,
+            "social_influence_score": 241.19999999999996,
+            "injuries_impact_score": 45.699999999999996
+        },
+        {
+            "session_id": "ff3b3e82-ec97-4808-b965-04accc06ba1d",
+            "player_id": 89,
+            "label": 3,
+            "skill_overall": 64.0,
+            "social_influence_score": 440.4,
+            "injuries_impact_score": 41.5
+        },
+        {
+            "session_id": "ff3b3e82-ec97-4808-b965-04accc06ba1d",
+            "player_id": 90,
+            "label": 3,
+            "skill_overall": 64.0,
+            "social_influence_score": 512.1999999999999,
+            "injuries_impact_score": 128.3
+        }
+    ],
+    "test_set": [
+        {
+            "session_id": "ff3b3e82-ec97-4808-b965-04accc06ba1d",
+            "player_id": 91,
+            "label": 3,
+            "skill_overall": 64.0,
+            "social_influence_score": 461.6,
+            "injuries_impact_score": 30.2
+        },
+        {
+            "session_id": "ff3b3e82-ec97-4808-b965-04accc06ba1d",
+            "player_id": 92,
+            "label": 3,
+            "skill_overall": 64.0,
+            "social_influence_score": 555.4,
+            "injuries_impact_score": 31.7
+        },
+        {
+            "session_id": "ff3b3e82-ec97-4808-b965-04accc06ba1d",
+            "player_id": 93,
             "label": 3,
             "skill_overall": 64.0,
             "social_influence_score": 0.0,

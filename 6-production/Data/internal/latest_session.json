@@ -1,8 +1,8 @@
 {
-    "UUID": "u1",
-    "playerID": "PLAYER_03",
-    "skillOverall": 75.0,
-    "social_influence_score": 60.0,
-    "injuries_impact_score": 10.0,
-    "label": 4
+    "session_id": "ad7cc8df-a4bd-4f40-9e59-59d5780c4658",
+    "player_id": 31,
+    "skill_overall": 82.0,
+    "social_influence_score": 0.0,
+    "injuries_impact_score": 0.0,
+    "label": 3
 }

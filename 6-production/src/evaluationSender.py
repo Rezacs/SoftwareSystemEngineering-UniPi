@@ -1,13 +1,28 @@
 import json
 
 import requests
+import json
+from pathlib import Path
 
-from src.config import (
-    EVALUATION_ENABLED,
-    EVALUATION_CLASSIFIER_LABEL_URL,
-    EVALUATION_PAYLOAD_PATH
+BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = BASE_DIR.parent
+CONFIG_PATH = PROJECT_ROOT / "config" / "productionConfig.json"
+
+
+def load_config():
+    with open(CONFIG_PATH, "r", encoding="utf-8") as file:
+        return json.load(file)
+
+
+_cfg = load_config()
+
+EVALUATION_ENABLED              = _cfg["evaluation"]["enabled"]
+EVALUATION_CLASSIFIER_LABEL_URL = (
+    f"http://{_cfg['evaluation_system']['host']}:"
+    f"{_cfg['evaluation_system']['port']}"
+    f"{_cfg['evaluation_system']['classifier_label_endpoint']}"
 )
-
+EVALUATION_PAYLOAD_PATH = Path(_cfg["paths"]["evaluation_payload"])
 
 class EvaluationSender:
     def __init__(self):
@@ -19,8 +34,8 @@ class EvaluationSender:
     def build_payload(self, classification_result: dict):
         payload = {
             "player_id": classification_result["player_id"],
-            "source": "classifier",
-            "rating": classification_result["rating"],
+            #"source": "classifier",
+            "label": classification_result["label"],
             "classifier_id": classification_result["classifier_id"]
         }
 
@@ -38,6 +53,7 @@ class EvaluationSender:
         print(f"[EvaluationSender] Sending label to Evaluation: {payload}")
 
         try:
+            print(f"[EvaluationSender] Sending label to Evaluation at {EVALUATION_CLASSIFIER_LABEL_URL} ...")
             response = requests.post(EVALUATION_CLASSIFIER_LABEL_URL, json=payload, timeout=10)
             print(f"[EvaluationSender] Label sent to Evaluation ({response.status_code})")
             return {

@@ -39,7 +39,7 @@
   },
 
   "classification": {
-    "feature_columns": ["skillOverall", "social_influence_score", "injuries_impact_score"]
+    "feature_columns": ["skill_overall", "social_influence_score", "injuries_impact_score"]
   },
 
   "evaluation": {

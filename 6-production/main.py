@@ -5,7 +5,7 @@ import webbrowser
 import os
 
 
-def main():
+if __name__ == "__main__":
     print("=== Production System ===")
 
     ensure_directories()
@@ -22,10 +22,9 @@ def main():
     print("- Prepared Session Received (from Preparation)")
 
     # process already existing session automatically
-    orchestrator.process_existing_session_if_available(communication_controller)
 
     communication_controller.run()
 
 
-if __name__ == "__main__":
-    main()
+
+    

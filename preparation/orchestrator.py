@@ -94,7 +94,7 @@ class PreparationSystemOrchestrator:
 
         for p in prepared_sessions:
             #Evaluation phase send to classification system
-            url = f"http://{self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}/run"
+            url = f"http://{self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}/session"
             risp = requests.post(url, json=p)
             print(risp)
         return jsonify({"Message": "Prepared session correctly sent to classification system"}), 200

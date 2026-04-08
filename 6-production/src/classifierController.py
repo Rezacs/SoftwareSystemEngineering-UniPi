@@ -99,11 +99,11 @@ class ClassifierController:
         predicted_rating = float(self.model.predict(input_frame)[0])
 
         result = {
-            "player_id": prepared_session["playerID"],
-            "source": "classifier",
-            "rating": predicted_rating,
+            "player_id": prepared_session["player_id"],
+            #"source": "classifier",
+            "label": predicted_rating,
             "classifier_id": self.active_classifier_id,
-            "classification_timestamp": datetime.now().isoformat()
+            #"classification_timestamp": datetime.now().isoformat()
         }
 
         print(f"[ClassifierController] Classification result: {result}")

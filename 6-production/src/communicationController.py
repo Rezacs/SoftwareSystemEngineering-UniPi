@@ -131,7 +131,7 @@ class CommunicationController:
                 "status": "error",
                 "message": str(e)
             }
-
+    
     def run(self):
         print(f"[CommunicationController] Production server running on http://{PRODUCTION_HOST}:{PRODUCTION_PORT}")
         self.app.run(host=PRODUCTION_HOST, port=PRODUCTION_PORT)

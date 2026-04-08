@@ -1,6 +1,6 @@
-from reporting.report_metrics import ReportMetrics
-from reporting.visual_report import VisualReport
-from utils.logger import logger
+from src.reporting.report_metrics import ReportMetrics
+from src.reporting.visual_report import VisualReport
+from src.utils.logger import logger
 import json
 import os
 

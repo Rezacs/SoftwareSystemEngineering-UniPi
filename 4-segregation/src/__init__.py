@@ -4,8 +4,9 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = PROJECT_ROOT.parent
 
-CONFIG_PATH = str(PROJECT_ROOT / "config" / "config.json")
+CONFIG_PATH = str(REPO_ROOT / "config" / "segregationConfig.json")
 HEALTH_ENDPOINT = "/health"
 PREPARED_SESSIONS_ENDPOINT = "/prepared-sessions"
 WORKFLOW_STATE_ENDPOINT = "/workflow/state"

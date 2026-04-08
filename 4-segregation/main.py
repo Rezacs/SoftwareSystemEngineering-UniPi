@@ -13,7 +13,7 @@ from src.communication_controller import CommunicationController
 
 
 # ── Config path ────────────────────────────────────────────────────────────
-CONFIG_PATH = os.path.join("config", "config.json")
+CONFIG_PATH = os.path.join("..", "config", "segregationConfig.json")
 
 
 def _read_config() -> dict:

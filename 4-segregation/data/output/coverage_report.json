@@ -7,21 +7,21 @@
     "features": {
         "skill_overall": {
             "covered": true,
-            "min": 61.0,
-            "max": 91.1,
+            "min": 60.0,
+            "max": 87.0,
             "unique_values": 8
         },
         "social_influence_score": {
             "covered": true,
-            "min": 180.4,
-            "max": 348.5,
-            "unique_values": 8
+            "min": 0.0,
+            "max": 688.8999999999999,
+            "unique_values": 11
         },
         "injuries_impact_score": {
             "covered": true,
-            "min": 28.6,
-            "max": 58.4,
-            "unique_values": 8
+            "min": 0.0,
+            "max": 168.3,
+            "unique_values": 10
         }
     }
 }

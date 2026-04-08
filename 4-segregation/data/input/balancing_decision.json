@@ -1,5 +1,5 @@
 {
     "approved": true,
-    "simulated": false,
+    "simulated": true,
     "decision_type": "balancing"
 }

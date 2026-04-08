@@ -19,7 +19,7 @@
   "evaluation_system": {
     "host": "127.0.0.1",
     "port": 5007,
-    "classifier_label_endpoint": "/evaluation/classifier-labels"
+    "classifier_label_endpoint": "/classifier-label"
   },
 
   "messaging_system": {

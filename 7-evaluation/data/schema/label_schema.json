@@ -2,7 +2,8 @@
   "type": "object",
   "properties": {
     "player_id": { "type": "integer" },
-    "label": { "type": "integer" }
+    "label": { "type": "integer" },
+    "classifier_id": { "type": "string" }
   },
   "required": ["player_id", "label"]
 }

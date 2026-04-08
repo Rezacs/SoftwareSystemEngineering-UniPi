@@ -1,1 +1,85 @@
-[]
+[
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T15:21:47.232082",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T15:21:47.232071",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T15:24:43.837390",
+        "data": {
+            "player_id": "PLAYER_03",
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T15:24:43.835639"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T15:24:47.960301",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5007): Max retries exceeded with url: /classifier-label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5007): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            }
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T15:26:00.785962",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T15:26:00.785946",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "classifier_deployed",
+        "timestamp": "2026-04-08T15:26:06.288534",
+        "data": {
+            "classifier_id": "model_1",
+            "model_filename": "model_1.sav",
+            "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
+            "deployment_timestamp": "2026-04-08T15:26:06.288514",
+            "status": "deployed"
+        }
+    },
+    {
+        "event": "session_classified",
+        "timestamp": "2026-04-08T15:26:31.276141",
+        "data": {
+            "player_id": "PLAYER_03",
+            "source": "classifier",
+            "rating": 3.0,
+            "classifier_id": "model_1",
+            "classification_timestamp": "2026-04-08T15:26:31.275090"
+        }
+    },
+    {
+        "event": "label_sent",
+        "timestamp": "2026-04-08T15:26:35.368665",
+        "data": {
+            "client": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5000): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            },
+            "evaluation": {
+                "status": "error",
+                "message": "HTTPConnectionPool(host='127.0.0.1', port=5007): Max retries exceeded with url: /classifier-label (Caused by NewConnectionError(\"HTTPConnection(host='127.0.0.1', port=5007): Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione\"))"
+            }
+        }
+    }
+]

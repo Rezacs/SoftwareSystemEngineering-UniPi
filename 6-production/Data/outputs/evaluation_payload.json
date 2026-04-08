@@ -1,1 +1,5 @@
-{}
+{
+    "player_id": "PLAYER_03",
+    "label": 3.0,
+    "classifier_id": "model_1"
+}

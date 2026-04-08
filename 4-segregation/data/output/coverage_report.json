@@ -8,20 +8,20 @@
         "skill_overall": {
             "covered": true,
             "min": 60.0,
-            "max": 87.0,
-            "unique_values": 8
+            "max": 86.0,
+            "unique_values": 5
         },
         "social_influence_score": {
             "covered": true,
             "min": 0.0,
-            "max": 688.8999999999999,
+            "max": 895.4999999999999,
             "unique_values": 11
         },
         "injuries_impact_score": {
             "covered": true,
             "min": 0.0,
-            "max": 168.3,
-            "unique_values": 10
+            "max": 167.6,
+            "unique_values": 11
         }
     }
 }

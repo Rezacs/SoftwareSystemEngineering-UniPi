@@ -1,6 +1,9 @@
 import requests
 import json
 
+#@AUTHOR CARLO
+#DON'T DELETE THIS
+
 def send_payload_in_loop(ip, port, endpoint="/upload"):
     # Build the full URL
     url = f"http://{ip}:{port}{endpoint}"

@@ -227,9 +227,9 @@ class RecordsBuffer:
         return count
 
     def retrieve_last_records(self, rows_to_fetch: int) -> pd.DataFrame:
-        # 1. Fetch the actual 'last' records using ORDER BY
+        # 1. Fetch records using ORDER BY, starting from the older ones to to newest one
         # (Assuming you have an 'id' or 'created_at' column to define order)
-        select_query = "SELECT * FROM records ORDER BY ID DESC LIMIT ?"
+        select_query = "SELECT * FROM records ORDER BY ID ASC LIMIT ?"
     
         # Read into DataFrame
         df = pd.read_sql(

@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 import requests
 
+#@AUTHOR CARLO
+#DON'T DELETE THIS
+
 def wait_and_send(record, source_file, server_url):
     """Helper function to handle the pause, print, and network request."""
     print(f"\n[Source: {source_file}] - Data for Player ID: {record.get('player_id')}")

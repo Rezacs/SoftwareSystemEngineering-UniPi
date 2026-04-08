@@ -4,6 +4,8 @@ from preparation.preparation_system_config import PreparationSystemConfiguration
 
 from flask import Flask, request, jsonify
 
+import requests
+
 
 class PreparationSystemOrchestrator:
     """
@@ -85,14 +87,14 @@ class PreparationSystemOrchestrator:
                 #Development phase
                 #Send to segregation system
                 url = f"http://{self.preparation_system_config.segregation_system_ip}:{self.preparation_system_config.segregation_system_port}"
-                risp = request.post(url, json=p)
+                risp = requests.post(url, json=p)
                 print(risp)
             return jsonify({"Message": "Prepared session correctly sent to segregation system"}), 200
 
         for p in prepared_sessions:
             #Evaluation phase send to classification system
             url = f"http://{self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}"
-            risp = request.post(url, json=p)
+            risp = requests.post(url, json=p)
             print(risp)
         return jsonify({"Message": "Prepared session correctly sent to classification system"}), 200
 

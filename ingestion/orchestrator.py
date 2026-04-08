@@ -95,7 +95,7 @@ class IngestionSystemOrchestrator:
                 url = f"http://{self.ingestion_system_config.evaluation_system_ip}:{self.ingestion_system_config.evaluation_system_port}"
                 risp = requests.post(url, json=json)
                 print(risp)
-                pass
+                #pass
                 
 
         

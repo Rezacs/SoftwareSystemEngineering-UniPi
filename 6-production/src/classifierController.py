@@ -1,16 +1,11 @@
 import json
-import shutil
 from datetime import datetime
 from pathlib import Path
 
 import joblib
 import pandas as pd
 
-from src.config import (
-    CLASSIFIERS_DIR,
-    FEATURE_COLUMNS,
-    LATEST_CLASSIFIER_PATH,
-)
+from src.config import CLASSIFIERS_DIR, FEATURE_COLUMNS, LATEST_CLASSIFIER_PATH
 
 
 class ClassifierController:
@@ -24,25 +19,29 @@ class ClassifierController:
         if not LATEST_CLASSIFIER_PATH.exists():
             return
 
-        with open(LATEST_CLASSIFIER_PATH, "r", encoding="utf-8") as file:
-            metadata = json.load(file)
-
-        # ✅ SAFE CHECK
-        if "classifier_path" not in metadata:
+        try:
+            with open(LATEST_CLASSIFIER_PATH, "r", encoding="utf-8") as file:
+                metadata = json.load(file)
+        except Exception:
             return
 
-        classifier_path = Path(metadata["classifier_path"])
+        classifier_path_value = metadata.get("classifier_path")
+        if not classifier_path_value:
+            return
+
+        classifier_path = Path(classifier_path_value)
 
         if classifier_path.exists():
             self.active_classifier_path = classifier_path
             self.active_classifier_id = metadata.get("classifier_id")
             self.model = joblib.load(classifier_path)
 
-    def save_classifier(self, source_model_path: str, classifier_id: str, model_filename: str):
-        source_path = Path(source_model_path)
+    def save_uploaded_classifier(self, uploaded_file):
+        model_filename = uploaded_file.filename
+        classifier_id = Path(model_filename).stem
         destination_path = CLASSIFIERS_DIR / model_filename
 
-        shutil.copy(source_path, destination_path)
+        uploaded_file.save(destination_path)
 
         metadata = {
             "classifier_id": classifier_id,
@@ -55,7 +54,7 @@ class ClassifierController:
         with open(LATEST_CLASSIFIER_PATH, "w", encoding="utf-8") as file:
             json.dump(metadata, file, indent=4)
 
-        return destination_path, metadata
+        return metadata
 
     def deploy_classifier(self, classifier_id: str, model_filename: str):
         classifier_path = CLASSIFIERS_DIR / model_filename
@@ -82,11 +81,12 @@ class ClassifierController:
         input_row = {feature: prepared_session[feature] for feature in FEATURE_COLUMNS}
         input_frame = pd.DataFrame([input_row])
 
-        predicted_label = self.model.predict(input_frame)[0]
+        predicted_rating = float(self.model.predict(input_frame)[0])
 
         return {
-            "session_uuid": prepared_session["session_uuid"],
+            "player_id": prepared_session["player_id"],
+            "source": "classifier",
+            "rating": predicted_rating,
             "classifier_id": self.active_classifier_id,
-            "predicted_label": int(predicted_label),
             "classification_timestamp": datetime.now().isoformat()
         }

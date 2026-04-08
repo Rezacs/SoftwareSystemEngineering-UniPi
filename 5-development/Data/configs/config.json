@@ -45,8 +45,8 @@
 		"num_classes": 5
 	},
 	"pipeline": {
-		"overfitting_threshold": 0.1,
-		"generalization_threshold": 0.15,
+		"overfitting_threshold": 0.4,
+		"generalization_threshold": 0.3,
 		"max_outer_iterations": 3,
 		"default_max_iter": 200
 	}

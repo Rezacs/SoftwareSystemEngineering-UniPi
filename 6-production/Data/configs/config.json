@@ -6,7 +6,8 @@
 
   "endpoints": {
     "classifier_received": "/classifier",
-    "prepared_session_received": "/session"
+    "prepared_session_received": "/session",
+    "status": "/status"
   },
 
   "client_side_system": {
@@ -17,8 +18,8 @@
 
   "evaluation_system": {
     "host": "127.0.0.1",
-    "port": 8000,
-    "label_endpoint": "/evaluation"
+    "port": 8001,
+    "classifier_label_endpoint": "/evaluation/classifier-labels"
   },
 
   "messaging_system": {
@@ -38,7 +39,11 @@
   },
 
   "classification": {
-    "feature_columns": ["skillOverall", "socialInfluence", "injuriesImpact"]
+    "feature_columns": [
+      "skillOverall",
+      "socialInfluence",
+      "injuriesImpact"
+    ]
   },
 
   "evaluation": {

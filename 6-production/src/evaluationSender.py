@@ -1,11 +1,10 @@
 import json
-from datetime import datetime
 
 import requests
 
 from src.config import (
     EVALUATION_ENABLED,
-    EVALUATION_LABEL_URL,
+    EVALUATION_CLASSIFIER_LABEL_URL,
     EVALUATION_PAYLOAD_PATH
 )
 
@@ -19,10 +18,10 @@ class EvaluationSender:
 
     def build_payload(self, classification_result: dict):
         payload = {
-            "session_uuid": classification_result["session_uuid"],
-            "classifier_id": classification_result["classifier_id"],
-            "predicted_label": classification_result["predicted_label"],
-            "timestamp": datetime.now().isoformat()
+            "player_id": classification_result["player_id"],
+            "source": "classifier",
+            "rating": classification_result["rating"],
+            "classifier_id": classification_result["classifier_id"]
         }
 
         with open(EVALUATION_PAYLOAD_PATH, "w", encoding="utf-8") as file:
@@ -37,7 +36,7 @@ class EvaluationSender:
         payload = self.build_payload(classification_result)
 
         try:
-            response = requests.post(EVALUATION_LABEL_URL, json=payload)
+            response = requests.post(EVALUATION_CLASSIFIER_LABEL_URL, json=payload)
             return {
                 "status": "sent",
                 "evaluation_response_code": response.status_code

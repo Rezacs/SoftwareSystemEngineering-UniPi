@@ -1,13 +1,20 @@
-from flask import Flask, request, jsonify
+import json
+
 import requests
+from flask import Flask, jsonify, request
 
 from src.config import (
     PRODUCTION_HOST,
     PRODUCTION_PORT,
     CLASSIFIER_RECEIVED_ENDPOINT,
     PREPARED_SESSION_RECEIVED_ENDPOINT,
+    STATUS_ENDPOINT,
     CLIENT_SIDE_LABEL_URL,
-    MESSAGING_CONFIGURATION_URL
+    MESSAGING_CONFIGURATION_URL,
+    LATEST_CLASSIFIER_PATH,
+    LATEST_SESSION_PATH,
+    LATEST_LABEL_PATH,
+    LOG_PATH
 )
 
 
@@ -18,18 +25,15 @@ class CommunicationController:
         self._register_routes()
 
     def _register_routes(self):
-
-        # =========================
-        # BPMN: Classifier Received
-        # =========================
         @self.app.route(CLASSIFIER_RECEIVED_ENDPOINT, methods=["POST"])
         def classifier_received():
-            data = request.json
-
             try:
-                deployment_info = self.orchestrator.handle_classifier_received(data)
+                if "classifier" not in request.files:
+                    return jsonify({"error": "Missing classifier file"}), 400
 
-                # BPMN: Configuration Sent → Messaging System
+                uploaded_file = request.files["classifier"]
+
+                deployment_info = self.orchestrator.handle_classifier_received(uploaded_file)
                 config_response = self.send_configuration_to_messaging(deployment_info)
 
                 return jsonify({
@@ -37,22 +41,15 @@ class CommunicationController:
                     "deployment": deployment_info,
                     "messaging": config_response
                 })
-
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
 
-        # =========================
-        # BPMN: Prepared Session Received
-        # =========================
         @self.app.route(PREPARED_SESSION_RECEIVED_ENDPOINT, methods=["POST"])
         def session_received():
-            data = request.json
-
             try:
-                # Classify
-                classification_result = self.orchestrator.handle_session_received(data)
+                data = request.get_json()
 
-                # Send results (Client + Evaluation)
+                classification_result = self.orchestrator.handle_session_received(data)
                 send_result = self.orchestrator.process_classification_result(
                     classification_result,
                     self
@@ -63,27 +60,16 @@ class CommunicationController:
                     "result": classification_result,
                     "delivery": send_result
                 })
-
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
-        # =========================
-        # Dashboard Status Endpoint
-        # =========================
-        @self.app.route("/status", methods=["GET"])
-        def get_status():
-            import json
-            from src.config import (
-                LATEST_CLASSIFIER_PATH,
-                LATEST_SESSION_PATH,
-                LATEST_LABEL_PATH,
-                LOG_PATH
-            )
 
+        @self.app.route(STATUS_ENDPOINT, methods=["GET"])
+        def get_status():
             def read_json(path, default):
                 try:
                     with open(path, "r", encoding="utf-8") as f:
                         return json.load(f)
-                except:
+                except Exception:
                     return default
 
             return jsonify({
@@ -93,9 +79,6 @@ class CommunicationController:
                 "logs": read_json(LOG_PATH, [])
             })
 
-    # =========================
-    # BPMN: Label Sent → Client-side
-    # =========================
     def send_label_to_client(self, classification_result: dict):
         try:
             response = requests.post(CLIENT_SIDE_LABEL_URL, json=classification_result)
@@ -109,9 +92,6 @@ class CommunicationController:
                 "message": str(e)
             }
 
-    # =========================
-    # BPMN: Configuration Sent → Messaging System
-    # =========================
     def send_configuration_to_messaging(self, deployment_info: dict):
         try:
             response = requests.post(MESSAGING_CONFIGURATION_URL, json=deployment_info)

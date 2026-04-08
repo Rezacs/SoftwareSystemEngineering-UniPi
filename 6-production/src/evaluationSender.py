@@ -19,8 +19,7 @@ class EvaluationSender:
     def build_payload(self, classification_result: dict):
         payload = {
             "player_id": classification_result["player_id"],
-            "source": "classifier",
-            "rating": classification_result["rating"],
+            "label": classification_result["rating"],
             "classifier_id": classification_result["classifier_id"]
         }
 

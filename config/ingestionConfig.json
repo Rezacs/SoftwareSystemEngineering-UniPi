@@ -1,11 +1,11 @@
 {
-    "hosting_ip" : "127.0.0.1",
-    "hosting_port" : 5001,
-    "phase" : 0,
-    "missing_samples_treshold" : 2,          
-    "sufficient_records_treshold" : 6,          
-    "evaluation_system_port" : 5003,
-    "evaluation_system_ip"    : "0.0.0.0", 
-    "preparation_system_port"   : 5002,        
-    "preparation_system_ip"      : "127.0.0.1"    
+  "hosting_ip": "127.0.0.1",
+  "hosting_port": 5001,
+  "phase": 0,
+  "missing_samples_treshold": 2,
+  "sufficient_records_treshold": 6,
+  "evaluation_system_port": 5007,
+  "evaluation_system_ip": "127.0.0.1",
+  "preparation_system_port": 5002,
+  "preparation_system_ip": "127.0.0.1"
 }

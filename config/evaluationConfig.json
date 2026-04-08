@@ -1,7 +1,7 @@
 {
   "server": {
     "host": "127.0.0.1",
-    "port": 5000
+    "port": 5007
   },
 
   "evaluation": {
@@ -29,13 +29,13 @@
     },
     "classification": {
       "ip": "127.0.0.1",
-      "port": 6000,
+      "port": 5006,
       "endpoint": "/prediction"
     },
     "messaging": {
       "enabled": true,
       "ip": "127.0.0.1",
-      "port": 7000,
+      "port": 9000,
       "endpoint": "/classifier-alert"
     }
   }

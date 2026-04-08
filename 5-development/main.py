@@ -13,7 +13,7 @@ from src.developmentSystemOrchestrator import DevelopmentSystemOrchestrator
 from src.communicationController import CommunicationController
 
 # ── Config is loaded here only to know the listen port and file paths ──────
-_CONFIG_PATH =  "..\config\developmentConfig.json"
+_CONFIG_PATH = r"..\config\developmentConfig.json"
 
 def _read_config() -> dict:
     with open(_CONFIG_PATH, "r", encoding="UTF-8") as f:

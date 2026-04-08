@@ -1,13 +1,13 @@
 {
   "type": "object",
   "required": [
-    "session_uuid",
+    "player_id",
     "skillOverall",
     "socialInfluence",
     "injuriesImpact"
   ],
   "properties": {
-    "session_uuid": {
+    "player_id": {
       "type": "string"
     },
     "skillOverall": {
@@ -18,9 +18,6 @@
     },
     "injuriesImpact": {
       "type": "number"
-    },
-    "timestamp": {
-      "type": "string"
     }
   }
 }

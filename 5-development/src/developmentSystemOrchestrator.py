@@ -17,7 +17,8 @@ from src.testingReportView import TestingReportView
 from src.communicationController import CommunicationController
 
 # ── Config file location (the only hardcoded path in the system) ───────────
-CONFIG_PATH = os.path.join( "..\config\developmentConfig.json")
+CONFIG_PATH =  "..\config\developmentConfig.json"
+print(f"[Orchestrator] Loading configuration from: {CONFIG_PATH}")
 
 
 def _load_config() -> dict:

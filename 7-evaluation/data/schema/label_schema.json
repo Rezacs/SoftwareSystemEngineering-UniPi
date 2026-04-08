@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "player_id": { "type": "string" },
+    "player_id": { "type": "integer" },
     "label": { "type": "integer" }
   },
   "required": ["player_id", "label"]

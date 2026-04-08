@@ -73,27 +73,28 @@ class PreparationSystemOrchestrator:
         prepared_sessions=[]
         for d in features:
             prepared_session={
-                "UUID" : batch_prepared_session.get("UUID"),
-                "playerID" : d.get("player_id"),
-                "skillOverall" : d.get("skillOverall"),
+                "session_id" : batch_prepared_session.get("UUID"),
+                "player_id" : d.get("player_id"),
+                "skill_overall" : d.get("skillOverall"),
                 "social_influence_score" : d.get("social_influence_score"),
                 "injuries_impact_score" : d.get("injuries_impact_score"),
                 "label" : d.get("label")
             }
             prepared_sessions.append(prepared_session)
-
+        print("Sending prepared session at endpoint")
         if self.preparation_system_config.phase==0:
+
             for p in prepared_sessions:
                 #Development phase
                 #Send to segregation system
-                url = f"http://{self.preparation_system_config.segregation_system_ip}:{self.preparation_system_config.segregation_system_port}"
+                url = f"http://{self.preparation_system_config.segregation_system_ip}:{self.preparation_system_config.segregation_system_port}/prepared-sessions"
                 risp = requests.post(url, json=p)
                 print(risp)
             return jsonify({"Message": "Prepared session correctly sent to segregation system"}), 200
 
         for p in prepared_sessions:
             #Evaluation phase send to classification system
-            url = f"http://{self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}"
+            url = f"http://{self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}/run"
             risp = requests.post(url, json=p)
             print(risp)
         return jsonify({"Message": "Prepared session correctly sent to classification system"}), 200

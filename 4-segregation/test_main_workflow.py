@@ -17,11 +17,11 @@ def test_status_messages():
     print("=" * 60)
     
     # Import main module to check the status handling
-    import main
+    import preparation_main
     
     # Check that the main module has the launch_pipeline function
-    assert hasattr(main, 'launch_pipeline'), "launch_pipeline function not found"
-    assert hasattr(main, 'ask_testing_mode'), "ask_testing_mode function not found"
+    assert hasattr(preparation_main, 'launch_pipeline'), "launch_pipeline function not found"
+    assert hasattr(preparation_main, 'ask_testing_mode'), "ask_testing_mode function not found"
     
     print("\n✓ Main module structure verified")
     

@@ -100,7 +100,7 @@ class IngestionSystemOrchestrator:
 
         
         #send data preparation system
-        url = f"http://{self.ingestion_system_config.preparation_system_ip}:{self.ingestion_system_config.evaluation_system_port}"
+        url = f"http://{self.ingestion_system_config.preparation_system_ip}:{self.ingestion_system_config.preparation_system_port}/run"
         risp = requests.post(url, json=raw_session)
         print(risp)
 

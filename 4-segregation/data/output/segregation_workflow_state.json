@@ -1,3 +1,5 @@
 {
-    "phase": "idle"
+    "phase": "sessions_not_sufficient",
+    "stored_sessions": 0,
+    "required_sessions": 8
 }

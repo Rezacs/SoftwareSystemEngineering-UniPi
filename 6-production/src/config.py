@@ -3,7 +3,8 @@ from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-CONFIG_PATH = BASE_DIR / "Data" / "configs" / "config.json"
+PROJECT_ROOT = BASE_DIR.parent
+CONFIG_PATH = PROJECT_ROOT / "config" / "productionConfig.json"
 
 
 def load_config():

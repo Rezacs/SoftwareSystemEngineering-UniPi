@@ -52,7 +52,10 @@ class Orchestrator:
         # ================= FETCH MATCHED =================
         pairs = self.repo.get_matched_pairs()
 
-        logger.info(f"📦 Matched pairs: {len(pairs)} / {self.eval_cfg['batch_size']}")
+        #logger.info(f"📦 Matched pairs: {len(pairs)} / {self.eval_cfg['batch_size']}")
+        
+        logger.info(f"📦 Available: {len(pairs)} | Using: {min(len(pairs), self.eval_cfg['batch_size'])}"
+)
 
         # ================= CHECK BATCH =================
         if not self.batch_mgr.is_ready(pairs):

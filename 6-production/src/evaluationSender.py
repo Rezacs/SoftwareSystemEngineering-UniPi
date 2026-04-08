@@ -31,17 +31,21 @@ class EvaluationSender:
 
     def send_label_to_evaluation(self, classification_result: dict):
         if not self.is_evaluation_phase():
+            print("[EvaluationSender] Evaluation skipped.")
             return {"status": "evaluation_skipped"}
 
         payload = self.build_payload(classification_result)
+        print(f"[EvaluationSender] Sending label to Evaluation: {payload}")
 
         try:
             response = requests.post(EVALUATION_CLASSIFIER_LABEL_URL, json=payload)
+            print(f"[EvaluationSender] Label sent to Evaluation ({response.status_code})")
             return {
                 "status": "sent",
                 "evaluation_response_code": response.status_code
             }
         except Exception as e:
+            print(f"[EvaluationSender] Failed to send label to Evaluation: {e}")
             return {
                 "status": "error",
                 "message": str(e)

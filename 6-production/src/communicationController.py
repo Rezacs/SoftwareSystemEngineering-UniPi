@@ -33,14 +33,16 @@ class CommunicationController:
 
                 uploaded_file = request.files["classifier"]
 
+                if uploaded_file.filename == "":
+                    return jsonify({"error": "Empty classifier filename"}), 400
+
                 deployment_info = self.orchestrator.handle_classifier_received(uploaded_file)
-                config_response = self.send_configuration_to_messaging(deployment_info)
 
                 return jsonify({
                     "status": "classifier_deployed",
-                    "deployment": deployment_info,
-                    "messaging": config_response
-                })
+                    "deployment": deployment_info
+                }), 200
+
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
 
@@ -80,13 +82,16 @@ class CommunicationController:
             })
 
     def send_label_to_client(self, classification_result: dict):
+        print(f"[CommunicationController] Sending label to Client-side: {classification_result}")
         try:
             response = requests.post(CLIENT_SIDE_LABEL_URL, json=classification_result)
+            print(f"[CommunicationController] Label sent to Client-side ({response.status_code})")
             return {
                 "status": "sent",
                 "response_code": response.status_code
             }
         except Exception as e:
+            print(f"[CommunicationController] Failed to send label to Client-side: {e}")
             return {
                 "status": "error",
                 "message": str(e)

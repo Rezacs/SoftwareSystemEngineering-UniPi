@@ -8,14 +8,11 @@ import os
 def main():
     print("=== Production System ===")
 
-    # Ensure folders exist
     ensure_directories()
 
-    # Initialize core components
-
-    # Open dashboard automatically
     dashboard_path = os.path.abspath("frontend/dashboard.html")
     webbrowser.open(f"file://{dashboard_path}")
+
     orchestrator = ProductionSystemOrchestrator()
     communication_controller = CommunicationController(orchestrator)
 
@@ -24,7 +21,9 @@ def main():
     print("- Classifier Received (from Development)")
     print("- Prepared Session Received (from Preparation)")
 
-    # Start server
+    # process already existing session automatically
+    orchestrator.process_existing_session_if_available(communication_controller)
+
     communication_controller.run()
 
 

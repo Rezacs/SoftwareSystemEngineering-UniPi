@@ -11,7 +11,7 @@ from src import CONFIG_PATH, PREPARED_SESSIONS_ENDPOINT
 PROJECT_ROOT = Path(__file__).resolve().parent
 INPUT_DIR = PROJECT_ROOT / "data" / "input"
 OUTPUT_DIR = PROJECT_ROOT / "data" / "output"
-SEND_STATUS_PATH = OUTPUT_DIR / "sent_prepared_sessions_status.json"
+# SEND_STATUS_PATH = OUTPUT_DIR / "sent_prepared_sessions_status.json"
 BATCH_SIZE = 4
 
 
@@ -87,7 +87,7 @@ def send_prepared_sessions_batch(
         "all_succeeded": all(result["ok"] for result in results),
         "results": results,
     }
-    save_json(SEND_STATUS_PATH, overall_status)
+    # save_json(SEND_STATUS_PATH, overall_status)
     return overall_status, next_index
 
 

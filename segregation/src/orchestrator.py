@@ -1,5 +1,6 @@
 """Coordinates the Segregation System workflow, including storage, checks, stop-and-go decisions, and final set generation."""
 
+from datetime import datetime, timezone
 import random
 from typing import Optional
 
@@ -13,6 +14,7 @@ from . import (
     COVERAGE_REPORT_DECISION_PATH,
     COVERAGE_REPORT_OUTPUT_PATH,
     COVERAGE_PLOT_OUTPUT_PATH,
+    SEGREGATION_LOG_PATH,
     SEGREGATION_DB_PATH,
     SEGREGATION_WORKFLOW_STATE_PATH,
 )
@@ -43,9 +45,62 @@ class SegregationSystemOrchestrator:
             return {"phase": "idle"}
 
     def save_state(self, phase: str, path: str, **extra_fields) -> dict:
+        phases_with_log_buffer = {
+            "waiting_balancing_decision",
+            "waiting_coverage_decision",
+        }
+        if phase not in phases_with_log_buffer:
+            extra_fields.pop("log_events", None)
         state = {"phase": phase, **extra_fields}
         JsonIO.save(path, state)
         return state
+
+    @staticmethod
+    def _utc_now_iso() -> str:
+        return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+    def _append_workflow_event(
+        self,
+        state: dict,
+        process: str,
+        decision: Optional[str] = None,
+    ) -> dict:
+        events = state.get("log_events", [])
+        event = {
+            "timestamp": self._utc_now_iso(),
+            "process": process,
+        }
+        if decision is not None:
+            event["decision"] = decision
+        events.append(event)
+        state["log_events"] = events
+        return state
+
+    def _set_latest_event_decision(self, state: dict, process: str, decision: str) -> dict:
+        events = state.get("log_events", [])
+        for event in reversed(events):
+            if event.get("process") == process and "decision" not in event:
+                event["decision"] = decision
+                state["log_events"] = events
+                return state
+
+        return self._append_workflow_event(state, process=process, decision=decision)
+
+    def _persist_cycle_log(self, state: dict) -> None:
+        events = state.get("log_events", [])
+        if not events:
+            return
+
+        try:
+            current_log = JsonIO.load(self._paths["segregation_log"])
+            if not isinstance(current_log, dict):
+                current_log = {}
+        except (FileNotFoundError, ValueError, TypeError):
+            current_log = {}
+
+        cycle_key = events[-1]["timestamp"]
+        current_log[cycle_key] = events
+        JsonIO.save(self._paths["segregation_log"], current_log)
 
     def reset_state(self, path: str = SEGREGATION_WORKFLOW_STATE_PATH) -> None:
         """Reset workflow state to idle for a new cycle."""
@@ -114,6 +169,7 @@ class SegregationSystemOrchestrator:
         balancing_plot_output_path=BALANCING_PLOT_OUTPUT_PATH,
         coverage_report_output_path=COVERAGE_REPORT_OUTPUT_PATH,
         coverage_plot_output_path=COVERAGE_PLOT_OUTPUT_PATH,
+        segregation_log_path=SEGREGATION_LOG_PATH,
         config_path=CONFIG_PATH,
         workflow_state_path=SEGREGATION_WORKFLOW_STATE_PATH,
         balancing_report_decision_path=BALANCING_REPORT_DECISION_PATH,
@@ -134,6 +190,7 @@ class SegregationSystemOrchestrator:
             "balancing_plot_output": balancing_plot_output_path,
             "coverage_report_output": coverage_report_output_path,
             "coverage_plot_output": coverage_plot_output_path,
+            "segregation_log": segregation_log_path,
             "workflow_state": workflow_state_path,
             "balancing_decision": balancing_report_decision_path,
             "coverage_decision": coverage_report_decision_path,
@@ -161,6 +218,7 @@ class SegregationSystemOrchestrator:
     
     def _handle_idle(self):
         """Check if we have sufficient sessions and generate balancing report."""
+        state = self.load_state(self._paths["workflow_state"])
         active_sessions_count = self.session_repository.sessions_count(
             self._paths["segregation_db"]
         )
@@ -170,7 +228,7 @@ class SegregationSystemOrchestrator:
                 "sessions_not_sufficient",
                 self._paths["workflow_state"],
                 stored_sessions=active_sessions_count,
-                required_sessions=self._config["sufficientSessionNumber"]
+                required_sessions=self._config["sufficientSessionNumber"],
             )
             return {
                 "status": "sessions_not_sufficient",
@@ -190,6 +248,10 @@ class SegregationSystemOrchestrator:
         )
         JsonIO.save(self._paths["balancing_report_output"], balancing_report)
         self.view_balancing.showPlot(balancing_report, self._paths["balancing_plot_output"])
+        state = self._append_workflow_event(
+            state,
+            process="check class balancing",
+        )
         self.save_state(
             "waiting_balancing_decision",
             self._paths["workflow_state"],
@@ -197,7 +259,8 @@ class SegregationSystemOrchestrator:
                 active_sessions[-1].get("session_id")
                 if active_sessions
                 else None
-            )
+            ),
+            log_events=state.get("log_events", []),
         )
         
         self._stop_and_ask(
@@ -221,6 +284,7 @@ class SegregationSystemOrchestrator:
     
     def _handle_balancing_decision(self):
         """Process balancing decision and proceed accordingly."""
+        state = self.load_state(self._paths["workflow_state"])
         # In testing mode, always simulate decision (don't read file)
         if self.testing_mode:
             balancing_decision = self._simulate_decision("balancing")
@@ -239,6 +303,16 @@ class SegregationSystemOrchestrator:
         
         if not balancing_decision.get("approved", False):
             print("[Orchestrator] Balancing REJECTED — Resetting to idle")
+            state = self._set_latest_event_decision(
+                state,
+                process="check class balancing",
+                decision="classes not balanced",
+            )
+            state = self._append_workflow_event(
+                state,
+                process="configuration sent to messaging system",
+            )
+            self._persist_cycle_log(state)
             self.session_repository.mark_all_to_process(self._paths["segregation_db"])
             self.reset_state(self._paths["workflow_state"])
             
@@ -254,6 +328,11 @@ class SegregationSystemOrchestrator:
         
         # Balancing approved - generate coverage report
         print("[Orchestrator] Balancing APPROVED — Generating coverage report...")
+        state = self._set_latest_event_decision(
+            state,
+            process="check class balancing",
+            decision="classes balanced",
+        )
         feature_map = self.data_extractor.extract_features(self._paths["segregation_db"])
         statistics = self.coverage_checker.retrieveStatistics(feature_map)
         coverage_report = self.coverage_checker.generatePlotData(
@@ -262,7 +341,15 @@ class SegregationSystemOrchestrator:
         )
         JsonIO.save(self._paths["coverage_report_output"], coverage_report)
         self.view_coverage.showPlot(coverage_report, self._paths["coverage_plot_output"])
-        self.save_state("waiting_coverage_decision", self._paths["workflow_state"])
+        state = self._append_workflow_event(
+            state,
+            process="check data coverage",
+        )
+        self.save_state(
+            "waiting_coverage_decision",
+            self._paths["workflow_state"],
+            log_events=state.get("log_events", []),
+        )
         
         self._stop_and_ask(
             "COVERAGE REPORT GENERATED — Review and decide",
@@ -285,6 +372,7 @@ class SegregationSystemOrchestrator:
     
     def _handle_coverage_decision(self):
         """Process coverage decision and finalize or reject."""
+        state = self.load_state(self._paths["workflow_state"])
         # In testing mode, always simulate decision (don't read file)
         if self.testing_mode:
             coverage_decision = self._simulate_decision("coverage")
@@ -303,6 +391,16 @@ class SegregationSystemOrchestrator:
         
         if not coverage_decision.get("approved", False):
             print("[Orchestrator] Coverage REJECTED — Resetting to idle")
+            state = self._set_latest_event_decision(
+                state,
+                process="check data coverage",
+                decision="data distribution not covered",
+            )
+            state = self._append_workflow_event(
+                state,
+                process="configuration sent to messaging system",
+            )
+            self._persist_cycle_log(state)
             self.session_repository.mark_all_to_process(self._paths["segregation_db"])
             self.reset_state(self._paths["workflow_state"])
             
@@ -318,6 +416,11 @@ class SegregationSystemOrchestrator:
         
         # Coverage approved - generate calibration set
         print("[Orchestrator] Coverage APPROVED — Generating calibration set...")
+        state = self._set_latest_event_decision(
+            state,
+            process="check data coverage",
+            decision="data distribution covered",
+        )
         active_sessions = self.data_extractor.extract_all(self._paths["segregation_db"])
         calibration_set = self.calibration_set_provider.generateCalibrationSets(
             active_sessions
@@ -328,6 +431,11 @@ class SegregationSystemOrchestrator:
         )
         self.session_repository.delete_processed_sessions(self._paths["segregation_db"])
         self.session_repository.promote_pending_sessions(self._paths["segregation_db"])
+        state = self._append_workflow_event(
+            state,
+            process="calibration sets sent to development system",
+        )
+        self._persist_cycle_log(state)
         self.save_state("completed", self._paths["workflow_state"])
         
         print("[Orchestrator] Calibration set sent successfully!")

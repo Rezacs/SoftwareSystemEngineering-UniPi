@@ -10,8 +10,8 @@ from src import CALIBRATION_SET_ENDPOINT
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 OUTPUT_DIR = PROJECT_ROOT / "data" / "output"
-RECEIVED_CALIBRATION_SET_PATH = OUTPUT_DIR / "received_calibration_set.json"
-RECEIVED_CALIBRATION_STATUS_PATH = OUTPUT_DIR / "received_calibration_set_status.json"
+# RECEIVED_CALIBRATION_SET_PATH = OUTPUT_DIR / "received_calibration_set.json"
+# RECEIVED_CALIBRATION_STATUS_PATH = OUTPUT_DIR / "received_calibration_set_status.json"
 MOCK_DEVELOPMENT_SYSTEM_PORT = 5003
 
 REQUIRED_SESSION_FIELDS = [
@@ -96,20 +96,20 @@ def create_app() -> Flask:
             "errors": errors,
             **metadata,
         }
-        save_json(RECEIVED_CALIBRATION_STATUS_PATH, status_payload)
+        # save_json(RECEIVED_CALIBRATION_STATUS_PATH, status_payload)
 
         if is_valid:
-            save_json(RECEIVED_CALIBRATION_SET_PATH, payload)
+            # save_json(RECEIVED_CALIBRATION_SET_PATH, payload)
             return jsonify(status_payload), 200
 
         return jsonify(status_payload), 400
 
-    @app.get("/last-calibration-set/status")
-    def get_last_status():
-        if not RECEIVED_CALIBRATION_STATUS_PATH.exists():
-            return jsonify({"status": "no_calibration_set_received"}), 404
-        with RECEIVED_CALIBRATION_STATUS_PATH.open("r", encoding="utf-8") as file:
-            return jsonify(json.load(file))
+    # @app.get("/last-calibration-set/status")
+    # def get_last_status():
+    #     if not RECEIVED_CALIBRATION_STATUS_PATH.exists():
+    #         return jsonify({"status": "no_calibration_set_received"}), 404
+    #     with RECEIVED_CALIBRATION_STATUS_PATH.open("r", encoding="utf-8") as file:
+    #         return jsonify(json.load(file))
 
     return app
 

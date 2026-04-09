@@ -13,7 +13,7 @@
   "client_side_system": {
     "host": "127.0.0.1",
     "port": 5000,
-    "label_endpoint": "/label"
+    "label_endpoint": "/receive-label"
   },
 
   "evaluation_system": {
@@ -39,7 +39,11 @@
   },
 
   "classification": {
-    "feature_columns": ["skill_overall", "social_influence_score", "injuries_impact_score"]
+    "feature_columns": [
+      "skill_overall",
+      "social_influence_score",
+      "injuries_impact_score"
+    ]
   },
 
   "evaluation": {

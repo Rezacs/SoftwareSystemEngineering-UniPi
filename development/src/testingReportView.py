@@ -7,4 +7,4 @@ class TestingReportView:
         print(f"  Testing error            : {report.testing_error:.4f}")
         print(f"  Generalization threshold : {report.generalization_threshold}")
         print(f"  Passed                   : {report.result}")
-        # Additional details can be printed here as needed for classifier
+        

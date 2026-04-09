@@ -11,11 +11,6 @@ from src.trainingOrchestrator import TrainingOrchestrator
 
 
 class ValidationOrchestrator:
-    """
-    Implements the BPMN tasks:
-      • retrieve_average_parameters() → feeds SET AVERAGE HYPERPARAMS
-      • generate_validation_report()  → SET HYPERPARAMS + GENERATE VALIDATION REPORT
-    """
 
     def __init__(
         self,

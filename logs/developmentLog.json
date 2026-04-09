@@ -1,29 +1,62 @@
-
 {
-    "2024-06-01T12:10:00Z": [
-        {
-            "timestamp": "2024-06-01T12:00:00Z",
-            "process": "learning curve",
-            "decision": "set #iterations to 100"
-        },
-        {
-            "timestamp": "2024-06-01T12:05:00Z",
-            "process": "set #iterations",
-            "decision": "set #iterations to 100"
-        },
-        {
-            "timestamp": "2024-06-01T12:00:00Z",
-            "process": "learning curve",
-            "decision": "set #iterations to 100"
-        },
-        {
-            "timestamp": "2024-06-01T12:05:00Z",
-            "process": "set #iterations",
-            "decision": "set #iterations to 100"
-        },
-        {
-            "timestamp": "2024-06-01T12:10:00Z",
-            "output": "classifier"
-        }
-    ]
+	"2026-04-09T16:42:53Z": [
+		{
+			"timestamp": "2026-04-09T16:42:53Z",
+			"process": "set #iterations",
+			"decision": "approved iterations: 200"
+		},
+		{
+			"timestamp": "2026-04-09T16:42:53Z",
+			"process": "ValidationReport",
+			"decision": "selected model index 1"
+		},
+		{
+			"timestamp": "2026-04-09T16:42:53Z",
+			"process": "Results",
+			"decision": "Final approval: False"
+		},
+		{
+			"output": "testing report"
+		}
+	],
+	"2026-04-09T16:43:28Z": [
+		{
+			"timestamp": "2026-04-09T16:43:28Z",
+			"process": "set #iterations",
+			"decision": "approved iterations: 200"
+		},
+		{
+			"timestamp": "2026-04-09T16:43:28Z",
+			"process": "ValidationReport",
+			"decision": "selected model index 1"
+		},
+		{
+			"timestamp": "2026-04-09T16:43:28Z",
+			"process": "Results",
+			"decision": "Final approval: False"
+		},
+		{
+			"output": "testing report"
+		}
+	],
+	"2026-04-09T16:46:26Z": [
+		{
+			"timestamp": "2026-04-09T16:46:26Z",
+			"process": "set #iterations",
+			"decision": "approved iterations: 200"
+		},
+		{
+			"timestamp": "2026-04-09T16:46:26Z",
+			"process": "ValidationReport",
+			"decision": "selected model index 1"
+		},
+		{
+			"timestamp": "2026-04-09T16:46:26Z",
+			"process": "Results",
+			"decision": "Final approval: False"
+		},
+		{
+			"output": "testing report"
+		}
+	]
 }

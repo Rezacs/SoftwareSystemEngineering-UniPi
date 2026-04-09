@@ -1,17 +1,3 @@
-"""
-CommunicationController
-=======================
-INBOUND  — Flask REST server receives the learning-set payload
-           from the Segregation System.
-
-OUTBOUND — Two operations only:
-             • send_classifier()     → POST .sav to Production System (test passes)
-             • save_rejected_report()→ saves testing report locally as JSON (test fails)
-
-All network configuration is read from config.json, which is loaded
-by DevelopmentSystemOrchestrator and passed in at construction time.
-"""
-
 import json
 import os
 import threading
@@ -22,19 +8,7 @@ from flask import Flask, Response, jsonify, request
 
 
 class CommunicationController:
-    """
-    Parameters
-    ----------
-    listen_host          : interface to bind the Flask server on
-    listen_port          : port for the Flask server
-    segregation_ip       : IP of the system sending the payload (for logging)
-    segregation_port     : port of the sender (for logging)
-    production_ip        : IP of the Production System (classifier destination)
-    production_port      : port of the Production System
-    production_endpoint  : endpoint on the Production System
-    received_data_path   : where incoming payloads are saved to disk
-    rejected_report_path : where the testing report is saved when test fails
-    """
+  
 
     def __init__(
         self,

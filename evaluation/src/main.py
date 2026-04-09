@@ -1,6 +1,8 @@
 from src.api.json_api import app
 from src.config.config_loader import Config
+
 config = Config()
+
 def choose_mode():
     print("\n=== Select Evaluation Mode ===")
     print("1) Human Mode")
@@ -35,7 +37,7 @@ if __name__ == "__main__":
     import logging
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
-    
+
     app.run(
         host=host,
         port=port,

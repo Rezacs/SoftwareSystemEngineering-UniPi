@@ -45,7 +45,7 @@ class Orchestrator:
 
         # ================= RECEIVE =================
         logger.info(
-            f"📥 Received {data['source']} → {data['player_id']} = {data['label']}"
+            f"Received {data['source']} label → player_id: {data['player_id']} has label: {data['label']}"
         )
 
         # ================= STORE =================
@@ -54,14 +54,14 @@ class Orchestrator:
         # ================= FETCH MATCHED =================
         pairs = self.repo.get_matched_pairs()
 
-        #logger.info(f"📦 Matched pairs: {len(pairs)} / {self.eval_cfg['batch_size']}")
+        #logger.info(f"Matched pairs: {len(pairs)} / {self.eval_cfg['batch_size']}")
         
-        logger.info(f"📦 Available: {len(pairs)} | Using: {min(len(pairs), self.eval_cfg['batch_size'])}"
+        logger.info(f"Available: {len(pairs)} | Using: {min(len(pairs), self.eval_cfg['batch_size'])}"
 )
 
         # ================= CHECK BATCH =================
         if not self.batch_mgr.is_ready(pairs):
-            logger.info("⏳ Waiting for more matched data...")
+            logger.info("Waiting for more matched pairs...")
             return {"status": "waiting_for_data"}
 
         # ================= BUILD BATCH =================
@@ -93,22 +93,11 @@ class Orchestrator:
         
         if self.eval_cfg.get("reset_after_batch", True):
             self.repo.delete_used(batch)
-            logger.info("Only consumed batch removed from DB")
-
-        # ================= PAUSE =================
-        # logger.info("⏸ Waiting for HUMAN decision")
-
-        # return {
-        #     "status": "waiting_for_human",
-        #     "metrics": metrics,
-        #     "report": visual,
-        #     "suggested_decision": self._suggest_decision(metrics)
-        # }
+            logger.info("Buffer Cleared → Only consumed batch removed from DB")
 
         decision = self._suggest_decision(metrics)
          #====== AUTO MODE ===========
         if self.config["server"]["mode"] == "auto":
-            #logger.info(f"🤖 AUTO Decision → {decision}")
             return self.finalize_decision(decision, mode="AUTO")
 
         # ======== HUMAN MODE =================
@@ -133,7 +122,7 @@ class Orchestrator:
             "metrics": self.last_metrics
         }
 
-        if decision == "BAD":
+        if decision == "REJECT":
             output["action"] = "SEND_TO_MESSAGING"
             self._simulate_messaging(output)
 
@@ -142,7 +131,7 @@ class Orchestrator:
         # ================= RESET STATE =================
         self.state.clear_batch()
 
-        logger.info("🔄 System ready for next batch")
+        logger.info("🔄 System ready for next batch\n==============================================================\n")
 
         return output
 
@@ -153,12 +142,12 @@ class Orchestrator:
     def _suggest_decision(self, metrics):
 
         if metrics["errors"] > self.eval_cfg["max_errors"]:
-            return "BAD"
+            return "REJECT"
 
         if metrics["max_consecutive"] > self.eval_cfg["max_consecutive_errors"]:
-            return "BAD"
+            return "REJECT"
 
-        return "GOOD"
+        return "ACCEPT "
 
     # =========================================================
     # ================= MESSAGING ==============================
@@ -170,7 +159,7 @@ class Orchestrator:
             logger.info("Messaging disabled (simulation only)")
             return
 
-        logger.warning("Sending BAD classifier config to messaging system (SIMULATED)")
+        logger.warning("Sending REJECT classifier config to messaging system (SIMULATED)")
         logger.info(json.dumps(payload, indent=2))
 
     # =========================================================

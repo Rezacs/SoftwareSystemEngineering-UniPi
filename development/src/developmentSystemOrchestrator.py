@@ -3,6 +3,7 @@ import json
 import os
 import sys
 from datetime import datetime, timezone
+from pathlib import Path
 import time
 from typing import Any, Dict, List, Optional
 
@@ -18,9 +19,10 @@ from src.validationReportView import ValidationReportView
 from src.testingReportView import TestingReportView
 from src.communicationController import CommunicationController
 
-# ── Config file location (the only hardcoded path in the system) ───────────
-CONFIG_PATH =  r"..\config\developmentConfig.json"
-LOG_PATH    =  r"..\logs\developmentLog.json"
+# ── Config/log paths resolved from repository root (cross-platform) ─────────
+REPO_ROOT = Path(__file__).resolve().parents[2]
+CONFIG_PATH = str(REPO_ROOT / "config" / "developmentConfig.json")
+LOG_PATH = str(REPO_ROOT / "logs" / "developmentLog.json")
 print(f"[Orchestrator] Loading configuration from: {CONFIG_PATH}")
 
 
@@ -28,7 +30,7 @@ def _load_config() -> dict:
     if not os.path.isfile(CONFIG_PATH):
         raise FileNotFoundError(
             f"Configuration file not found: {CONFIG_PATH}\n"
-            f"Make sure {r"..\config\developmentConfig.json"} exists before running."
+            f"Make sure ../config/developmentConfig.json exists before running."
         )
     with open(CONFIG_PATH, "r", encoding="UTF-8") as f:
         return json.load(f)

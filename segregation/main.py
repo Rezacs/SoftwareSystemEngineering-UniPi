@@ -7,6 +7,7 @@ import json
 import os
 import threading
 import time
+from pathlib import Path
 from typing import Optional
 
 from src.orchestrator import SegregationSystemOrchestrator
@@ -14,14 +15,15 @@ from src.communication_controller import CommunicationController
 
 
 # ── Config path ────────────────────────────────────────────────────────────
-CONFIG_PATH = os.path.join("..", "config", "segregationConfig.json")
+REPO_ROOT = Path(__file__).resolve().parent.parent
+CONFIG_PATH = REPO_ROOT / "config" / "segregationConfig.json"
 
 
 def _read_config() -> dict:
     """Load configuration from config.json."""
-    if not os.path.isfile(CONFIG_PATH):
+    if not CONFIG_PATH.is_file():
         raise FileNotFoundError(f"Configuration file not found: {CONFIG_PATH}")
-    with open(CONFIG_PATH, "r", encoding="UTF-8") as f:
+    with CONFIG_PATH.open("r", encoding="UTF-8") as f:
         return json.load(f)
 
 

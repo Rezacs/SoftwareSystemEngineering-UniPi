@@ -74,8 +74,8 @@ def human_decision():
     data = request.json
     decision = data.get("decision")
 
-    if decision not in ["GOOD", "BAD"]:
-        return jsonify({"error": "Decision must be GOOD or BAD"}), 400
+    if decision not in ["ACCEPT", "REJECT"]:
+        return jsonify({"error": "Decision must be ACCEPT or REJECT"}), 400
 
     # ================= APPLY DECISION =================
     result = orchestrator.finalize_decision(decision, mode="HUMAN")

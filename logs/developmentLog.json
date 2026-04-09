@@ -2,7 +2,8 @@
     "logs1": [
         {
             "timestamp": "2024-06-01T12:00:00Z",
-            "process": "learning curve"
+            "process": "learning curve",
+            "phase": "production"
         },
         {
             "timestamp": "2024-06-01T12:05:00Z",

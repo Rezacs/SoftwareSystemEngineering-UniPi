@@ -22,15 +22,6 @@ def _sessions_to_frames(sessions: List[PreparedSession], feature_cols: List[str]
 
 
 class TrainingOrchestrator:
-    """
-    Implements the BPMN tasks:
-      • SET HYPERPARAMS (configuration)  → set_parameters()
-      • CALIBRATE                        → generate_calibration_report()
-      • GENERATE CALIBRATION REPORT      → generate_calibration_report()
-      • train_classifier()               → called per HP config inside grid search
-
-    Uses MLPClassifier to predict an integer score in {1, 2, 3, 4, 5}.
-    """
 
     def __init__(self, feature_cols: List[str], score_min: int, score_max: int) -> None:
         self._params:       dict      = {}

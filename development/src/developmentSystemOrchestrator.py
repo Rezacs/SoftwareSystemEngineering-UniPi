@@ -1,6 +1,8 @@
+
 import json
 import os
 import sys
+from datetime import datetime, timezone
 import time
 from typing import Any, Dict, List, Optional
 
@@ -17,7 +19,8 @@ from src.testingReportView import TestingReportView
 from src.communicationController import CommunicationController
 
 # ── Config file location (the only hardcoded path in the system) ───────────
-CONFIG_PATH =  "..\config\developmentConfig.json"
+CONFIG_PATH =  r"..\config\developmentConfig.json"
+LOG_PATH    =  r"..\logs\developmentLog.json"
 print(f"[Orchestrator] Loading configuration from: {CONFIG_PATH}")
 
 
@@ -25,7 +28,7 @@ def _load_config() -> dict:
     if not os.path.isfile(CONFIG_PATH):
         raise FileNotFoundError(
             f"Configuration file not found: {CONFIG_PATH}\n"
-            f"Make sure ..\config\developmentConfig.json exists before running."
+            f"Make sure {r"..\config\developmentConfig.json"} exists before running."
         )
     with open(CONFIG_PATH, "r", encoding="UTF-8") as f:
         return json.load(f)
@@ -40,23 +43,6 @@ def _sessions_to_frames(sessions, feature_cols: List[str]):
 
 
 class DevelopmentSystemOrchestrator:
-    """
-    State-machine orchestrator for the Development System.
-    Loads ALL configuration from Data/configs/config.json at startup.
-    Every public method name matches its BPMN task label exactly.
-
-    Phase → BPMN method mapping:
-        "Ready"            → set_average_hyperparams()
-        "LearningCurve"    → set_iterations()
-        "Validation"       → generate_validation_report()
-        "ValidationReport" → is_there_a_valid_classifier()
-        "Testing"          → generate_test_report()
-        "Results"          → test_passed()
-
-    testing_mode=False  →  Stop&Go: pauses at each phase, human edits user_input.json
-    testing_mode=True   →  Automated: simulates human decisions from report files,
-                           never calls sys.exit(), but still waits for real HTTP data
-    """
 
     def __init__(
         self,
@@ -65,7 +51,7 @@ class DevelopmentSystemOrchestrator:
     ) -> None:
         # ── load config ────────────────────────────────────────────────
         cfg = _load_config()
-
+        
         net  = cfg["network"]
         pth  = cfg["paths"]
         mdl  = cfg["model"]
@@ -116,6 +102,10 @@ class DevelopmentSystemOrchestrator:
             received_data_path  = pth["received_data"],
             rejected_report_path= pth["rejected_report"],
         )
+        
+        # log 
+        self._log_path = LOG_PATH
+        self._session_key = "current_session"
 
     # ── status persistence ─────────────────────────────────────────────
 
@@ -269,6 +259,63 @@ class DevelopmentSystemOrchestrator:
         )
         for hp in hp_list
     ]
+
+    # ── Logging Logic ──────────────────────────────────────────────────
+
+    def _init_log(self) -> None:
+        """Initialize the log file if it doesn't exist and prepare the session."""
+        os.makedirs(os.path.dirname(self._log_path), exist_ok=True)
+        
+        data = {}
+        if os.path.isfile(self._log_path):
+            with open(self._log_path, "r", encoding="UTF-8") as f:
+                try:
+                    data = json.load(f)
+                except json.JSONDecodeError:
+                    data = {}
+
+        if self._session_key not in data:
+            data[self._session_key] = []
+            
+        with open(self._log_path, "w", encoding="UTF-8") as f:
+            json.dump(data, f, indent="\t")
+
+    def _log_event(self, process: str, decision: str) -> None:
+        """Appends a human-decision event to the log."""
+        if not os.path.isfile(self._log_path):
+            self._init_log()
+
+        with open(self._log_path, "r+", encoding="UTF-8") as f:
+            data = json.load(f)
+            event = {
+                "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "process": process,
+                "decision": decision
+            }
+            data[self._session_key].append(event)
+            f.seek(0)
+            json.dump(data, f, indent="\t")
+            f.truncate()
+
+    def _finalize_log(self, output_type: str) -> None:
+        """Finalizes the session by adding output and renaming the key to current timestamp."""
+        if not os.path.isfile(self._log_path): return
+
+        with open(self._log_path, "r+", encoding="UTF-8") as f:
+            data = json.load(f)
+            if self._session_key in data:
+                session_data = data.pop(self._session_key)
+                # Add final output entry
+                session_data.append({"output": output_type})
+                
+                # Create final key with current ISO timestamp
+                final_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+                data[final_timestamp] = session_data
+                
+                f.seek(0)
+                json.dump(data, f, indent="\t")
+                f.truncate()
+                
     # ── state machine entry point ──────────────────────────────────────
 
     def run(self) -> None:
@@ -283,6 +330,7 @@ class DevelopmentSystemOrchestrator:
             self._start_time = time.time_ns()
 
         if self._status["phase"] == "Starting":
+            self._init_log()
             self._update_status({"phase": "Ready"})
 
         self._execute_development()
@@ -346,6 +394,7 @@ class DevelopmentSystemOrchestrator:
         if not good_iter:
             max_iter = user_input.get("max_iter", self._status["max_iter"])
             self._update_status({"max_iter": max_iter})
+            self._log_event("learning curve", f"set #iterations to {max_iter}")
             print(f"[Orchestrator] CALIBRATE — {max_iter} epochs …")
 
             X_train, y_train = self._get_frames("training_set")
@@ -366,6 +415,7 @@ class DevelopmentSystemOrchestrator:
             else:
                 self._execute_development()
         else:
+            self._log_event("set #iterations", f"approved iterations: {self._status['max_iter']}")
             print(f"[Orchestrator] #ITERATIONS FINE — {self._status['max_iter']} approved.")
             self._update_status({"phase": "Validation"})
             self._execute_development()
@@ -411,11 +461,14 @@ class DevelopmentSystemOrchestrator:
           YES → advance to generate_test_report()
         """
         best_model_index = self._get_user_input().get("best_model", 0)
+        decision_text = f"selected model index {best_model_index}" if best_model_index != 0 else "rejected all models"
+        self._log_event("ValidationReport", decision_text)
         print(f"[Orchestrator] IS THERE A VALID CLASSIFIER? → index={best_model_index}")
 
         if best_model_index == 0:
             iteration = self._status.get("iteration", 0) + 1
             if iteration >= self._max_outer_iterations:
+                self._finalize_log("rejected report")
                 print(
                     f"[Orchestrator] Max outer iterations "
                     f"({self._max_outer_iterations}) reached — saving rejected report."
@@ -480,6 +533,7 @@ class DevelopmentSystemOrchestrator:
             YES → send classifier to production, reset to IDLE
         """
         approved = self._get_user_input().get("approved", False)
+        self._log_event("Results", f"Final approval: {approved}")
         best_data = self._status["best_classifier_data"]
         cl_id = best_data["index"]
         model_path = os.path.join(self._classifier_folder, f"model_{cl_id}.sav")
@@ -489,11 +543,12 @@ class DevelopmentSystemOrchestrator:
             print("[Orchestrator] SUCCESS: CLASSIFIER SENT TO PRODUCTION.")
             print("!" * 60 + "\n")
             self._comm.send_classifier(model_path)
-           
+            self._finalize_log("classifier")
             self._reset_status()
             
         else:
             print("\n[Orchestrator] TEST REJECTED: Saving report and resetting to IDLE.")
             self._comm.save_rejected_report(self._testing_report_path)
+            self._finalize_log("testing report")
             self._reset_status()
            

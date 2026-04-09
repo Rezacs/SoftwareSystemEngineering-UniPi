@@ -1,104 +1,80 @@
 {
 	"training_set": [
 		{
-			"session_id": "e7eba6b5-b085-4672-9e7d-2040ccaa681b",
+			"session_id": "s-001",
 			"player_id": 1,
-			"label": 3,
-			"skill_overall": 89.0,
-			"social_influence_score": 649.8999999999999,
-			"injuries_impact_score": 123.1
+			"skill_overall": 0.8,
+			"social_influence_score": 0.2,
+			"injuries_impact_score": 0.1,
+			"label": 4
 		},
 		{
-			"session_id": "e7eba6b5-b085-4672-9e7d-2040ccaa681b",
+			"session_id": "s-002",
 			"player_id": 2,
-			"label": 3,
-			"skill_overall": 90.0,
-			"social_influence_score": 240.29999999999998,
-			"injuries_impact_score": 100.6
+			"skill_overall": 0.4,
+			"social_influence_score": 0.5,
+			"injuries_impact_score": 0.6,
+			"label": 2
 		},
 		{
-			"session_id": "e7eba6b5-b085-4672-9e7d-2040ccaa681b",
+			"session_id": "s-003",
 			"player_id": 3,
-			"label": 3,
-			"skill_overall": 90.0,
-			"social_influence_score": 758.1999999999999,
-			"injuries_impact_score": 86.5
+			"skill_overall": 0.6,
+			"social_influence_score": 0.3,
+			"injuries_impact_score": 0.3,
+			"label": 3
 		},
 		{
-			"session_id": "e7eba6b5-b085-4672-9e7d-2040ccaa681b",
+			"session_id": "s-004",
 			"player_id": 4,
-			"label": 3,
-			"skill_overall": 90.0,
-			"social_influence_score": 322.5,
-			"injuries_impact_score": 85.1
+			"skill_overall": 0.2,
+			"social_influence_score": 0.8,
+			"injuries_impact_score": 0.4,
+			"label": 1
 		},
 		{
-			"session_id": "e7eba6b5-b085-4672-9e7d-2040ccaa681b",
+			"session_id": "s-005",
 			"player_id": 5,
-			"label": 3,
-			"skill_overall": 82.0,
-			"social_influence_score": 898.6,
-			"injuries_impact_score": 150.8
-		},
-		{
-			"session_id": "e7eba6b5-b085-4672-9e7d-2040ccaa681b",
-			"player_id": 6,
-			"label": 3,
-			"skill_overall": 82.0,
-			"social_influence_score": 0.0,
-			"injuries_impact_score": 0.0
-		},
-		{
-			"session_id": "021757e1-4100-447d-8894-7d6f3f798045",
-			"player_id": 6,
-			"label": -1,
-			"skill_overall": 60.0,
-			"social_influence_score": 465.69999999999993,
-			"injuries_impact_score": 34.3
-		},
-		{
-			"session_id": "021757e1-4100-447d-8894-7d6f3f798045",
-			"player_id": 7,
-			"label": 3,
-			"skill_overall": 85.0,
-			"social_influence_score": 126.3,
-			"injuries_impact_score": 192.8
+			"skill_overall": 0.9,
+			"social_influence_score": 0.1,
+			"injuries_impact_score": 0.0,
+			"label": 5
 		}
 	],
 	"validation_set": [
 		{
-			"session_id": "021757e1-4100-447d-8894-7d6f3f798045",
-			"player_id": 8,
-			"label": 3,
-			"skill_overall": 89.0,
-			"social_influence_score": 467.79999999999995,
-			"injuries_impact_score": 206.1
+			"session_id": "s-006",
+			"player_id": 6,
+			"skill_overall": 0.7,
+			"social_influence_score": 0.4,
+			"injuries_impact_score": 0.2,
+			"label": 4
 		},
 		{
-			"session_id": "021757e1-4100-447d-8894-7d6f3f798045",
-			"player_id": 9,
-			"label": 3,
-			"skill_overall": 89.0,
-			"social_influence_score": 93.79999999999998,
-			"injuries_impact_score": 199.1
+			"session_id": "s-007",
+			"player_id": 7,
+			"skill_overall": 0.3,
+			"social_influence_score": 0.6,
+			"injuries_impact_score": 0.5,
+			"label": 2
 		}
 	],
 	"test_set": [
 		{
-			"session_id": "021757e1-4100-447d-8894-7d6f3f798045",
-			"player_id": 10,
-			"label": 3,
-			"skill_overall": 82.0,
-			"social_influence_score": 598.1999999999999,
-			"injuries_impact_score": 104.1
+			"session_id": "s-008",
+			"player_id": 8,
+			"skill_overall": 0.5,
+			"social_influence_score": 0.5,
+			"injuries_impact_score": 0.3,
+			"label": 3
 		},
 		{
-			"session_id": "021757e1-4100-447d-8894-7d6f3f798045",
-			"player_id": 11,
-			"label": 3,
-			"skill_overall": 91.0,
-			"social_influence_score": 0.0,
-			"injuries_impact_score": 0.0
+			"session_id": "s-009",
+			"player_id": 9,
+			"skill_overall": 0.1,
+			"social_influence_score": 0.9,
+			"injuries_impact_score": 0.8,
+			"label": 1
 		}
 	]
 }

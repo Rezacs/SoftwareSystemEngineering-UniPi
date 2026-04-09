@@ -1,0 +1,501 @@
+player_id,player_name,position,main_position,current_club_name,date_of_death,days_missed,games_missed,injury_reason,season_name
+1,Carlos Henrique Venâncio Casemiro,Midfield - Defensive Midfield,Midfield,Manchester United,,268,61,Knock | muscular problems | Stomach flu | infection | Corona virus | ankle sprain | stomach problems | Fracture of fibula shaft | minor knock | Ankle sprain,23/24 | 21/22 | 20/21 | 18/19 | 17/18 | 16/17 | 15/16 | 14/15
+2,Karim Benzema,Attack - Centre-Forward,Attack,Al-Ittihad Club,,256,34,unknown injury | muscle stiffness | Muscle injury | Back problems | Rest | Ankle injury | Muscle fatigue | Left hip flexor problems | muscular problems | minor knock | Calf problems,24/25 | 23/24 | 22/23 | 21/22
+3,Lionel Andrés Messi Cuccittini,Attack - Right Winger,Attack,Inter Miami CF,,188,43,muscular problems | Adductor pain | Rest | Ligament injury | Leg injury | Muscle injury | Knee problems | Achilles heel problems | Calf problems,25/26 | 24/25 | 23/24 | 22/23
+4,Robert Lewandowski,Attack - Centre-Forward,Attack,FC Barcelona,,202,35,Muscle injury | Lumbar vertebra problems | Torn muscle fiber | Ankle injury | Hamstring injury | Rest | Ligament stretching | Shin injury | Groin surgery | Patellar tendon problems | muscular problems,25/26 | 24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20 | 17/18
+5,Mateo Kova?i?,Midfield - Central Midfield,Midfield,Manchester City,,430,59,Achilles tendon surgery | unknown injury | Muscle injury | Knock | Ill | Calf problems | Rest | Knee problems | Ankle injury | Corona virus | Adductor pain | Calf injury | Achilles tendon problems | Knee injury,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20
+6,Nicolás Hernán Gonzalo Otamendi,Defender - Centre-Back,Defender,SL Benfica,,77,16,Corona virus | Knock | Knee injury | Achilles tendon problems | Ankle problems,20/21 | 19/20 | 18/19 | 15/16 | 14/15
+7,David Olatukunbo Alaba,Defender - Centre-Back,Defender,Real Madrid,,635,119,Meniscus tear | Adductor injury | Cruciate ligament tear | Adductor pain | Hamstring injury | Muscle injury | Fitness | muscular problems | Corona virus,24/25 | 23/24 | 22/23 | 21/22 | 20/21
+8,Neymar da Silva Santos Júnior,Midfield - Attacking Midfield,Midfield,Santos FC,,901,138,Hamstring injury | Fitness | Cruciate ligament tear | muscular problems | Ankle surgery | Ankle injury | Adductor pain | Ankle problems,24/25 | 23/24 | 22/23 | 21/22 | 20/21
+9,Marc-André ter Stegen,Goalkeeper,Goalkeeper,FC Barcelona,,710,128,Back injury | Patellar tendon rupture | Stomach flu | cold | Knee surgery | Rest | Knee injury | Knee problems | Shoulder injury | Muscle injury,25/26 | 24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20 | 18/19 | 17/18 | 16/17 | 15/16
+10,Olivier Giroud,Attack - Centre-Forward,Attack,LOSC Lille,,235,48,Leg injury | Calf problems | Ankle sprain | Torn muscle fiber | Back injury | Lumbago | Quarantine | Corona virus | Groin injury | Ankle injury | Ill | Knock | Hamstring injury | Adductor pain,24/25 | 22/23 | 21/22 | 19/20 | 18/19 | 17/18
+11,Kevin De Bruyne,Midfield - Attacking Midfield,Midfield,SSC Napoli,,356,85,Hamstring muscle injury | stomach problems | Groin strain | Fitness | Hamstring injury | Foot bruise | Ill | Corona virus | Ankle injury | Facial fracture | muscular problems | Muscle injury | Back injury | Ankle problems,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20
+12,Kieran Trippier,Defender - Right-Back,Defender,Newcastle United,,357,64,Hamstring injury | Calf injury | Groin injury | Metatarsal fracture | Shoulder injury | Groin strain | Strain in the thigh and gluteal muscles | bruise | Ankle injury,24/25 | 23/24 | 21/22 | 19/20 | 18/19 | 17/18
+13,Alisson Ramsés Becker,Goalkeeper,Goalkeeper,Liverpool FC,,411,80,concussion | Hamstring injury | Thigh problems | Virus | muscular problems | Corona virus | Ill | Hip injury | Shoulder injury | Calf injury,24/25 | 23/24 | 21/22 | 20/21 | 19/20 | 17/18
+14,Thibaut Nicolas Marc Courtois,Goalkeeper,Goalkeeper,Real Madrid,,461,88,Back injury | Muscle injury | Achilles tendon problems | Adductor tear | Meniscus tear | Cruciate ligament tear | Adductor pain | Hamstring injury | Sciatica problems | Inflammation of pubic bone | Corona virus | stomach problems | Bone sprain,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20
+15,Damián Emiliano Martínez,Goalkeeper,Goalkeeper,Aston Villa,,19,3,unknown injury | Knee problems,24/25 | 21/22
+16,Stefano Russo,Goalkeeper,Goalkeeper,Retired,,83,15,unknown injury | Elbow injury,20/21 | 15/16
+17,Jan Oblak,Goalkeeper,Goalkeeper,AtlÃ©tico de Madrid,,187,30,Back injury | Corona virus | Rest | Knock | Wrist injury | influenza | Shoulder injury,22/23 | 21/22 | 17/18 | 16/17
+18,Antoine Griezmann,Attack - Second Striker,Attack,AtlÃ©tico de Madrid,,143,25,Ankle injury | Muscle injury | Corona virus | minor knock | ankle sprain,23/24 | 21/22 | 19/20 | 17/18 | 16/17 | 12/13
+19,Harry Kane,Attack - Centre-Forward,Attack,Bayern Munich,,301,54,Torn muscle fiber | Back problems | Ankle injury | unknown injury | Fitness | Torn thigh muscle | Ill | Ligament injury | Torn ankle ligaments | Back injury | Knee injury | Hamstring injury,24/25 | 23/24 | 20/21 | 19/20 | 18/19 | 17/18
+20,Virgil van Dijk,Defender - Centre-Back,Defender,Liverpool FC,,621,115,Rest | Ill | Hamstring injury | Knee problems | Corona virus | Cruciate ligament tear | Ankle injury | Rib fracture | Knock | Thigh problems,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20 | 18/19 | 17/18 | 16/17
+21,Mohamed Salah Ghaly,Attack - Right Winger,Attack,Liverpool FC,,188,38,muscular problems | Hamstring muscle injury | Corona virus | Ankle injury | Ankle problems | concussion | Thigh problems | Shoulder injury | Torn lateral ankle ligament,23/24 | 20/21 | 19/20 | 18/19 | 17/18 | 16/17 | 15/16 | 14/15 | 12/13
+22,Leon Christoph Goretzka,Midfield - Central Midfield,Midfield,Bayern Munich,,278,46,bruise | Hamstring strain | Ill | muscular problems | Broken hand | Thigh problems | Corona virus | Knee surgery | Fitness | Hip problems | cold | Rest | Torn muscle fiber | strain | Calf problems,24/25 | 23/24 | 22/23 | 21/22 | 20/21
+23,Joshua Walter Kimmich,Midfield - Defensive Midfield,Midfield,Bayern Munich,,173,34,Tendon irritation | Shoulder injury | Ill | muscular problems | Corona virus | Fitness | Quarantine | influenza | Meniscus damage | bruise | Back problems | stomach problems,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 17/18 | 16/17
+24,Raphaël Varane,Defender - Centre-Back,Defender,Retired,,412,63,Knee problems | Muscle injury | Ill | unknown injury | Foot injury | Leg injury | Ankle sprain | muscular problems | Corona virus | Abdominal problems | Hamstring injury | Groin injury | flu,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 18/19
+25,Memphis Depay,Attack - Centre-Forward,Attack,Sport Club Corinthians Paulista,,395,69,Hamstring injury | ankle sprain | Leg injury | Injury to the ankle | Fitness | Muscle injury | Calf injury | Thigh problems | Hamstring strain,25/26 | 24/25 | 23/24 | 22/23 | 21/22
+26,Timo Werner,Attack - Left Winger,Attack,RB Leipzig,,315,54,Hamstring injury | Hip injury | Thigh problems | Adductor pain | Back problems | Ankle problems | cold | Syndesmotic ligament tear | infection | Corona virus | strain | Hamstring strain | Knock | influenza | Ill,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20 | 18/19
+27,Domenico Berardi,Attack - Right Winger,Attack,US Sassuolo,,441,60,Achilles tendon surgery | Meniscus injury | Fever | Rest | muscular problems | Adductor pain | Thigh problems | Hamstring muscle injury | unknown injury | Knee problems | Corona virus | Foot bruise,23/24 | 22/23 | 21/22
+28,Adrien Rabiot,Midfield - Central Midfield,Midfield,AC Milan,,155,23,Calf injury | Muscle fatigue | Foot injury | Calf problems | Thigh problems | bruise | cold | Quarantine | Corona virus | Ankle problems | Muscle injury,24/25 | 23/24 | 22/23 | 21/22
+29,John Stones,Defender - Centre-Back,Defender,Manchester City,,423,83,Hamstring injury | Foot injury | unknown injury | Hip injury | Rest | Knock | Ankle injury | Muscle injury | Groin injury,24/25 | 23/24 | 22/23 | 20/21 | 19/20 | 18/19
+30,Stanislav Lobotka,Midfield - Defensive Midfield,Midfield,SSC Napoli,,221,47,Ankle sprain | Hamstring injury | Bruised ribs | Hamstring muscle injury | Quarantine | Dead leg | Muscle injury | Tonsillitis | flu | Muscle fatigue | ankle sprain | unknown injury,24/25 | 23/24 | 21/22 | 20/21 | 19/20 | 18/19 | 14/15
+31,Federico Dimarco,Defender - Left-Back,Defender,Inter Milan,,312,77,unknown injury | Hamstring injury | flu | Muscle fatigue | muscular problems | Injury to abdominal muscles | Adductor injury | Broken foot,24/25 | 23/24 | 22/23 | 18/19 | 17/18
+32,Paulo Bruno Exequiel Dybala,Attack - Second Striker,Attack,AS Roma,,281,39,Tendon rupture | unknown injury | Bruised knee | muscular problems | Muscle fatigue | Adductor injury | Thigh problems | Hamstring muscle injury | Collateral ligament injury | Adductor pain | Ankle problems | Ankle sprain,24/25 | 23/24 | 22/23
+33,André Onana,Goalkeeper,Goalkeeper,Trabzonspor,,130,13,Hamstring injury | Groin injury | Shoulder injury | Ill | Rest,25/26 | 21/22 | 19/20 | 18/19 | 17/18 | 16/17
+34,Andrew Robertson,Defender - Left-Back,Defender,Liverpool FC,,241,47,Knock | Ankle problems | Ill | Shoulder injury | Knee injury | Hip injury | Ankle injury | Torn thigh muscle | Fracture of fibula shaft | Arm injury | Calf strain,23/24 | 22/23 | 20/21 | 19/20 | 18/19 | 17/18 | 16/17
+35,Boris Babi?,Attack - Centre-Forward,Attack,FC Schaffhausen,,496,61,unknown injury | Corona virus | Cruciate ligament tear,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20 | 18/19 | 17/18
+36,Bruno Miguel Borges Fernandes,Midfield - Attacking Midfield,Midfield,Manchester United,,30,6,Knee injury | Ill | Leg injury | flu,23/24 | 21/22 | 18/19 | 16/17
+37,Bernardo Mota Veiga de Carvalho e Silva,Midfield - Attacking Midfield,Midfield,Manchester City,,151,28,unknown injury | muscular problems | Muscle injury | Knock | Ankle injury | Hamstring injury,24/25 | 23/24 | 21/22 | 20/21 | 18/19 | 16/17 | 15/16
+38,Rodrigo Javier De Paul,Midfield - Central Midfield,Midfield,Inter Miami CF,,18,4,Hamstring injury,23/24
+39,Nicolò Barella,Midfield - Central Midfield,Midfield,Inter Milan,,204,49,Adductor injury | Hamstring injury | Nose surgery | Muscle fatigue | unknown injury | Bruised knee | Ankle problems | Knee injury | Wrist fracture,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20 | 16/17
+40,Gianluca Mancini,Defender - Centre-Back,Defender,AS Roma,,62,17,flu | Pubalgia | inflammation | Adductor injury | Bruised knee | Foot injury | muscular problems | Stomach flu,24/25 | 23/24 | 21/22 | 20/21 | 19/20
+41,Rúben dos Santos Gato Alves Dias,Defender - Centre-Back,Defender,Manchester City,,188,45,muscle stiffness | Hip injury | unknown injury | Calf injury | Hamstring injury | Knock | Ankle injury | Appendectomy,24/25 | 22/23 | 21/22 | 17/18
+42,Manuel Locatelli,Midfield - Defensive Midfield,Midfield,Juventus FC,,132,27,Ankle sprain | fracture | Muscle fatigue | Inner ligament injury | Corona virus | muscular problems | Quarantine | Foot bruise | flu,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 16/17
+43,Mattia Zaccagni,Attack - Left Winger,Attack,SS Lazio,,211,37,Groin surgery | Pubic bone irritation | Calf problems | Stomach flu | Ankle injury | Toe injury | Hip injury | Knee problems | Ankle problems | Fever | Calf injury | Hamstring injury | Quarantine,24/25 | 23/24 | 22/23 | 21/22
+44,Guglielmo Vicario,Goalkeeper,Goalkeeper,Tottenham Hotspur,,216,33,unknown injury | Ankle surgery | Fever | Chest injury | Finger injury,24/25 | 23/24 | 22/23 | 18/19
+45,Daniel Olmo Carvajal,Midfield - Attacking Midfield,Midfield,FC Barcelona,,370,84,Adductor injury | strain | Muscle injury | muscular problems | Acromioclavicular joint dislocation | Knee injury | Torn muscle fiber | Inner knee ligament tear | cold | Corona virus,24/25 | 23/24 | 22/23 | 21/22
+46,Kai Lukas Havertz,Attack - Centre-Forward,Attack,Arsenal FC,,267,54,Knee injury | Hamstring injury | Ill | Knee problems | influenza | Corona virus | cold | Knock | muscular problems | Torn muscle fiber | Knee bruise,25/26 | 24/25 | 22/23 | 21/22 | 20/21 | 19/20 | 18/19 | 17/18
+47,Trent Alexander-Arnold,Defender - Right-Back,Defender,Real Madrid,,316,43,muscular problems | Ankle injury | Hamstring injury | Torn lateral knee ligament | Ankle problems | Corona virus | Calf injury | Ill | Back problems,25/26 | 24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20 | 18/19
+48,Alessandro Bastoni,Defender - Centre-Back,Defender,Inter Milan,,170,31,Muscle fatigue | unknown injury | Calf injury | Fever | Hamstring injury | Ankle problems | Stomach flu | Corona virus | Knock | Meniscus injury,23/24 | 22/23 | 21/22 | 20/21 | 19/20 | 18/19
+49,Gianluigi Donnarumma,Goalkeeper,Goalkeeper,Manchester City,,141,17,Facial injury | Corona virus | Fitness | Ankle sprain | Contracture | stomach problems | Hamstring muscle injury | strain | Adductor pain | Head injury,24/25 | 21/22 | 20/21 | 19/20 | 18/19 | 17/18 | 15/16
+50,Enrico Brignola,Attack - Right Winger,Attack,Ternana Calcio,,358,38,Calf strain | Muscle injury | muscular problems | unknown injury | Broken hand,24/25 | 22/23 | 19/20 | 18/19
+51,Fausto Grillo,Defender - Centre-Back,Defender,Club AtlÃ©tico TucumÃ¡n,,472,24,Ankle injury | Bone edema,20/21 | 18/19 | 17/18
+52,Rafael Santos Borré Maury,Attack - Centre-Forward,Attack,Sport Club Internacional,,143,28,Thigh problems | Abdominal problems | Hamstring injury | Corona virus | Knock | Hip problems | Foot bruise,25/26 | 24/25 | 20/21 | 19/20 | 18/19
+53,Evander da Silva Ferreira,Midfield - Attacking Midfield,Midfield,FC Cincinnati,,142,23,Knee injury | Leg injury | Calf injury | Hip injury | Muscle fiber tear | Corona virus | Hamstring strain,24/25 | 23/24 | 22/23 | 20/21
+54,Matheus Pereira da Silva,Midfield - Central Midfield,Midfield,Fortaleza Esporte Clube,,53,7,Hamstring injury | Corona virus | unknown injury,25/26 | 21/22 | 18/19
+55,Francisco Andrés Arancibia Silva,Attack - Right Winger,Attack,Deportivo Garcilaso,,104,15,ankle sprain | Lower leg fracture,25/26 | 17/18
+56,Matthijs de Ligt,Defender - Centre-Back,Defender,Manchester United,,298,65,Knee injury | Foot injury | Ill | Inner ligament injury | Inner knee ligament tear | Knock | Calf injury | Virus | Inner ligament stretch of the knee | Adductor pain | Groin problems | Muscle fatigue | Corona virus | Shoulder injury,24/25 | 23/24 | 22/23 | 21/22 | 20/21
+57,Diogo José Teixeira da Silva,Attack - Left Winger,Attack,---,03.07.2025 (28),561,125,muscular problems | Muscle injury | Hip injury | Knee collateral ligament tear | Calf injury | Hamstring injury | Ankle injury | Foot injury | Knee bruise | bruise,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20 | 18/19
+58,Federico Chiesa,Attack - Right Winger,Attack,Liverpool FC,,505,93,Muscle injury | unknown injury | Knee problems | muscular problems | Tendon irritation | Muscle fatigue | Fitness | Cruciate ligament tear | Hamstring muscle injury,24/25 | 23/24 | 22/23 | 21/22
+59,Kylian Mbappé Lottin,Attack - Centre-Forward,Attack,Real Madrid,,136,28,Stomach flu | Hamstring injury | Muscle injury | Adductor pain | infection | Calf injury | Thigh problems | Corona virus | Ankle injury | Rest,24/25 | 22/23 | 21/22 | 20/21 | 19/20
+60,Rodrigo Bentancur Colmán,Midfield - Defensive Midfield,Midfield,Tottenham Hotspur,,460,73,concussion | Head injury | Torn ankle ligaments | Cruciate ligament tear | Adductor pain | Back problems | Ankle injury | Corona virus | Knee problems | Muscle fatigue | Knee injury,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20 | 18/19 | 15/16
+61,Rodrigo Hernández Cascante,Midfield - Defensive Midfield,Midfield,Manchester City,,320,63,Knee problems | Cruciate ligament tear | Hamstring injury | Knock | Muscle injury,25/26 | 24/25 | 20/21 | 19/20
+62,Declan Rice,Midfield - Central Midfield,Midfield,Arsenal FC,,30,11,Broken toe | Ill,24/25 | 18/19
+63,Ikoma Loïs Openda,Attack - Centre-Forward,Attack,Juventus FC,,6,1,Knock,24/25
+64,Federico Santiago Valverde Dipetta,Midfield - Central Midfield,Midfield,Real Madrid,,241,47,Lumbago | muscular problems | Dead leg | flu | Corona virus | sprain | Quarantine | Muscle injury | Shin injury | Knee injury | Ill,24/25 | 22/23 | 21/22 | 20/21 | 19/20 | 17/18
+65,Vinícius José Paixão de Oliveira Júnior,Attack - Left Winger,Attack,Real Madrid,,191,36,ankle sprain | Muscle injury | Cervical spine injury | Torn thigh muscle | Hamstring muscle injury | Knee problems | Corona virus | Intestinal virus | Torn lateral knee ligament,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 18/19
+66,Sandro Tonali,Midfield - Central Midfield,Midfield,Newcastle United,,84,17,Rest | Muscle fatigue | unknown injury | Fever | Knee injury | Contracture | Bursitis | Shin bruise | Adductor injury | muscular problems,22/23 | 21/22 | 20/21 | 19/20
+67,Achraf Hakimi Mouh,Defender - Right-Back,Defender,Paris Saint-Germain,,122,15,Hamstring injury | Corona virus | Ankle problems | Quarantine | Metatarsal fracture,22/23 | 21/22 | 20/21 | 18/19
+68,Erling Braut Haaland,Attack - Centre-Forward,Attack,Manchester City,,277,56,Ankle injury | Knee problems | Muscle injury | Stress reaction of the bone | Groin problems | Foot bruise | Ill | muscular problems | Hip flexor problems | minor knock | Torn muscle fiber,24/25 | 23/24 | 22/23 | 21/22 | 20/21
+69,Nahuel Molina Lucero,Defender - Right-Back,Defender,AtlÃ©tico de Madrid,,155,20,Muscle injury | unknown injury | Hip injury | Fitness,24/25 | 23/24 | 21/22 | 20/21 | 18/19
+70,Alphonso Boyle Davies,Defender - Left-Back,Defender,Bayern Munich,,537,89,Cruciate ligament tear | Torn muscle fiber | Internal ligament strain | Torn muscle bundle | Head injury | muscular problems | heart problems | Corona virus | Thigh problems | Knee problems | Ankle injury | Torn ankle ligaments | Inner ligament stretch of the knee,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 18/19
+71,Xavier Casmier Amaechi,Attack - Right Winger,Attack,Plymouth Argyle,,280,49,bruise | Knee problems | Torn lateral ankle ligament | Ankle injury | Hamstring strain | Metatarsal fracture | Corona virus | Quarantine | Hamstring injury | Stomach flu,24/25 | 23/24 | 22/23 | 21/22 | 20/21 | 19/20
+72,Marvin Senger,Defender - Centre-Back,Defender,Stal Mielec,,177,25,Ankle injury | muscular problems | Torn muscle fiber | Adductor pain | laceration wound | Back problems,24/25 | 22/23 | 21/22 | 20/21
+73,Randal Kolo Muani,Attack - Centre-Forward,Attack,Tottenham Hotspur,,9,2,Virus | Adductor pain,23/24 | 22/23
+74,Mamadou Sangaré,Midfield - Central Midfield,Midfield,Morecambe FC,,15,3,unknown injury,24/25
+75,Gleison Bremer Silva Nascimento,Defender - Centre-Back,Defender,Juventus FC,,389,61,Cruciate ligament tear | Muscle injury | Muscle fatigue | Thigh problems | unknown injury | Hamstring muscle injury | Ankle problems | Ankle injury | Corona virus,24/25 | 22/23 | 21/22 | 20/21
+76,Joshua Tenkorang,Midfield - Central Midfield,Midfield,Ravenna FC,,277,28,unknown injury | Fever | Rest | Knee injury,23/24 | 22/23 | 20/21
+77,Alexis Mac Allister,Midfield - Central Midfield,Midfield,Liverpool FC,,142,14,Muscle injury | Knee injury | Back injury | Virus,24/25 | 23/24 | 20/21
+78,Francesco Amatucci,Midfield - Central Midfield,Midfield,AS Cittadella,,47,6,Muscle injury | flu | Rest | unknown injury | Corona virus,22/23 | 21/22
+79,Edoardo Sottini,Defender - Centre-Back,Defender,UC AlbinoLeffe,,276,28,Achilles tendon surgery | unknown injury,24/25 | 23/24 | 21/22
+80,Jude Victor William Bellingham,Midfield - Attacking Midfield,Midfield,Real Madrid,,146,18,Shoulder injury | Muscle injury | ankle sprain | Knee injury | Knee problems | Knock,25/26 | 24/25 | 23/24 | 22/23 | 21/22 | 20/21
+81,Andreas Kristoffer Jungdal,Goalkeeper,Goalkeeper,KVC Westerlo,,73,11,minor knock | unknown injury | muscular problems | Hamstring injury,24/25 | 23/24 | 22/23
+82,Lennard Hartjes,Midfield - Central Midfield,Midfield,Excelsior Rotterdam,,656,83,Cruciate ligament tear | Knock | Muscle injury,24/25 | 23/24 | 21/22 | 19/20
+83,Florian Richard Wirtz,Midfield - Attacking Midfield,Midfield,Liverpool FC,,386,69,Inner ligament injury | Capsular injury | bruise | muscular problems | Stomach flu | Rest | Cruciate ligament tear | Hip flexor problems | Adductor pain | Corona virus | Knee problems,24/25 | 23/24 | 22/23 | 21/22 | 20/21
+84,Aleksander Paluszek,Defender - Centre-Back,Defender,GKS Katowice,,254,30,Collateral ligament tear | Corona virus | unknown injury,25/26 | 21/22
+85,Julian Baas,Midfield - Central Midfield,Midfield,Sparta Rotterdam,,22,3,unknown injury | Knock,22/23 | 20/21
+86,Cissé Sandra,Midfield - Attacking Midfield,Midfield,Club Brugge KV,,152,22,Muscle injury,23/24 | 20/21
+87,Aurèle Amenda,Defender - Centre-Back,Defender,Eintracht Frankfurt,,149,15,Calf injury | Syndesmosis ligament tear | Hamstring injury,24/25 | 23/24
+88,Volodymyr Brazhko,Midfield - Defensive Midfield,Midfield,Dynamo Kyiv,,136,7,unknown injury | Fitness | Ankle injury | Virus,24/25 | 23/24 | 21/22
+89,Alan Nicolás Marinelli,Attack - Left Winger,Attack,1.FC Slovacko,,108,13,Foot surgery,22/23
+90,Enzo Barrenechea,Midfield - Defensive Midfield,Midfield,SL Benfica,,325,44,Ankle problems | influenza | unknown injury | Partial damage to the cruciate ligament | Muscle injury,24/25 | 21/22 | 20/21 | 19/20
+91,Mika Baur,Attack - Left Winger,Attack,SC Paderborn 07,,75,11,bruise | Bruised knee | unknown injury,23/24 | 22/23
+92,Brahima Diarra,Attack - Right Winger,Attack,Al-Wahda FC,,80,11,Ankle injury,21/22
+93,Franco Ezequiel Carboni,Defender - Left-Back,Defender,FC Empoli,,6,1,unknown injury,23/24
+94,Franco Tomás Ortellado,Defender - Centre-Back,Defender,CA LanÃºs,,794,74,Cruciate ligament tear,23/24
+95,Tommaso Corazza,Defender - Left-Back,Defender,Delfino Pescara 1936,,22,3,Finger injury,23/24
+96,Tomás Ezequiel Castro Ponce,Midfield - Right Midfield,Midfield,Club Almagro,,43,4,Collateral ligament injury | Corona virus,23/24 | 20/21
+97,Kenan Y?ld?z,Attack - Left Winger,Attack,Juventus FC,,105,12,Muscle fatigue | Stomach flu | Ligament stretching | muscular problems,24/25 | 23/24 | 21/22
+98,Benjamin Cremaschi,Midfield - Central Midfield,Midfield,Parma Calcio 1913,,67,9,Pubalgia,23/24
+164240,Thiago Silva,Defender - Centre-Back,Defender,Chelsea,,14,2,Back injury | Groin injury,25/26
+173030,Óscar Trejo,Midfield - Attacking Midfield,Midfield,Rayo Vallecano,,27,5,Hamstring injury | Back injury,25/26
+173608,Joselu,Attack - Centre-Forward,Attack,Real Madrid,,184,32,Rest | Knee problems | Groin injury | Hamstring injury,25/26 | 24/25 | 23/24
+177003,Luka Modric,Midfield - Central Midfield,Midfield,Real Madrid,,8,1,Hamstring injury | Muscle injury,25/26
+177413,Axel Witsel,Midfield - Defensive Midfield,Midfield,AtlÃƒÂ©tico Madrid,,8,1,Knock | Hamstring injury,25/26
+178213,Étienne Capoue,Midfield - Central Midfield,Midfield,Villarreal,,30,5,Knock | Back injury,25/26
+178603,Mats Hummels,Defender - Centre-Back,Defender,Dortmund,,14,2,Ill | Corona virus,25/26
+182521,Toni Kroos,Midfield - Central Midfield,Midfield,Real Madrid,,22,4,Ill | Groin problems,25/26
+183512,Yuri Berchiche,Defender - Left-Back,Defender,Athletic Club,,14,2,Ligament injury | Hamstring injury,25/26
+184392,Matteo Darmian,Defender - Centre-Back,Defender,Internazionale,,47,8,Ill | Calf injury | Rest,25/26 | 24/25
+186942,?lkay Gündo?an,Midfield - Central Midfield,Midfield,Barcelona,,86,15,Adductor pain | Muscle injury | Ankle sprain,25/26 | 24/25
+188350,Marco Reus,Midfield - Attacking Midfield,Midfield,Dortmund,,8,1,Back injury | Adductor pain,25/26
+188567,Pierre-Emerick Aubameyang,Attack - Centre-Forward,Attack,Marseille,,8,1,Rest | Knee problems,25/26
+189125,Giacomo Bonaventura,Midfield - Central Midfield,Midfield,Fiorentina,,107,18,Hamstring injury | Muscle injury | Corona virus,25/26 | 24/25
+189271,Francis Coquelin,Midfield - Central Midfield,Midfield,Villarreal,,8,1,Calf problems | Corona virus,25/26
+189505,Pedro,Attack - Right Winger,Attack,Lazio,,30,5,Muscle injury | Adductor pain,25/26
+189596,Thomas Müller,Midfield - Attacking Midfield,Midfield,Bayern Munich,,8,1,Calf problems | Knee injury,25/26
+189881,Chris Smalling,Defender - Centre-Back,Defender,Roma,,99,17,Knock | Ill | Rest,25/26 | 24/25
+190460,Christian Eriksen,Midfield - Central Midfield,Midfield,Manchester United,,8,1,Ankle sprain | Corona virus,25/26
+190674,Benjamin André,Midfield - Defensive Midfield,Midfield,Lille,,8,1,Foot injury | Adductor pain,25/26
+190717,Michail Antonio,Attack - Centre-Forward,Attack,West Ham United,,53,9,Leg injury | Ill | Rest,25/26 | 24/25
+190765,Pascal Groß,Midfield - Central Midfield,Midfield,Brighton & Hove Albion,,8,1,Calf problems | Muscle injury,25/26
+190813,Stephan El Shaarawy,Midfield - Left Midfield,Midfield,Roma,,8,1,Adductor pain | Back injury,25/26
+191043,Alex Sandro,Defender - Left-Back,Defender,Juventus,,207,36,Groin injury | Corona virus | Adductor injury | Ligament injury,25/26 | 24/25 | 23/24
+191740,Ander Herrera,Midfield - Central Midfield,Midfield,Athletic Club,,8,1,Ankle sprain | Back injury,25/26
+192318,Mario Götze,Midfield - Attacking Midfield,Midfield,Eintracht Frankfurt,,287,49,Back injury | Knock | Ankle sprain | Fitness,25/26 | 24/25 | 23/24
+192505,Romelu Lukaku,Attack - Centre-Forward,Attack,Roma,,23,4,Leg injury | Ill,25/26
+192638,Marcos Alonso,Defender - Left-Back,Defender,Barcelona,,14,2,Adductor injury | Ligament injury,25/26
+192883,Henrikh Mkhitaryan,Midfield - Attacking Midfield,Midfield,Internazionale,,8,1,Muscle injury | Back injury,25/26
+193198,Nemanja Gudelj,Defender - Centre-Back,Defender,Sevilla,,37,6,Back injury | Calf injury,25/26
+193476,Rémy Cabella,Midfield - Attacking Midfield,Midfield,Lille,,31,5,Back injury | Ill,25/26
+193747,Koke,Midfield - Defensive Midfield,Midfield,AtlÃƒÂ©tico Madrid,,8,1,Knee injury | Fitness,25/26
+195086,Dejan Lovren,Defender - Centre-Back,Defender,Lyon,,14,2,Ankle injury | Back injury,25/26
+196978,Callum Wilson,Attack - Centre-Forward,Attack,Newcastle United,,26,4,Ankle injury | Corona virus,25/26
+197445,David Alaba,Defender - Centre-Back,Defender,Real Madrid,,28,5,Groin injury | Adductor injury,25/26
+197781,Isco,Midfield - Attacking Midfield,Midfield,Real Betis,,8,1,Corona virus | Calf problems,25/26
+197891,Juanmi,Midfield - Left Midfield,Midfield,CÃƒÂ¡diz,,0,0,No significant injury record,
+198032,Dan Burn,Defender - Centre-Back,Defender,Newcastle United,,14,2,Groin injury | Back injury,25/26
+198164,Jonathan Viera,Midfield - Attacking Midfield,Midfield,AlmerÃƒÂ­a,,8,1,Ill | Groin problems,25/26
+198176,Stefan de Vrij,Defender - Centre-Back,Defender,Internazionale,,14,2,Adductor injury | Ankle injury,25/26
+198451,Dani Rodríguez,Midfield - Right Midfield,Midfield,Mallorca,,8,1,Foot injury | Adductor pain,25/26
+198706,Luis Alberto,Midfield - Central Midfield,Midfield,Lazio,,46,8,Groin problems | Rest | Calf problems,25/26 | 24/25
+198950,Pablo Sarabia,Midfield - Right Midfield,Midfield,Wolverhampton Wanderers,,52,9,Adductor pain | Fitness | Knock,25/26 | 24/25
+199439,Michael Gregoritsch,Attack - Centre-Forward,Attack,Freiburg,,0,0,No significant injury record,
+199576,Oriol Romeu,Midfield - Defensive Midfield,Midfield,Barcelona,,8,1,Ankle sprain | Back injury,25/26
+199845,Francesco Acerbi,Defender - Centre-Back,Defender,Internazionale,,66,11,Adductor injury | Corona virus | Ligament injury,25/26 | 24/25
+200458,Lucas Digne,Defender - Left-Back,Defender,Aston Villa,,286,49,Ligament injury | Groin injury | Ill | Calf injury,25/26 | 24/25 | 23/24
+200724,Nacho Fernández,Defender - Centre-Back,Defender,Real Madrid,,58,10,Ligament injury | Ankle injury | Hamstring injury,25/26 | 24/25
+200888,Danilo Pereira,Midfield - Defensive Midfield,Midfield,Paris Saint-Germain,,8,1,Corona virus | Calf problems,25/26
+201119,Ismaily,Defender - Left-Back,Defender,Lille,,75,13,Knock | Adductor injury | Ligament injury,25/26 | 24/25
+201305,Gabriel Paulista,Defender - Centre-Back,Defender,AtlÃƒÂ©tico Madrid,,14,2,Adductor injury | Corona virus,25/26
+201455,Geoffrey Kondogbia,Midfield - Central Midfield,Midfield,Marseille,,8,1,Groin problems | Adductor pain,25/26
+201519,Jordan Veretout,Midfield - Central Midfield,Midfield,Marseille,,8,1,Back injury | Rest,25/26
+202024,Remo Freuler,Midfield - Defensive Midfield,Midfield,Bologna,,34,6,Knock | Hamstring injury,25/26
+202335,Eric Dier,Defender - Centre-Back,Defender,Bayern Munich,,96,17,Ligament injury | Ankle injury | Ill,25/26 | 24/25
+202648,Sergi Darder,Midfield - Central Midfield,Midfield,Mallorca,,24,4,Rest | Groin problems,25/26
+202651,Suso,Attack - Right Winger,Attack,Sevilla,,20,3,Groin injury | Fitness,25/26
+202652,Raheem Sterling,Attack - Left Winger,Attack,Chelsea,,12,2,Ankle injury | Calf problems,25/26
+202695,James Tarkowski,Defender - Centre-Back,Defender,Everton,,14,2,Muscle injury | Groin injury,25/26
+202884,Leonardo Spinazzola,Defender - Left-Back,Defender,Roma,,14,2,Knock | Adductor injury,25/26
+203263,Harry Maguire,Defender - Centre-Back,Defender,Manchester United,,100,17,Back injury | Rest | Calf injury,25/26 | 24/25
+203747,Héctor Bellerín,Defender - Right-Back,Defender,Real Betis,,6,1,Ankle injury | Ill,25/26
+204311,Kurt Zouma,Defender - Centre-Back,Defender,West Ham United,,6,1,Hamstring injury | Muscle injury,25/26
+204525,Iñigo Martínez,Defender - Centre-Back,Defender,Barcelona,,14,2,Groin injury | Hamstring injury,25/26
+204614,Mário Rui,Defender - Left-Back,Defender,Napoli,,14,2,Corona virus | Hamstring injury,25/26
+204639,Stefan Savi?,Defender - Centre-Back,Defender,AtlÃƒÂ©tico Madrid,,14,2,Adductor injury | Muscle injury,25/26
+204923,Marcel Sabitzer,Midfield - Central Midfield,Midfield,Dortmund,,15,3,Hamstring injury | Muscle injury,25/26
+205175,Arkadiusz Milik,Attack - Centre-Forward,Attack,Juventus,,0,0,No significant injury record,
+205431,Niclas Füllkrug,Attack - Centre-Forward,Attack,Dortmund,,205,35,Calf problems | Knock | Fitness | Ill,25/26 | 24/25 | 23/24
+205452,Antonio Rüdiger,Defender - Centre-Back,Defender,Real Madrid,,14,2,Hamstring injury | Adductor injury,25/26
+205498,Jorginho,Midfield - Defensive Midfield,Midfield,Arsenal,,8,1,Ill | Foot injury,25/26
+205569,James Ward-Prowse,Midfield - Central Midfield,Midfield,West Ham United,,0,0,No significant injury record,
+205632,Lucas Ocampos,Attack - Right Winger,Attack,Sevilla,,26,4,Muscle injury | Fitness,25/26
+205923,Ben Davies,Defender - Centre-Back,Defender,Tottenham Hotspur,,14,2,Groin injury | Back injury,25/26
+206113,Serge Gnabry,Midfield - Right Midfield,Midfield,Bayern Munich,,0,0,No significant injury record,
+206517,Jack Grealish,Attack - Left Winger,Attack,Manchester City,,36,6,Muscle injury | Corona virus,25/26
+206590,Moi Gómez,Midfield - Central Midfield,Midfield,Osasuna,,0,0,No significant injury record,
+207421,Leandro Trossard,Attack - Second Striker,Attack,Arsenal,,0,0,No significant injury record,
+207566,William Carvalho,Midfield - Defensive Midfield,Midfield,Real Betis,,45,8,Back injury | Rest | Groin problems,25/26 | 24/25
+207616,Adam Webster,Defender - Centre-Back,Defender,Brighton & Hove Albion,,19,3,Ligament injury | Back injury,25/26
+207863,Felipe,Defender - Centre-Back,Defender,Nottingham Forest,,14,2,Ligament injury | Ankle injury,25/26
+208004,Joël Veltman,Defender - Right-Back,Defender,Brighton & Hove Albion,,44,8,Muscle injury | Knee injury | Ill,25/26 | 24/25
+208093,Gerard Moreno,Attack - Centre-Forward,Attack,Villarreal,,28,5,Ankle injury | Adductor pain,25/26
+208128,Hakan Çalhano?lu,Midfield - Central Midfield,Midfield,Internazionale,,0,0,No significant injury record,
+208135,Abdoulaye Doucouré,Midfield - Central Midfield,Midfield,Everton,,8,1,Muscle injury | Ankle sprain,25/26
+208268,Bryan Cristante,Midfield - Defensive Midfield,Midfield,Roma,,0,0,No significant injury record,
+208450,Andreas Pereira,Midfield - Attacking Midfield,Midfield,Fulham,,174,30,Ill | Rest | Adductor pain | Back injury,25/26 | 24/25 | 23/24
+208461,Marten de Roon,Midfield - Defensive Midfield,Midfield,Atalanta,,8,1,Muscle injury | Back injury,25/26
+208574,Filip Kosti?,Midfield - Left Midfield,Midfield,Juventus,,284,49,Groin problems | Calf problems | Fitness | Foot injury,25/26 | 24/25 | 23/24
+208596,Andrea Belotti,Attack - Centre-Forward,Attack,Fiorentina,,100,17,Ill | Groin injury | Hamstring injury,25/26 | 24/25
+208618,Lucas Vázquez,Defender - Right-Back,Defender,Real Madrid,,254,44,Knee injury | Muscle injury | Ill | Rest,25/26 | 24/25 | 23/24
+208777,Óliver Torres,Midfield - Central Midfield,Midfield,Sevilla,,68,12,Foot injury | Calf problems | Knee injury,25/26 | 24/25
+208787,Adrien Thomasson,Attack - Left Winger,Attack,Lens,,0,0,No significant injury record,
+208920,Nathan Aké,Defender - Centre-Back,Defender,Manchester City,,34,6,Rest | Corona virus,25/26
+209331,Mohamed Salah,Attack - Right Winger,Attack,Liverpool,,44,8,Knee problems | Groin injury | Calf problems,25/26 | 24/25
+209519,Gaëtan Laborde,Attack - Centre-Forward,Attack,Nice,,0,0,No significant injury record,
+209658,Leon Goretzka,Midfield - Central Midfield,Midfield,Bayern Munich,,91,16,Fitness | Rest | Foot injury,25/26 | 24/25
+209889,Raphaël Guerreiro,Defender - Left-Back,Defender,Bayern Munich,,31,5,Ill | Calf injury,25/26
+209989,Thomas Partey,Midfield - Defensive Midfield,Midfield,Arsenal,,0,0,No significant injury record,
+210047,Fabian Schär,Defender - Centre-Back,Defender,Newcastle United,,36,6,Muscle injury | Calf injury,25/26
+210315,Raúl de Tomás,Attack - Centre-Forward,Attack,Rayo Vallecano,,0,0,No significant injury record,
+210324,Jonas Hofmann,Midfield - Attacking Midfield,Midfield,Leverkusen,,39,7,Knee injury | Muscle injury,25/26
+210406,Piotr Zieli?ski,Midfield - Central Midfield,Midfield,Napoli,,0,0,No significant injury record,
+210413,Alessio Romagnoli,Defender - Centre-Back,Defender,Lazio,,6,1,Hamstring injury | Knock,25/26
+210514,João Cancelo,Defender - Left-Back,Defender,Barcelona,,28,5,Muscle injury | Calf injury,25/26
+210736,Emerson,Defender - Left-Back,Defender,Tottenham Hotspur,,6,1,Knee injury | Knock,25/26
+210897,Chancel Mbemba,Defender - Centre-Back,Defender,Marseille,,37,6,Ill | Back injury,25/26
+211022,Rubén García,Midfield - Left Midfield,Midfield,Osasuna,,0,0,No significant injury record,
+211110,Paulo Dybala,Attack - Second Striker,Attack,Roma,,18,3,Back problems | Muscle injury,25/26
+211256,Nicolás Tagliafico,Defender - Left-Back,Defender,Lyon,,38,7,Groin injury | Adductor injury,25/26
+211300,Anthony Martial,Attack - Centre-Forward,Attack,Manchester United,,99,17,Leg injury | Ill | Muscle injury,25/26 | 24/25
+211575,André Gomes,Midfield - Defensive Midfield,Midfield,Everton,,0,0,No significant injury record,
+212096,Vincenzo Grifo,Midfield - Left Midfield,Midfield,Freiburg,,8,1,Ill | Knock,25/26
+212187,Philipp Max,Defender - Left-Back,Defender,Eintracht Frankfurt,,6,1,Groin injury | Adductor injury,25/26
+212190,Niklas Süle,Defender - Centre-Back,Defender,Dortmund,,6,1,Back injury | Rest,25/26
+212194,Julian Brandt,Midfield - Attacking Midfield,Midfield,Dortmund,,15,3,Back injury | Knock,25/26
+212242,Robert Andrich,Midfield - Defensive Midfield,Midfield,Leverkusen,,0,0,No significant injury record,
+212622,Joshua Kimmich,Midfield - Defensive Midfield,Midfield,Bayern Munich,,0,0,No significant injury record,
+212811,Mario Lemina,Midfield - Defensive Midfield,Midfield,Wolverhampton Wanderers,,0,0,No significant injury record,
+213331,Jonathan Tah,Defender - Centre-Back,Defender,Leverkusen,,6,1,Knock | Adductor injury,25/26
+213345,Kingsley Coman,Midfield - Left Midfield,Midfield,Bayern Munich,,19,3,Fitness | Calf problems,25/26
+213661,Andreas Christensen,Defender - Centre-Back,Defender,Barcelona,,31,5,Back injury | Knock,25/26
+213666,Ruben Loftus-Cheek,Midfield - Central Midfield,Midfield,Milan,,0,0,No significant injury record,
+213955,Sardar Azmoun,Attack - Centre-Forward,Attack,Roma,,0,0,No significant injury record,
+213991,Jefferson Lerma,Midfield - Defensive Midfield,Midfield,Crystal Palace,,109,19,Back injury | Rest | Ill,25/26 | 24/25
+214097,Benjamin Bourigeaud,Midfield - Central Midfield,Midfield,Rennes,,0,0,No significant injury record,
+214997,Ángel Correa,Attack - Centre-Forward,Attack,AtlÃƒÂ©tico Madrid,,0,0,No significant injury record,
+215333,Duván Zapata,Attack - Centre-Forward,Attack,Torino,,8,1,Leg injury | Rest,25/26
+215441,Serhou Guirassy,Attack - Centre-Forward,Attack,Stuttgart,,234,40,Knee problems | Rest | Ill | Groin injury,25/26 | 24/25 | 23/24
+215590,Ayoze Pérez,Midfield - Left Midfield,Midfield,Real Betis,,37,6,Hamstring injury | Muscle injury,25/26
+216150,Davide Zappacosta,Defender - Left-Back,Defender,Atalanta,,73,13,Rest | Calf injury | Muscle injury,25/26 | 24/25
+216201,Iñaki Williams,Midfield - Right Midfield,Midfield,Athletic Club,,0,0,No significant injury record,
+216393,Youri Tielemans,Midfield - Central Midfield,Midfield,Aston Villa,,28,5,Knock | Corona virus,25/26
+216409,Matteo Politano,Attack - Right Winger,Attack,Napoli,,0,0,No significant injury record,
+216447,Álvaro García,Midfield - Left Midfield,Midfield,Rayo Vallecano,,73,13,Muscle injury | Ankle sprain | Back injury,25/26 | 24/25
+216460,José María Giménez,Defender - Centre-Back,Defender,AtlÃƒÂ©tico Madrid,,6,1,Ankle injury | Ill,25/26
+216549,Alexander Sørloth,Attack - Centre-Forward,Attack,Villarreal,,0,0,No significant injury record,
+216816,Giovanni Simeone,Attack - Centre-Forward,Attack,Napoli,,22,4,Groin injury | Leg injury,25/26
+218339,Mahmoud Dahoud,Midfield - Central Midfield,Midfield,Stuttgart,,0,0,No significant injury record,
+219581,Samuel Gigot,Defender - Centre-Back,Defender,Marseille,,116,20,Calf injury | Rest | Ligament injury,25/26 | 24/25
+219683,Corentin Tolisso,Midfield - Defensive Midfield,Midfield,Lyon,,0,0,No significant injury record,
+219693,Diego Carlos,Defender - Centre-Back,Defender,Aston Villa,,14,2,Adductor injury | Calf injury,25/26
+219733,Ludovic Ajorque,Attack - Centre-Forward,Attack,Mainz 05,,136,23,Groin injury | Calf problems | Hamstring injury | Knock,25/26 | 24/25 | 23/24
+219789,Hamari Traoré,Defender - Right-Back,Defender,Real Sociedad,,14,2,Ill | Hamstring injury,25/26
+219792,Baptiste Santamaria,Midfield - Defensive Midfield,Midfield,Rennes,,0,0,No significant injury record,
+219932,Antonio Sanabria,Attack - Centre-Forward,Attack,Torino,,5,1,Calf problems | Leg injury,25/26
+220093,Hans Hateboer,Defender - Right-Back,Defender,Atalanta,,6,1,Calf injury | Muscle injury,25/26
+220440,Clément Lenglet,Defender - Centre-Back,Defender,Aston Villa,,39,7,Ligament injury | Ankle injury,25/26
+220621,Saïd Benrahma,Midfield - Left Midfield,Midfield,Lyon,,0,0,No significant injury record,
+220651,Angeliño,Defender - Left-Back,Defender,Roma,,6,1,Hamstring injury | Groin injury,25/26
+220697,James Maddison,Midfield - Attacking Midfield,Midfield,Tottenham Hotspur,,277,48,Muscle injury | Ankle sprain | Fitness | Calf problems,25/26 | 24/25 | 23/24
+220714,Philip Billing,Midfield - Central Midfield,Midfield,Bournemouth,,6,1,Foot injury | Ill,25/26
+220814,Lucas Hernández,Defender - Centre-Back,Defender,Paris Saint-Germain,,40,7,Calf injury | Muscle injury | Knock,25/26 | 24/25
+220834,Marco Asensio,Attack - Right Winger,Attack,Paris Saint-Germain,,5,1,Hamstring injury | Fitness,25/26
+221284,Jonathan Gradit,Defender - Centre-Back,Defender,Lens,,14,2,Ankle injury | Ill,25/26
+221342,Pablo Maffeo,Defender - Right-Back,Defender,Mallorca,,6,1,Ligament injury | Adductor injury,25/26
+221479,Dominic Calvert-Lewin,Attack - Centre-Forward,Attack,Everton,,19,3,Hamstring injury | Fitness,25/26
+221697,Ollie Watkins,Attack - Centre-Forward,Attack,Aston Villa,,0,0,No significant injury record,
+222104,Tosin Adarabioyo,Defender - Centre-Back,Defender,Fulham,,6,1,Rest | Hamstring injury,25/26
+222331,Lukas Klostermann,Defender - Centre-Back,Defender,RB Leipzig,,17,3,Knock | Hamstring injury,25/26
+222492,Leroy Sané,Midfield - Right Midfield,Midfield,Bayern Munich,,0,0,No significant injury record,
+222501,Timothy Castagne,Defender - Right-Back,Defender,Fulham,,6,1,Knee injury | Muscle injury,25/26
+222509,Dani Ceballos,Midfield - Central Midfield,Midfield,Real Madrid,,0,0,No significant injury record,
+222558,Rick Karsdorp,Midfield - Right Midfield,Midfield,Roma,,136,23,Ill | Knock | Fitness | Groin problems,25/26 | 24/25 | 23/24
+222665,Martin Ødegaard,Midfield - Attacking Midfield,Midfield,Arsenal,,41,7,Back injury | Calf problems | Ankle sprain,25/26 | 24/25
+223197,Enes Ünal,Attack - Centre-Forward,Attack,Bournemouth,,0,0,No significant injury record,
+223273,Mario Pašali?,Midfield - Attacking Midfield,Midfield,Atalanta,,44,8,Ill | Rest | Knock,25/26 | 24/25
+223671,Stefan Posch,Defender - Right-Back,Defender,Bologna,,39,7,Ill | Back injury,25/26
+223710,Vedat Muriqi,Attack - Centre-Forward,Attack,Mallorca,,278,48,Back problems | Ankle injury | Hamstring injury | Knock,25/26 | 24/25 | 23/24
+223790,Sheraldo Becker,Attack - Centre-Forward,Attack,Real Sociedad,,5,1,Corona virus | Ankle injury,25/26
+224081,Kalvin Phillips,Midfield - Defensive Midfield,Midfield,West Ham United,,0,0,No significant injury record,
+224158,Sofyan Amrabat,Midfield - Defensive Midfield,Midfield,Manchester United,,19,3,Ankle sprain | Fitness,25/26
+224221,Joachim Andersen,Defender - Centre-Back,Defender,Crystal Palace,,29,5,Groin injury | Ankle injury,25/26
+224309,Joan Jordán,Midfield - Central Midfield,Midfield,Sevilla,,133,23,Fitness | Foot injury | Groin problems | Knock,25/26 | 24/25 | 23/24
+224334,Marcos Acuña,Defender - Left-Back,Defender,Sevilla,,14,2,Back injury | Muscle injury,25/26
+224371,Jarrod Bowen,Midfield - Right Midfield,Midfield,West Ham United,,36,6,Knock | Muscle injury,25/26
+224411,Gonçalo Guedes,Attack - Centre-Forward,Attack,Villarreal,,0,0,No significant injury record,
+224425,Marius Wolf,Defender - Right-Back,Defender,Dortmund,,6,1,Rest | Ligament injury,25/26
+225085,Jonathan Bamba,Midfield - Left Midfield,Midfield,Celta Vigo,,5,1,Corona virus | Rest,25/26
+225100,Joe Gomez,Defender - Centre-Back,Defender,Liverpool,,6,1,Calf injury | Rest,25/26
+225126,Ellyes Skhiri,Midfield - Defensive Midfield,Midfield,Eintracht Frankfurt,,0,0,No significant injury record,
+225193,Mikel Merino,Midfield - Central Midfield,Midfield,Real Sociedad,,20,3,Foot injury | Ill,25/26
+225201,Álex Berenguer,Midfield - Left Midfield,Midfield,Athletic Club,,0,0,No significant injury record,
+225375,Konrad Laimer,Midfield - Defensive Midfield,Midfield,Bayern Munich,,0,0,No significant injury record,
+225659,Guido Rodríguez,Midfield - Defensive Midfield,Midfield,Real Betis,,5,1,Back injury | Rest,25/26
+226161,Marcos Llorente,Midfield - Right Midfield,Midfield,AtlÃƒÂ©tico Madrid,,257,44,Ankle sprain | Hamstring injury | Corona virus | Rest,25/26 | 24/25 | 23/24
+226166,Nordi Mukiele,Defender - Right-Back,Defender,Paris Saint-Germain,,6,1,Ankle injury | Back injury,25/26
+226221,Aritz Elustondo,Defender - Centre-Back,Defender,Real Sociedad,,18,3,Corona virus | Adductor injury,25/26
+226226,Giovani Lo Celso,Midfield - Attacking Midfield,Midfield,Tottenham Hotspur,,0,0,No significant injury record,
+226456,Pablo Fornals,Midfield - Left Midfield,Midfield,Real Betis,,22,4,Adductor pain | Hamstring injury,25/26
+226491,Kieran Tierney,Defender - Left-Back,Defender,Real Sociedad,,6,1,Ankle injury | Knock,25/26
+226710,Gianluca Scamacca,Attack - Centre-Forward,Attack,Atalanta,,0,0,No significant injury record,
+226754,Ismaël Bennacer,Midfield - Defensive Midfield,Midfield,Milan,,0,0,No significant injury record,
+226851,Benjamin Pavard,Defender - Centre-Back,Defender,Internazionale,,6,1,Corona virus | Adductor injury,25/26
+227174,Matty Cash,Defender - Right-Back,Defender,Aston Villa,,301,52,Muscle injury | Groin injury | Corona virus | Hamstring injury,25/26 | 24/25 | 23/24
+227535,Rodrigo Bentancur,Midfield - Central Midfield,Midfield,Tottenham Hotspur,,0,0,No significant injury record,
+227678,Ezri Konsa,Defender - Centre-Back,Defender,Aston Villa,,6,1,Groin injury | Ankle injury,25/26
+227796,Christian Pulisic,Attack - Left Winger,Attack,Milan,,86,15,Muscle injury | Corona virus | Ill,25/26 | 24/25
+227813,Oleksandr Zinchenko,Defender - Left-Back,Defender,Arsenal,,6,1,Knock | Adductor injury,25/26
+227928,Nélson Semedo,Defender - Right-Back,Defender,Wolverhampton Wanderers,,6,1,Ill | Ligament injury,25/26
+228093,Marcus Thuram,Attack - Centre-Forward,Attack,Internazionale,,10,2,Muscle injury | Corona virus,25/26
+228618,Ferland Mendy,Defender - Left-Back,Defender,Real Madrid,,6,1,Ankle injury | Knock,25/26
+228708,Lucas Martínez Quarta,Defender - Centre-Back,Defender,Fiorentina,,115,20,Knock | Adductor injury | Rest,25/26 | 24/25
+228813,Aleix García,Midfield - Central Midfield,Midfield,Girona,,77,13,Corona virus | Calf problems | Fitness,25/26 | 24/25
+228941,André Silva,Attack - Centre-Forward,Attack,Real Sociedad,,11,2,Hamstring injury | Calf problems,25/26
+229237,Manuel Akanji,Defender - Centre-Back,Defender,Manchester City,,20,3,Corona virus | Ankle injury,25/26
+229261,Denis Zakaria,Midfield - Defensive Midfield,Midfield,Monaco,,28,5,Groin problems | Foot injury,25/26
+229391,João Palhinha,Midfield - Defensive Midfield,Midfield,Fulham,,34,6,Calf problems | Back injury,25/26
+229558,Dayot Upamecano,Defender - Centre-Back,Defender,Bayern Munich,,46,8,Knock | Adductor injury | Rest,25/26 | 24/25
+229668,Mario Hermoso,Defender - Centre-Back,Defender,AtlÃƒÂ©tico Madrid,,6,1,Knock | Hamstring injury,25/26
+229880,Aaron Wan-Bissaka,Defender - Right-Back,Defender,Manchester United,,6,1,Muscle injury | Knock,25/26
+229891,Julian Ryerson,Defender - Left-Back,Defender,Dortmund,,6,1,Ankle injury | Knock,25/26
+229906,Leon Bailey,Midfield - Right Midfield,Midfield,Aston Villa,,26,4,Rest | Ill,25/26
+229942,Axel Disasi,Defender - Centre-Back,Defender,Chelsea,,259,45,Calf injury | Rest | Ligament injury | Back injury,25/26 | 24/25 | 23/24
+230658,Arthur Melo,Midfield - Central Midfield,Midfield,Fiorentina,,78,13,Knock | Ankle sprain | Knee injury,25/26 | 24/25
+230666,Gabriel Jesus,Attack - Centre-Forward,Attack,Arsenal,,158,27,Rest | Back problems | Muscle injury | Fitness,25/26 | 24/25 | 23/24
+230899,Ademola Lookman,Attack - Centre-Forward,Attack,Atalanta,,0,0,No significant injury record,
+230918,Trevoh Chalobah,Defender - Centre-Back,Defender,Chelsea,,27,5,Calf injury | Knock,25/26
+230978,Taiwo Awoniyi,Attack - Centre-Forward,Attack,Nottingham Forest,,20,3,Ill | Groin injury,25/26
+231102,Ludovic Blas,Midfield - Attacking Midfield,Midfield,Rennes,,28,5,Adductor pain | Muscle injury,25/26
+231340,Gonzalo Montiel,Defender - Right-Back,Defender,Nottingham Forest,,6,1,Groin injury | Ill,25/26
+231352,Tammy Abraham,Attack - Centre-Forward,Attack,Roma,,0,0,No significant injury record,
+231443,Ousmane Dembélé,Attack - Right Winger,Attack,Paris Saint-Germain,,0,0,No significant injury record,
+231478,Lautaro Martinez,Attack - Centre-Forward,Attack,Internazionale,,18,3,Muscle injury | Calf problems,25/26
+231521,Exequiel Palacios,Midfield - Central Midfield,Midfield,Leverkusen,,20,3,Calf problems | Hamstring injury,25/26
+231591,Javi Galán,Defender - Left-Back,Defender,Real Sociedad,,18,3,Groin injury | Back injury,25/26
+231627,Umar Sadiq,Attack - Centre-Forward,Attack,Real Sociedad,,0,0,No significant injury record,
+231633,Issa Diop,Defender - Centre-Back,Defender,Fulham,,6,1,Rest | Corona virus,25/26
+231677,Marcus Rashford,Attack - Left Winger,Attack,Manchester United,,0,0,No significant injury record,
+231747,Kylian Mbappe,Attack - Centre-Forward,Attack,Paris Saint-Germain,,122,21,Muscle injury | Corona virus | Ankle injury | Adductor pain,25/26 | 24/25 | 23/24
+231936,Ben White,Defender - Right-Back,Defender,Arsenal,,22,4,Adductor injury | Knee injury,25/26
+232293,Victor Osimhen,Attack - Centre-Forward,Attack,Napoli,,39,7,Adductor pain | Knock,25/26
+232487,Wataru Endo,Midfield - Central Midfield,Midfield,Liverpool,,8,1,Adductor pain | Muscle injury,25/26
+232488,Cristian Romero,Defender - Centre-Back,Defender,Tottenham Hotspur,,43,7,Calf injury | Muscle injury | Ill,25/26 | 24/25
+232580,Gabriel Magalhães,Defender - Centre-Back,Defender,Arsenal,,29,5,Back injury | Muscle injury,25/26
+232639,Ritsu Doan,Midfield - Right Midfield,Midfield,Freiburg,,0,0,No significant injury record,
+232656,Theo Hernández,Defender - Left-Back,Defender,Milan,,6,1,Knock | Adductor injury,25/26
+232658,Danilho Doekhi,Defender - Centre-Back,Defender,Union Berlin,,6,1,Rest | Ligament injury,25/26
+232905,Junya Ito,Midfield - Right Midfield,Midfield,Reims,,20,3,Ill | Groin problems,25/26
+232938,Takehiro Tomiyasu,Defender - Right-Back,Defender,Arsenal,,6,1,Muscle injury | Calf injury,25/26
+233049,Jadon Sancho,Attack - Left Winger,Attack,Dortmund,,0,0,No significant injury record,
+233064,Mason Mount,Midfield - Attacking Midfield,Midfield,Manchester United,,11,2,Hamstring injury | Knee injury,25/26
+233084,Nahuel Molina,Defender - Right-Back,Defender,AtlÃƒÂ©tico Madrid,,54,9,Groin injury | Back injury | Rest,25/26 | 24/25
+233152,Ko Itakura,Defender - Centre-Back,Defender,MÃƒÂ¶nchengladbach,,43,7,Corona virus | Back injury | Muscle injury,25/26 | 24/25
+233419,Raphinha,Attack - Right Winger,Attack,Barcelona,,0,0,No significant injury record,
+233486,Robin Le Normand,Defender - Centre-Back,Defender,Real Sociedad,,40,7,Ill | Ligament injury | Groin injury,25/26 | 24/25
+233500,Luis Sinisterra,Midfield - Left Midfield,Midfield,Bournemouth,,0,0,No significant injury record,
+233556,Riccardo Orsolini,Midfield - Right Midfield,Midfield,Bologna,,0,0,No significant injury record,
+233731,Alexander Isak,Attack - Centre-Forward,Attack,Newcastle United,,37,6,Adductor pain | Fitness,25/26
+233927,Lucas Paquetá,Midfield - Attacking Midfield,Midfield,West Ham United,,13,2,Knee injury | Muscle injury,25/26
+234112,Dodô,Defender - Right-Back,Defender,Fiorentina,,6,1,Calf injury | Muscle injury,25/26
+234153,Carlos Soler,Midfield - Central Midfield,Midfield,Paris Saint-Germain,,275,47,Fitness | Ill | Foot injury | Adductor pain,25/26 | 24/25 | 23/24
+234236,Patrik Schick,Attack - Centre-Forward,Attack,Leverkusen,,194,33,Back problems | Muscle injury | Corona virus | Rest,25/26 | 24/25 | 23/24
+234396,Alphonso Davies,Defender - Left-Back,Defender,Bayern Munich,,6,1,Adductor injury | Ligament injury,25/26
+234574,Diogo Dalot,Defender - Right-Back,Defender,Manchester United,,6,1,Rest | Ligament injury,25/26
+234742,Harvey Barnes,Attack - Left Winger,Attack,Newcastle United,,0,0,No significant injury record,
+234824,Yoane Wissa,Attack - Left Winger,Attack,Brentford,,108,19,Ill | Rest | Ankle injury,25/26 | 24/25
+234943,Florian Neuhaus,Midfield - Central Midfield,Midfield,MÃƒÂ¶nchengladbach,,0,0,No significant injury record,
+235008,Lucas Robertone,Midfield - Central Midfield,Midfield,AlmerÃƒÂ­a,,0,0,No significant injury record,
+235173,Ibrahim Sangaré,Midfield - Defensive Midfield,Midfield,Nottingham Forest,,0,0,No significant injury record,
+235212,Achraf Hakimi,Defender - Right-Back,Defender,Paris Saint-Germain,,6,1,Calf injury | Knock,25/26
+235407,Salih Özcan,Midfield - Defensive Midfield,Midfield,Dortmund,,0,0,No significant injury record,
+235410,Youssef En-Nesyri,Attack - Centre-Forward,Attack,Sevilla,,0,0,No significant injury record,
+235432,Marshall Munetsi,Midfield - Defensive Midfield,Midfield,Reims,,62,11,Rest | Knock | Back injury,25/26 | 24/25
+235781,Santi Comesaña,Midfield - Defensive Midfield,Midfield,Villarreal,,0,0,No significant injury record,
+235790,Kai Havertz,Midfield - Attacking Midfield,Midfield,Arsenal,,0,0,No significant injury record,
+235794,Eberechi Eze,Midfield - Attacking Midfield,Midfield,Crystal Palace,,8,1,Groin problems | Adductor pain,25/26
+235844,Edson Álvarez,Midfield - Defensive Midfield,Midfield,West Ham United,,0,0,No significant injury record,
+235997,Fran Beltrán,Midfield - Defensive Midfield,Midfield,Celta Vigo,,0,0,No significant injury record,
+236015,Morgan Gibbs-White,Midfield - Attacking Midfield,Midfield,Nottingham Forest,,0,0,No significant injury record,
+236276,Arnaut Danjuma,Attack - Centre-Forward,Attack,Everton,,0,0,No significant injury record,
+236401,Noussair Mazraoui,Defender - Right-Back,Defender,Bayern Munich,,304,52,Corona virus | Hamstring injury | Knee injury | Adductor injury,25/26 | 24/25 | 23/24
+236480,Yves Bissouma,Midfield - Defensive Midfield,Midfield,Tottenham Hotspur,,0,0,No significant injury record,
+236496,Mattéo Guendouzi,Midfield - Central Midfield,Midfield,Lazio,,35,6,Ankle sprain | Hamstring injury,25/26
+236499,Douglas Luiz,Midfield - Defensive Midfield,Midfield,Aston Villa,,24,4,Knock | Back injury,25/26
+236699,Saša Luki?,Midfield - Central Midfield,Midfield,Fulham,,0,0,No significant injury record,
+236772,Dominik Szoboszlai,Midfield - Attacking Midfield,Midfield,Liverpool,,275,47,Knee injury | Ankle sprain | Hamstring injury | Back injury,25/26 | 24/25 | 23/24
+236786,Martin Terrier,Midfield - Left Midfield,Midfield,Rennes,,296,51,Ill | Knock | Knee injury | Corona virus,25/26 | 24/25 | 23/24
+236791,Antonín Barák,Midfield - Central Midfield,Midfield,Fiorentina,,8,1,Knock | Hamstring injury,25/26
+236804,Facundo Medina,Defender - Centre-Back,Defender,Lens,,6,1,Ligament injury | Ankle injury,25/26
+236920,Justin Kluivert,Midfield - Right Midfield,Midfield,Bournemouth,,87,15,Ankle sprain | Muscle injury | Knee injury,25/26 | 24/25
+237161,Sean Longstaff,Midfield - Central Midfield,Midfield,Newcastle United,,0,0,No significant injury record,
+237221,Juan Foyth,Defender - Right-Back,Defender,Villarreal,,44,8,Ankle injury | Back injury | Groin injury,25/26 | 24/25
+237238,Scott McTominay,Midfield - Defensive Midfield,Midfield,Manchester United,,0,0,No significant injury record,
+237646,Daniel Muñoz,Defender - Right-Back,Defender,Crystal Palace,,6,1,Ill | Ankle injury,25/26
+237678,Ibrahima Konaté,Defender - Centre-Back,Defender,Liverpool,,27,5,Adductor injury | Ligament injury,25/26
+237681,Takefusa Kubo,Attack - Right Winger,Attack,Real Sociedad,,0,0,No significant injury record,
+237692,Phil Foden,Attack - Left Winger,Attack,Manchester City,,0,0,No significant injury record,
+237819,Nicolás Domínguez,Midfield - Defensive Midfield,Midfield,Nottingham Forest,,37,6,Ankle sprain | Muscle injury,25/26
+237942,Pervis Estupiñán,Defender - Left-Back,Defender,Brighton & Hove Albion,,6,1,Hamstring injury | Knee injury,25/26
+237985,Kevin Danso,Defender - Centre-Back,Defender,Lens,,6,1,Ligament injury | Back injury,25/26
+238067,Nicolò Zaniolo,Midfield - Right Midfield,Midfield,Aston Villa,,34,6,Groin problems | Adductor pain,25/26
+238095,Nikola Milenkovi?,Defender - Centre-Back,Defender,Fiorentina,,6,1,Adductor injury | Calf injury,25/26
+238216,Conor Gallagher,Midfield - Central Midfield,Midfield,Chelsea,,0,0,No significant injury record,
+238717,Ethan Pinnock,Defender - Centre-Back,Defender,Brentford,,6,1,Ankle injury | Ill,25/26
+239053,Federico Valverde,Midfield - Central Midfield,Midfield,Real Madrid,,51,9,Corona virus | Rest | Groin problems,25/26 | 24/25
+239085,Erling Haaland,Attack - Centre-Forward,Attack,Manchester City,,4,1,Adductor pain | Leg injury,25/26
+239231,Marc Cucurella,Defender - Left-Back,Defender,Chelsea,,6,1,Knee injury | Groin injury,25/26
+239770,Nicolò Casale,Defender - Centre-Back,Defender,Lazio,,6,1,Ligament injury | Groin injury,25/26
+239807,Davide Frattesi,Midfield - Central Midfield,Midfield,Internazionale,,255,44,Muscle injury | Hamstring injury | Knee injury | Ankle sprain,25/26 | 24/25 | 23/24
+240130,Éder Militão,Defender - Centre-Back,Defender,Real Madrid,,6,1,Ligament injury | Adductor injury,25/26
+240243,Matheus Cunha,Attack - Centre-Forward,Attack,Wolverhampton Wanderers,,83,14,Corona virus | Groin injury | Knock,25/26 | 24/25
+240452,M'Bala Nzola,Attack - Centre-Forward,Attack,Fiorentina,,0,0,No significant injury record,
+240638,Tijjani Reijnders,Midfield - Central Midfield,Midfield,Milan,,17,3,Knee injury | Muscle injury,25/26
+240679,Teun Koopmeiners,Midfield - Central Midfield,Midfield,Atalanta,,0,0,No significant injury record,
+240690,Nicolás González,Attack - Right Winger,Attack,Fiorentina,,137,24,Fitness | Back problems | Ill | Groin injury,25/26 | 24/25 | 23/24
+240709,Ridle Baku,Defender - Right-Back,Defender,Wolfsburg,,36,6,Hamstring injury | Knee injury,25/26
+240753,Amine Gouiri,Attack - Centre-Forward,Attack,Rennes,,0,0,No significant injury record,
+240833,Youssoufa Moukoko,Attack - Centre-Forward,Attack,Dortmund,,0,0,No significant injury record,
+241042,Oliver Skipp,Midfield - Defensive Midfield,Midfield,Tottenham Hotspur,,0,0,No significant injury record,
+241084,Luis Díaz,Attack - Left Winger,Attack,Liverpool,,0,0,No significant injury record,
+241095,Nikola Vlaši?,Attack - Second Striker,Attack,Torino,,0,0,No significant injury record,
+241461,Ferran Torres,Attack - Left Winger,Attack,Barcelona,,65,11,Calf problems | Hamstring injury | Knock,25/26 | 24/25
+241464,Pau Torres,Defender - Centre-Back,Defender,Aston Villa,,33,6,Calf injury | Knee injury,25/26
+241486,Jules Koundé,Defender - Centre-Back,Defender,Barcelona,,46,8,Back injury | Groin injury | Corona virus,25/26 | 24/25
+241637,Aurélien Tchouaméni,Midfield - Defensive Midfield,Midfield,Real Madrid,,101,17,Hamstring injury | Muscle injury | Corona virus,25/26 | 24/25
+241721,Rafael Leão,Attack - Left Winger,Attack,Milan,,87,15,Fitness | Ankle injury | Knock,25/26 | 24/25
+241852,Moussa Diaby,Midfield - Right Midfield,Midfield,Aston Villa,,7,1,Knee injury | Muscle injury,25/26
+242000,Konstantinos Mavropanos,Defender - Centre-Back,Defender,West Ham United,,6,1,Corona virus | Hamstring injury,25/26
+242201,Luis Milla,Midfield - Central Midfield,Midfield,Getafe,,111,19,Corona virus | Groin problems | Knock,25/26 | 24/25
+242434,Curtis Jones,Midfield - Central Midfield,Midfield,Liverpool,,39,7,Knee injury | Hamstring injury,25/26
+242444,João Félix,Attack - Second Striker,Attack,Barcelona,,42,7,Knee problems | Back problems | Ill,25/26 | 24/25
+242516,Cody Gakpo,Attack - Second Striker,Attack,Liverpool,,0,0,No significant injury record,
+242577,Romain Faivre,Midfield - Right Midfield,Midfield,Bournemouth,,0,0,No significant injury record,
+242578,Benoît Badiashile,Defender - Centre-Back,Defender,Chelsea,,6,1,Muscle injury | Ill,25/26
+242664,Alexis Saelemaekers,Attack - Right Winger,Attack,Bologna,,81,14,Fitness | Back problems | Knee problems,25/26 | 24/25
+243014,Bryan Mbeumo,Attack - Right Winger,Attack,Brentford,,69,12,Adductor pain | Fitness | Rest,25/26 | 24/25
+243241,Alessandro Buongiorno,Defender - Centre-Back,Defender,Torino,,24,4,Ankle injury | Adductor injury,25/26
+243576,Pedro Porro,Defender - Right-Back,Defender,Tottenham Hotspur,,6,1,Adductor injury | Muscle injury,25/26
+243630,Jonathan David,Attack - Centre-Forward,Attack,Lille,,23,4,Hamstring injury | Calf problems,25/26
+243715,William Saliba,Defender - Centre-Back,Defender,Arsenal,,15,3,Ill | Hamstring injury,25/26
+243812,Rodrygo,Attack - Right Winger,Attack,Real Madrid,,14,2,Ankle injury | Adductor pain,25/26
+243854,Mohamed Simakan,Defender - Centre-Back,Defender,RB Leipzig,,6,1,Ankle injury | Back injury,25/26
+244261,Lovro Majer,Midfield - Central Midfield,Midfield,Wolfsburg,,0,0,No significant injury record,
+244263,Amir Rrahmani,Defender - Centre-Back,Defender,Napoli,,40,7,Ill | Back injury | Groin injury,25/26 | 24/25
+244309,Teddy Teuma,Midfield - Central Midfield,Midfield,Reims,,0,0,No significant injury record,
+244749,Nayef Aguerd,Defender - Centre-Back,Defender,West Ham United,,55,9,Rest | Ligament injury | Ill,25/26 | 24/25
+244892,Sofiane Diop,Midfield - Left Midfield,Midfield,Nice,,78,13,Foot injury | Knock | Hamstring injury,25/26 | 24/25
+245279,Sergio Reguilón,Defender - Left-Back,Defender,Brentford,,33,6,Hamstring injury | Adductor injury,25/26
+245388,Jean-Clair Todibo,Defender - Centre-Back,Defender,Nice,,13,2,Ankle injury | Ill,25/26
+245630,Youssouf Fofana,Midfield - Defensive Midfield,Midfield,Monaco,,10,2,Groin problems | Calf problems,25/26
+245741,Jesper Lindstrøm,Midfield - Attacking Midfield,Midfield,Napoli,,0,0,No significant injury record,
+246104,Ryan Gravenberch,Midfield - Central Midfield,Midfield,Liverpool,,31,5,Muscle injury | Fitness,25/26
+246172,Samuel Chukwueze,Attack - Right Winger,Attack,Milan,,0,0,No significant injury record,
+246174,Harvey Elliott,Midfield - Attacking Midfield,Midfield,Liverpool,,24,4,Foot injury | Adductor pain,25/26
+246191,Julián Álvarez,Attack - Centre-Forward,Attack,Manchester City,,45,8,Corona virus | Back problems | Ankle injury,25/26 | 24/25
+246242,Boulaye Dia,Attack - Centre-Forward,Attack,Salernitana,,0,0,No significant injury record,
+246350,Enzo Le Fée,Midfield - Central Midfield,Midfield,Rennes,,5,1,Knee injury | Hamstring injury,25/26
+246430,Dušan Vlahovi?,Attack - Centre-Forward,Attack,Juventus,,0,0,No significant injury record,
+246646,Maxence Caqueret,Midfield - Central Midfield,Midfield,Lyon,,51,9,Hamstring injury | Corona virus | Rest,25/26 | 24/25
+246669,Bukayo Saka,Attack - Right Winger,Attack,Arsenal,,0,0,No significant injury record,
+246764,Mohamed Camara,Midfield - Defensive Midfield,Midfield,Monaco,,0,0,No significant injury record,
+246785,Bryan Gil,Attack - Left Winger,Attack,Tottenham Hotspur,,10,2,Ill | Ankle injury,25/26
+246863,Felix Nmecha,Midfield - Central Midfield,Midfield,Dortmund,,0,0,No significant injury record,
+247090,Enzo Fernández,Midfield - Central Midfield,Midfield,Chelsea,,119,21,Muscle injury | Hamstring injury | Ankle sprain,25/26 | 24/25
+247131,Alfonso Espino,Defender - Left-Back,Defender,Rayo Vallecano,,14,2,Groin injury | Back injury,25/26
+247246,Khéphren Thuram,Midfield - Central Midfield,Midfield,Nice,,23,4,Corona virus | Calf problems,25/26
+247263,Edmond Tapsoba,Defender - Centre-Back,Defender,Leverkusen,,102,18,Corona virus | Ankle injury | Ill,25/26 | 24/25
+247394,Dejan Kulusevski,Attack - Right Winger,Attack,Tottenham Hotspur,,0,0,No significant injury record,
+247463,Folarin Balogun,Attack - Centre-Forward,Attack,Monaco,,0,0,No significant injury record,
+247635,Khvicha Kvaratskhelia,Attack - Left Winger,Attack,Napoli,,0,0,No significant injury record,
+247819,Nico Schlotterbeck,Defender - Centre-Back,Defender,Dortmund,,54,9,Knock | Groin injury | Corona virus,25/26 | 24/25
+247827,Michael Olise,Attack - Right Winger,Attack,Crystal Palace,,23,4,Knock | Calf problems,25/26
+247851,Bruno Guimarães,Midfield - Central Midfield,Midfield,Newcastle United,,0,0,No significant injury record,
+248243,Eduardo Camavinga,Midfield - Defensive Midfield,Midfield,Real Madrid,,0,0,No significant injury record,
+251445,Samuel Lino,Midfield - Left Midfield,Midfield,AtlÃƒÂ©tico Madrid,,110,19,Knock | Knee injury | Corona virus,25/26 | 24/25
+251566,Gabriel Martinelli,Attack - Left Winger,Attack,Arsenal,,63,11,Fitness | Ankle injury | Knock,25/26 | 24/25
+251852,Karim Adeyemi,Midfield - Left Midfield,Midfield,Dortmund,,0,0,No significant injury record,
+251854,Pedri,Midfield - Central Midfield,Midfield,Barcelona,,40,7,Adductor pain | Knee injury | Hamstring injury,25/26 | 24/25
+251892,Beto,Attack - Centre-Forward,Attack,Everton,,15,3,Fitness | Rest,25/26
+252059,Salis Abdul Samed,Midfield - Defensive Midfield,Midfield,Lens,,0,0,No significant injury record,
+252371,Jude Bellingham,Midfield - Central Midfield,Midfield,Real Madrid,,13,2,Muscle injury | Ankle sprain,25/26
+253002,Giacomo Raspadori,Attack - Second Striker,Attack,Napoli,,0,0,No significant injury record,
+253004,Ansu Fati,Attack - Left Winger,Attack,Brighton & Hove Albion,,0,0,No significant injury record,
+253072,Darwin Núñez,Attack - Centre-Forward,Attack,Liverpool,,0,0,No significant injury record,
+253124,Matheus Nunes,Midfield - Central Midfield,Midfield,Manchester City,,38,7,Ill | Groin problems,25/26
+253163,Ronald Araújo,Defender - Centre-Back,Defender,Barcelona,,69,12,Knee injury | Adductor injury | Knock,25/26 | 24/25
+254566,Patrick Wimmer,Attack - Right Winger,Attack,Wolfsburg,,0,0,No significant injury record,
+254796,Noni Madueke,Attack - Right Winger,Attack,Chelsea,,0,0,No significant injury record,
+255000,Terem Moffi,Attack - Centre-Forward,Attack,Nice,,0,0,No significant injury record,
+255001,Nicolò Rovella,Midfield - Central Midfield,Midfield,Lazio,,5,1,Corona virus | Calf problems,25/26
+255223,Amine Adli,Attack - Centre-Forward,Attack,Leverkusen,,11,2,Calf problems | Knock,25/26
+255253,Vitinha,Midfield - Central Midfield,Midfield,Paris Saint-Germain,,32,6,Calf problems | Muscle injury,25/26
+255475,Antony,Attack - Right Winger,Attack,Manchester United,,0,0,No significant injury record,
+256079,Moisés Caicedo,Midfield - Defensive Midfield,Midfield,Chelsea,,0,0,No significant injury record,
+256197,Piero Hincapié,Defender - Centre-Back,Defender,Leverkusen,,88,15,Groin injury | Corona virus | Hamstring injury,25/26 | 24/25
+256261,Malick Thiaw,Defender - Centre-Back,Defender,Milan,,206,36,Adductor injury | Muscle injury | Groin injury | Ankle injury,25/26 | 24/25 | 23/24
+256516,Nico Williams,Midfield - Right Midfield,Midfield,Athletic Club,,7,1,Ankle sprain | Muscle injury,25/26
+256630,Florian Wirtz,Midfield - Attacking Midfield,Midfield,Leverkusen,,31,5,Hamstring injury | Corona virus,25/26
+256790,Jamal Musiala,Midfield - Attacking Midfield,Midfield,Bayern Munich,,0,0,No significant injury record,
+256903,Gonçalo Ramos,Attack - Centre-Forward,Attack,Paris Saint-Germain,,0,0,No significant injury record,
+257278,Arthur Theate,Defender - Centre-Back,Defender,Rennes,,41,7,Corona virus | Ligament injury | Hamstring injury,25/26 | 24/25
+258648,Carlos Augusto,Midfield - Left Midfield,Midfield,Internazionale,,26,4,Adductor pain | Back injury,25/26
+259197,Nicolas Jackson,Attack - Centre-Forward,Attack,Chelsea,,14,2,Back problems | Ankle injury,25/26
+260407,Elye Wahi,Attack - Centre-Forward,Attack,Lens,,193,33,Knock | Corona virus | Ill | Groin injury,25/26 | 24/25 | 23/24
+261204,Myrto Uzuni,Attack - Centre-Forward,Attack,Granada,,0,0,No significant injury record,
+262138,Castello Lukeba,Defender - Centre-Back,Defender,RB Leipzig,,91,16,Knock | Adductor injury | Rest,25/26 | 24/25
+263781,Vanderson,Defender - Right-Back,Defender,Monaco,,42,7,Calf injury | Knock | Hamstring injury,25/26 | 24/25
+264240,Gavi,Midfield - Central Midfield,Midfield,Barcelona,,99,17,Hamstring injury | Back injury | Groin problems,25/26 | 24/25
+264453,Micky van de Ven,Defender - Centre-Back,Defender,Tottenham Hotspur,,6,1,Hamstring injury | Ill,25/26
+269312,Tommaso Baldanzi,Midfield - Attacking Midfield,Midfield,Roma,,0,0,No significant injury record,
+900166,Ivan Toney,Attack - Centre-Forward,Attack,Brentford,,0,0,No significant injury record,

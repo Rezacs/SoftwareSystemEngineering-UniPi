@@ -74,11 +74,11 @@ def human_decision():
     data = request.json
     decision = data.get("decision")
 
-    if decision not in ["GOOD", "BAD"]:
-        return jsonify({"error": "Decision must be GOOD or BAD"}), 400
+    if decision not in ["ACCEPT", "REJECT"]:
+        return jsonify({"error": "Decision must be ACCEPT or REJECT"}), 400
 
     # ================= APPLY DECISION =================
-    result = orchestrator.human_decision(decision)
+    result = orchestrator.finalize_decision(decision, mode="HUMAN")
 
     logger.info("🔄 Resetting system for next batch...")
 
@@ -116,19 +116,3 @@ def health():
         "status": "running",
         "system": "evaluation"
     })
-
-
-# =========================================================
-# ================= ENTRY POINT ============================
-# =========================================================
-
-if __name__ == "__main__":
-    print("\n=== Evaluation System Starting ===")
-    print(f"Server running on: http://{config['system']['host']}:{config['system']['port']}")
-    print("=================================\n")
-
-    app.run(
-        host=config["system"]["host"],
-        port=config["system"]["port"],
-        debug=False
-    )

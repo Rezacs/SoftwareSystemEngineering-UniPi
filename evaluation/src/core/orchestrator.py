@@ -1,3 +1,5 @@
+from sklearn import metrics
+
 from src.reporting.report_metrics import ReportMetrics
 from src.reporting.visual_report import VisualReport
 from src.utils.logger import logger
@@ -43,7 +45,7 @@ class Orchestrator:
 
         # ================= RECEIVE =================
         logger.info(
-            f"📥 Received {data['source']} → {data['player_id']} = {data['label']}"
+            f"Received {data['source']} label → player_id: {data['player_id']} has label: {data['label']}"
         )
 
         # ================= STORE =================
@@ -52,14 +54,14 @@ class Orchestrator:
         # ================= FETCH MATCHED =================
         pairs = self.repo.get_matched_pairs()
 
-        #logger.info(f"📦 Matched pairs: {len(pairs)} / {self.eval_cfg['batch_size']}")
+        #logger.info(f"Matched pairs: {len(pairs)} / {self.eval_cfg['batch_size']}")
         
-        logger.info(f"📦 Available: {len(pairs)} | Using: {min(len(pairs), self.eval_cfg['batch_size'])}"
+        logger.info(f"Available: {len(pairs)} | Using: {min(len(pairs), self.eval_cfg['batch_size'])}"
 )
 
         # ================= CHECK BATCH =================
         if not self.batch_mgr.is_ready(pairs):
-            logger.info("⏳ Waiting for more matched data...")
+            logger.info("Waiting for more matched pairs...")
             return {"status": "waiting_for_data"}
 
         # ================= BUILD BATCH =================
@@ -88,39 +90,39 @@ class Orchestrator:
         # ================= MARK WAITING =================
         self.state.set_batch(batch)
 
-        # ================= OPTIONAL RESET =================
-        # if self.eval_cfg.get("reset_after_batch", True):
-        #     self.repo.clear()
-        #     logger.info("Buffer cleared after batch")
         
         if self.eval_cfg.get("reset_after_batch", True):
             self.repo.delete_used(batch)
-            logger.info("Only consumed batch removed from DB")
+            logger.info("Buffer Cleared → Only consumed batch removed from DB")
 
-        # ================= PAUSE =================
+        decision = self._suggest_decision(metrics)
+         #====== AUTO MODE ===========
+        if self.config["server"]["mode"] == "auto":
+            return self.finalize_decision(decision, mode="AUTO")
+
+        # ======== HUMAN MODE =================
         logger.info("⏸ Waiting for HUMAN decision")
 
         return {
             "status": "waiting_for_human",
             "metrics": metrics,
             "report": visual,
-            "suggested_decision": self._suggest_decision(metrics)
-        }
-
+            "suggested_decision": decision
+}
     # =========================================================
-    # ================= DECISION ===============================
+    # ================= HUMAN DECISION ===============================
     # =========================================================
 
-    def human_decision(self, decision):
+    def finalize_decision(self, decision, mode="HUMAN"):
 
-        logger.info(f"HUMAN DECISION → {decision}")
+        logger.info(f"{mode} DECISION → {decision}")
 
         output = {
             "decision": decision,
             "metrics": self.last_metrics
         }
 
-        if decision == "BAD":
+        if decision == "REJECT":
             output["action"] = "SEND_TO_MESSAGING"
             self._simulate_messaging(output)
 
@@ -129,7 +131,7 @@ class Orchestrator:
         # ================= RESET STATE =================
         self.state.clear_batch()
 
-        logger.info("🔄 System ready for next batch")
+        logger.info("🔄 System ready for next batch\n==============================================================\n")
 
         return output
 
@@ -140,12 +142,12 @@ class Orchestrator:
     def _suggest_decision(self, metrics):
 
         if metrics["errors"] > self.eval_cfg["max_errors"]:
-            return "BAD"
+            return "REJECT"
 
         if metrics["max_consecutive"] > self.eval_cfg["max_consecutive_errors"]:
-            return "BAD"
+            return "REJECT"
 
-        return "GOOD"
+        return "ACCEPT "
 
     # =========================================================
     # ================= MESSAGING ==============================
@@ -157,7 +159,7 @@ class Orchestrator:
             logger.info("Messaging disabled (simulation only)")
             return
 
-        logger.warning("Sending BAD classifier config to messaging system (SIMULATED)")
+        logger.warning("Sending REJECT classifier config to messaging system (SIMULATED)")
         logger.info(json.dumps(payload, indent=2))
 
     # =========================================================
@@ -172,162 +174,3 @@ class Orchestrator:
 
         with open(path, "w") as f:
             json.dump(data, f, indent=2)
-# from reporting.report_metrics import ReportMetrics
-# from reporting.visual_report import VisualReport
-# from utils.logger import logger
-# import json
-# import os
-
-
-# class Orchestrator:
-#     """
-#     Main controller of Evaluation System
-#     """
-
-#     def __init__(self, repo, batch_mgr, config, state):
-#         self.repo = repo
-#         self.batch_mgr = batch_mgr
-#         self.config = config
-#         self.state = state
-
-#         # ================= CONFIG =================
-#         self.eval_cfg = config["evaluation"]
-#         self.paths_cfg = config["paths"]
-#         self.external_cfg = config["external_systems"]
-
-#         # ================= COMPONENTS =================
-#         self.metrics_engine = ReportMetrics(
-#             self.eval_cfg["error_threshold"]
-#         )
-#         self.visual = VisualReport()
-
-#         # ================= INTERNAL STATE =================
-#         self.last_metrics = None
-#         self.last_batch = None
-
-#     # =========================================================
-#     # ================= MAIN ENTRY =============================
-#     # =========================================================
-
-#     def process(self, data):
-
-#         # ================= STOP CHECK =================
-#         if not self.state.is_active():
-#             logger.warning("System is stopped. No further processing allowed.")
-#             return {
-#                 "status": "system_stopped",
-#                 "message": "System stopped after human decision"
-#             }
-
-#         # ================= RECEIVE =================
-#         logger.info(
-#             f"📥 Received {data['source']} → {data['player_id']} = {data['label']}"
-#         )
-
-#         # ================= STORE =================
-#         self.repo.save_label(data)
-
-#         # ================= FETCH MATCHED =================
-#         pairs = self.repo.get_matched_pairs()
-
-#         logger.info(f"📦 Matched pairs: {len(pairs)} / {self.eval_cfg['batch_size']}")
-
-#         # ================= CHECK BATCH =================
-#         if not self.batch_mgr.is_ready(pairs):
-#             logger.info("⏳ Waiting for more matched data...")
-#             return {"status": "waiting_for_data"}
-
-#         # ================= BUILD BATCH =================
-#         batch = self.batch_mgr.get_batch(pairs)
-
-#         logger.info("Batch ready → Evaluating...")
-
-#         # ================= METRICS =================
-#         metrics = self.metrics_engine.compute(batch)
-
-#         # ================= REPORT =================
-#         visual = self.visual.generate(batch, self.config)
-
-#         logger.info(f"Report generated → {visual.get('file')}")
-
-#         # ================= SAVE =================
-#         self.last_metrics = metrics
-#         self.last_batch = batch
-
-#         self._save_json("matched_pairs.json", batch)
-#         self._save_json("metrics.json", metrics)
-
-#         # ================= OPTIONAL RESET =================
-#         if self.eval_cfg.get("reset_after_batch", True):
-#             self.repo.clear()
-#             logger.info("Buffer cleared after batch")
-
-#         # ================= PAUSE =================
-#         logger.info("⏸ Waiting for HUMAN decision")
-
-#         return {
-#             "status": "waiting_for_human",
-#             "metrics": metrics,
-#             "report": visual,
-#             "suggested_decision": self._suggest_decision(metrics)
-#         }
-
-#     # =========================================================
-#     # ================= DECISION ===============================
-#     # =========================================================
-
-#     def human_decision(self, decision):
-
-#         logger.info(f"HUMAN DECISION → {decision}")
-
-#         self.state.stop()
-
-#         output = {
-#             "decision": decision,
-#             "metrics": self.last_metrics
-#         }
-
-#         if decision == "BAD":
-#             output["action"] = "SEND_TO_MESSAGING"
-#             self._simulate_messaging(output)
-
-#         self._save_json("decision.json", output)
-
-#         return output
-
-#     def _suggest_decision(self, metrics):
-
-#         if metrics["errors"] > self.eval_cfg["max_errors"]:
-#             return "BAD"
-
-#         if metrics["max_consecutive"] > self.eval_cfg["max_consecutive_errors"]:
-#             return "BAD"
-
-#         return "GOOD"
-
-#     # =========================================================
-#     # ================= MESSAGING ==============================
-#     # =========================================================
-
-#     def _simulate_messaging(self, payload):
-
-#         if not self.external_cfg["messaging"]["enabled"]:
-#             logger.info("Messaging disabled (simulation only)")
-#             return
-
-#         logger.warning("Sending BAD classifier config to messaging system (SIMULATED)")
-
-#         logger.info(json.dumps(payload, indent=2))
-
-#     # =========================================================
-#     # ================= UTIL ===============================
-#     # =========================================================
-
-#     def _save_json(self, filename, data):
-
-#         os.makedirs(self.paths_cfg["output_dir"], exist_ok=True)
-
-#         path = os.path.join(self.paths_cfg["output_dir"], filename)
-
-#         with open(path, "w") as f:
-#             json.dump(data, f, indent=2)

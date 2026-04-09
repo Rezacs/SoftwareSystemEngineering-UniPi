@@ -1,211 +1,184 @@
+import json
+import os
+import time
+import random
+import threading
+from datetime import datetime
 from flask import Flask, request, jsonify
 import pandas as pd
-import numpy as np
 import requests
-import sqlite3
-from datetime import datetime
-import threading
 
 app = Flask(__name__)
 
-##########################################
-# CONFIG
-##########################################
-
-INGESTION_URL = "http://127.0.0.1:5001/run"
-
-CSV_FILES = [
-    "../data/inputs/raws_football_db.csv",
-    "../data/inputs/raws_medical_db.csv",
-    "../data/inputs/raws_social_db.csv"
-]
+# Volatile storage
+results_storage = {}
+streaming_active = False  # Flag to track background worker status
 
 ##########################################
-# DATABASE
+# CONFIG & INITIAL LOGGING
 ##########################################
 
-def init_db():
-    conn = sqlite3.connect("client_system.db")
-    cursor = conn.cursor()
+CONFIG_PATH = r"../config/clientsideCofig.json"
+LOG_DIR = r"../logs"
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS player_labels (
-        player_id TEXT PRIMARY KEY,
-        label INTEGER,
-        classifier_id TEXT,
-        decision TEXT,
-        updated_at TEXT
-    )
-    """)
+def load_config():
+    with open(CONFIG_PATH, 'r') as f:
+        return json.load(f)
 
-    conn.commit()
-    conn.close()
+def log_event(filename, event_data):
+    os.makedirs(LOG_DIR, exist_ok=True)
+    path = os.path.join(LOG_DIR, filename)
+    logs = []
+    if os.path.exists(path):
+        with open(path, 'r') as f:
+            try: logs = json.load(f)
+            except: logs = []
+    logs.append(event_data)
+    with open(path, 'w') as f:
+        json.dump(logs, indent=4, fp=f)
 
-init_db()
-
-
-##########################################
-# SEND TO INGESTION
-##########################################
-
-def send_record(record):
-    try:
-        response = requests.post(INGESTION_URL, json=record)
-        print(f"Sent: {record}")
-        print(f"Response: {response.json()}")
-
-    except Exception as e:
-        print(f"Error sending record: {e}")
-
+config = load_config()
 
 ##########################################
-# CSV STREAMER
+# TEST LOG GENERATOR
 ##########################################
 
-def stream_csv_data():
+def generate_testing_csv(current_phase):
+    print("\n[SYSTEM] Aggregating logs for performance analysis...")
+    
+    shared_logs = ["clientsideLogs.json", "ingestionLog.json", "preparationLog.json"]
+    if current_phase == "0":
+        target_logs = shared_logs + ["segregationLog.json", "developmentLog.json"]
+    else:
+        target_logs = shared_logs + ["productionLog.json", "evaluationLog.json"]
 
-    df1 = pd.read_csv(CSV_FILES[0]).replace({np.nan: None})
-    df2 = pd.read_csv(CSV_FILES[1]).replace({np.nan: None})
-    df3 = pd.read_csv(CSV_FILES[2]).replace({np.nan: None})
+    aggregated_data = {}
 
-    for _, row in df1.iterrows():
+    for log_file in target_logs:
+        path = os.path.join(LOG_DIR, log_file)
+        if not os.path.exists(path):
+            print(f"Warning: {log_file} not found in logs folder.")
+            continue
+            
+        with open(path, 'r') as f:
+            try:
+                entries = json.load(f)
+                for entry in entries:
+                    p_id = entry.get("player_id")
+                    if not p_id: continue
+                    
+                    if p_id not in aggregated_data:
+                        aggregated_data[p_id] = {"player_id": p_id}
+                    
+                    column_name = log_file.replace(".json", "_ts")
+                    aggregated_data[p_id][column_name] = entry.get("timestamp")
+            except Exception as e:
+                print(f"Error reading {log_file}: {e}")
 
-        player_id = row["player_id"]
-
-        ###################################
-        # FOOTBALL RECORD
-        ###################################
-        record1 = {
-            "player_id": player_id,
-            "skill_overall": row["overall"],
-            "label": 3
-        }
-
-        send_record(record1)
-
-        ###################################
-        # MEDICAL RECORD
-        ###################################
-        match2 = df2[df2["player_id"] == player_id]
-
-        if not match2.empty:
-            r2 = match2.iloc[0]
-
-            record2 = {
-                "player_id": r2["player_id"],
-                "days_missed": r2["days_missed"],
-                "games_missed": r2["games_missed"]
-            }
-
-            send_record(record2)
-
-        ###################################
-        # SOCIAL RECORD
-        ###################################
-        match3 = df3[df3["id_player"] == player_id]
-
-        if not match3.empty:
-            r3 = match3.iloc[0]
-
-            record3 = {
-                "player_id": r3["id_player"],
-                "number_of_likes": r3["numberOfLikes"],
-                "number_of_followers": r3["numberOfFollowers"]
-            }
-
-            send_record(record3)
-
+    if aggregated_data:
+        test_df = pd.DataFrame(aggregated_data.values())
+        output_path = os.path.join(LOG_DIR, "testing_log.csv")
+        test_df.to_csv(output_path, index=False)
+        print(f"SUCCESS: Testing log saved to {output_path}")
+    else:
+        print("FAILED: No matching player data found across logs.")
 
 ##########################################
-# START PIPELINE
+# STREAMING WORKER
 ##########################################
 
-@app.route("/start", methods=["POST"])
-def start_pipeline():
+def stream_worker(current_phase, limit, data_pool):
+    global streaming_active
+    streaming_active = True
+    
+    ingestion_cfg = config['network']['ingestion_system']
+    url = f"http://{ingestion_cfg['ip']}:{ingestion_cfg['port']}{ingestion_cfg['endpoint']}"
+    total_available = len(data_pool)
 
-    threading.Thread(target=stream_csv_data).start()
+    for i in range(limit):
+        index = i % total_available
+        record = data_pool.iloc[index].to_dict()
+        p_id = record.get('player_id')
+        
+        # Log the outgoing record
+        log_event("clientsideLogs.json", {
+            "player_id": p_id, 
+            "timestamp": datetime.now().isoformat(), 
+            "event": "sent"
+        })
+        
+        try:
+            requests.post(url, json=record, timeout=5)
+            print(f"Sent [{i+1}/{limit}]: {p_id}")
+        except:
+            print(f"Target {url} unreachable.")
 
-    return jsonify({
-        "message": "CSV streaming started"
-    })
-
+        time.sleep(random.uniform(2, 5))
+    
+    print("\n[SYSTEM] Sequence finished.")
+    streaming_active = False
 
 ##########################################
-# RECEIVE LABEL FROM CLASSIFIER
+# FLASK INTERFACE
 ##########################################
 
 @app.route("/receive-label", methods=["POST"])
 def receive_label():
-
     data = request.get_json()
+    p_id = data.get("player_id")
+    results_storage[p_id] = data
+    return jsonify({"status": "received"})
 
-    player_id = data["player_id"]
-    label = data["label"]
-    classifier_id = data["classifier_id"]
-
-    ###################################
-    # DECISION LOGIC
-    ###################################
-    decision = "APPROVED" if label >= 4 else "REJECTED"
-
-    ###################################
-    # STORE
-    ###################################
-    conn = sqlite3.connect("client_system.db")
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    INSERT OR REPLACE INTO player_labels
-    VALUES (?, ?, ?, ?, ?)
-    """, (
-        player_id,
-        label,
-        classifier_id,
-        decision,
-        datetime.now().isoformat()
-    ))
-
-    conn.commit()
-    conn.close()
-
-    return jsonify({
-        "message": "Label stored",
-        "decision": decision
-    })
-
+def run_flask():
+    app.run(host=config['network']['listen_host'], 
+            port=config['network']['listen_port'], 
+            use_reloader=False)
 
 ##########################################
-# GET PLAYER RESULT
-##########################################
-
-@app.route("/player/<player_id>", methods=["GET"])
-def get_player(player_id):
-
-    conn = sqlite3.connect("client_system.db")
-    cursor = conn.cursor()
-
-    cursor.execute(
-        "SELECT * FROM player_labels WHERE player_id=?",
-        (player_id,)
-    )
-
-    row = cursor.fetchone()
-
-    conn.close()
-
-    if not row:
-        return jsonify({"error": "Not found"}), 404
-
-    return jsonify({
-        "player_id": row[0],
-        "label": row[1],
-        "classifier_id": row[2],
-        "decision": row[3],
-        "updated_at": row[4]
-    })
-
-
+# MAIN CONTROL LOOP
 ##########################################
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    # Start Flask in a non-blocking thread so the console stays interactive
+    threading.Thread(target=run_flask, daemon=True).start()
+    
+    while True:
+        log_event("clientsideLogs.json", {"event": "launch", "timestamp": datetime.now().isoformat()})
+        
+        print("\n" + "="*40)
+        print("CLIENT SYSTEM CONTROL PANEL")
+        print("="*40)
+        
+        phase_choice = input("Select Phase: [0] Development, [1] Production: ")
+        stream_limit = int(input("Enter number of records to stream: "))
+
+        # Prepare Data
+        pool_list = []
+        if phase_choice == "0":
+            for file_path in config['paths']['dev_files']:
+                if os.path.exists(file_path):
+                    df = pd.read_csv(file_path)
+                    if 'id_player' in df.columns: df = df.rename(columns={'id_player': 'player_id'})
+                    pool_list.append(df)
+            data_pool = pd.concat(pool_list, axis=0, ignore_index=True)
+        else:
+            data_pool = pd.read_csv(config['paths']['prod_file'])
+        
+        data_pool = data_pool.where(pd.notnull(data_pool), None).sample(frac=1).reset_index(drop=True)
+
+        # Start background stream
+        threading.Thread(target=stream_worker, args=(phase_choice, stream_limit, data_pool), daemon=True).start()
+
+        # Wait for worker to finish
+        print("Waiting for streaming to complete...")
+        while streaming_active:
+            time.sleep(1)
+
+        # Final Prompt
+        ready = input("\nStreaming done. Are you ready to plot the logs? (y/n): ").lower()
+        if ready == 'y':
+            generate_testing_csv(phase_choice)
+        else:
+            print("Skipping CSV generation.")
+            
+        print("\nRestarting system...")

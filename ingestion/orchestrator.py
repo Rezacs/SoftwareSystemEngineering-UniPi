@@ -1,4 +1,3 @@
-from common.json_io import JsonIO
 from ingestion.record_receiver import RecordReceiver
 from ingestion.raw_session_creator import RawSessionCreator
 from ingestion.ingestion_system_config import IngestionSystemConfiguration

@@ -17,7 +17,7 @@ from src.testingReportView import TestingReportView
 from src.communicationController import CommunicationController
 
 # ── Config file location (the only hardcoded path in the system) ───────────
-CONFIG_PATH =  "..\config\developmentConfig.json"
+CONFIG_PATH = os.path.join("..", "config", "developmentConfig.json")
 print(f"[Orchestrator] Loading configuration from: {CONFIG_PATH}")
 
 
@@ -25,7 +25,7 @@ def _load_config() -> dict:
     if not os.path.isfile(CONFIG_PATH):
         raise FileNotFoundError(
             f"Configuration file not found: {CONFIG_PATH}\n"
-            f"Make sure ..\config\developmentConfig.json exists before running."
+            f"Make sure ../config/developmentConfig.json exists before running."
         )
     with open(CONFIG_PATH, "r", encoding="UTF-8") as f:
         return json.load(f)

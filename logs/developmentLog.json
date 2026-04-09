@@ -1,0 +1,32 @@
+{
+    "logs1": [
+        {
+            "timestamp": "2024-06-01T12:00:00Z",
+            "process": "learning curve",
+            "phase": "production"
+        },
+        {
+            "timestamp": "2024-06-01T12:05:00Z",
+            "process": "set #iterations"
+        },
+        {
+            "timestamp": "2024-06-01T12:10:00Z",
+            "output": "classifier"
+        }
+    ],
+
+    "logs2": [
+        {
+            "timestamp": "2024-06-01T12:00:00Z",
+            "process": "learning curve"
+        },
+        {
+            "timestamp": "2024-06-01T12:05:00Z",
+            "process": "set #iterations"
+        },
+        {
+            "timestamp": "2024-06-01T12:10:00Z",
+            "output": "High memory usage detected."
+        }
+    ]
+}

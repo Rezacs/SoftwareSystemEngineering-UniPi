@@ -1,25 +1,22 @@
-"""Runs a mock upstream system that sends prepared sessions to the Segregation System via REST."""
+"""Interactive upstream simulator that sends batches of prepared sessions via REST."""
 
 import json
-import time
 from pathlib import Path
 
 import requests
-from flask import Flask, jsonify, request
 
-from src import PREPARED_SESSIONS_ENDPOINT
+from src import CONFIG_PATH, PREPARED_SESSIONS_ENDPOINT
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-CONFIG_PATH = PROJECT_ROOT / "config" / "config.json"
 INPUT_DIR = PROJECT_ROOT / "data" / "input"
 OUTPUT_DIR = PROJECT_ROOT / "data" / "output"
-SEND_STATUS_PATH = OUTPUT_DIR / "sent_prepared_sessions_status.json"
-MOCK_UPSTREAM_SYSTEM_PORT = 5001
+# SEND_STATUS_PATH = OUTPUT_DIR / "sent_prepared_sessions_status.json"
+BATCH_SIZE = 4
 
 
 def load_config() -> dict:
-    with CONFIG_PATH.open("r", encoding="utf-8") as config_file:
+    with Path(CONFIG_PATH).open("r", encoding="utf-8") as config_file:
         return json.load(config_file)
 
 
@@ -30,11 +27,13 @@ def save_json(path: Path, payload: dict):
 
 
 def load_prepared_sessions() -> list[tuple[str, dict]]:
-    json_files = sorted(INPUT_DIR.glob("prepared_session*.json"))
+    json_files = sorted(
+        path
+        for path in INPUT_DIR.glob("prepared_session*.json")
+        if path.name != "prepared_session.json"
+    )
     if not json_files:
-        raise FileNotFoundError(
-            f"No prepared-session JSON files found in {INPUT_DIR}"
-        )
+        raise FileNotFoundError(f"No prepared-session JSON files found in {INPUT_DIR}")
 
     prepared_sessions = []
     for json_filename in json_files:
@@ -43,17 +42,28 @@ def load_prepared_sessions() -> list[tuple[str, dict]]:
     return prepared_sessions
 
 
-def send_prepared_sessions(delay_seconds: float = 1.0) -> dict:
-    config = load_config()
-    url = (
+def build_target_url(config: dict) -> str:
+    return (
         f"http://{config['segregationSystemIpAddress']}:"
         f"{config['segregationSystemPort']}"
         f"{PREPARED_SESSIONS_ENDPOINT}"
     )
 
+
+def send_prepared_sessions_batch(
+    target_url: str,
+    prepared_sessions: list[tuple[str, dict]],
+    start_index: int,
+    batch_size: int = BATCH_SIZE,
+) -> tuple[dict, int]:
+    total = len(prepared_sessions)
+    selected = [
+        prepared_sessions[(start_index + offset) % total] for offset in range(batch_size)
+    ]
+
     results = []
-    for filename, payload in load_prepared_sessions():
-        response = requests.post(url, json=payload, timeout=5)
+    for filename, payload in selected:
+        response = requests.post(target_url, json=payload, timeout=5)
         response_text = response.text
         try:
             response_body = response.json()
@@ -68,55 +78,64 @@ def send_prepared_sessions(delay_seconds: float = 1.0) -> dict:
                 "response": response_body,
             }
         )
-        time.sleep(delay_seconds)
 
+    next_index = (start_index + batch_size) % total
     overall_status = {
-        "status": "prepared_sessions_sent",
-        "target_url": url,
+        "status": "prepared_sessions_batch_sent",
+        "target_url": target_url,
         "sent_count": len(results),
         "all_succeeded": all(result["ok"] for result in results),
         "results": results,
     }
-    save_json(SEND_STATUS_PATH, overall_status)
-    return overall_status
+    # save_json(SEND_STATUS_PATH, overall_status)
+    return overall_status, next_index
 
 
-def create_app() -> Flask:
-    app = Flask(__name__)
+def run_interactive_sender():
+    config = load_config()
+    target_url = build_target_url(config)
+    prepared_sessions = load_prepared_sessions()
+    cursor = 0
 
-    @app.get("/health")
-    def health():
-        return jsonify({"status": "ok", "service": "mock_upstream_system"})
+    print("=" * 60)
+    print("Prepared Sessions Interactive Sender")
+    print("=" * 60)
+    print(f"Target endpoint: {target_url}")
+    print(f"Loaded sessions : {len(prepared_sessions)} files")
+    print(f"Batch size      : {BATCH_SIZE}")
+    print("Press Enter to send one batch, type 'q' to quit.")
+    print("=" * 60)
 
-    @app.get("/prepared-sessions/available")
-    def list_prepared_sessions():
-        files = [path.name for path in sorted(INPUT_DIR.glob("prepared_session*.json"))]
-        return jsonify({"available_files": files, "count": len(files)})
-
-    @app.post("/prepared-sessions/send")
-    def send_batch():
-        payload = request.get_json(silent=True) or {}
-        delay_seconds = float(payload.get("delay_seconds", 1.0))
+    while True:
+        command = input("> ").strip().lower()
+        if command in {"q", "quit", "exit"}:
+            print("[PrepSim] Stopped by user.")
+            break
+        if command != "":
+            print("[PrepSim] Unknown command. Press Enter to send, or 'q' to quit.")
+            continue
 
         try:
-            status = send_prepared_sessions(delay_seconds=delay_seconds)
-        except FileNotFoundError as exc:
-            return jsonify({"status": "no_prepared_sessions", "details": str(exc)}), 404
+            status, cursor = send_prepared_sessions_batch(
+                target_url=target_url,
+                prepared_sessions=prepared_sessions,
+                start_index=cursor,
+                batch_size=BATCH_SIZE,
+            )
         except requests.RequestException as exc:
-            return jsonify({"status": "send_failed", "details": str(exc)}), 502
+            print(f"[PrepSim] Send failed: {exc}")
+            continue
 
-        http_status = 200 if status["all_succeeded"] else 502
-        return jsonify(status), http_status
-
-    @app.get("/prepared-sessions/last-send-status")
-    def get_last_send_status():
-        if not SEND_STATUS_PATH.exists():
-            return jsonify({"status": "no_batch_sent_yet"}), 404
-        with SEND_STATUS_PATH.open("r", encoding="utf-8") as file:
-            return jsonify(json.load(file))
-
-    return app
+        print(
+            f"[PrepSim] Batch sent: {status['sent_count']} sessions "
+            f"({'OK' if status['all_succeeded'] else 'PARTIAL/FAILED'})"
+        )
+        for result in status["results"]:
+            print(
+                f"  - {result['file']}: HTTP {result['status_code']} "
+                f"{'OK' if result['ok'] else 'FAIL'}"
+            )
 
 
 if __name__ == "__main__":
-    create_app().run(host="127.0.0.1", port=MOCK_UPSTREAM_SYSTEM_PORT, debug=False)
+    run_interactive_sender()

@@ -5,6 +5,7 @@ Entry point for the Development System.
 import json
 import os
 import threading
+from pathlib import Path
 
 from Data.preparedSession import PreparedSession
 from Data.learningSet import LearningSet
@@ -13,10 +14,11 @@ from src.developmentSystemOrchestrator import DevelopmentSystemOrchestrator
 from src.communicationController import CommunicationController
 
 # ── Config is loaded here only to know the listen port and file paths ──────
-_CONFIG_PATH = r"..\config\developmentConfig.json"
+REPO_ROOT = Path(__file__).resolve().parent.parent
+_CONFIG_PATH = REPO_ROOT / "config" / "developmentConfig.json"
 
 def _read_config() -> dict:
-    with open(_CONFIG_PATH, "r", encoding="UTF-8") as f:
+    with _CONFIG_PATH.open("r", encoding="UTF-8") as f:
         return json.load(f)
 
 

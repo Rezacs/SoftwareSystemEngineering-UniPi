@@ -1,4 +1,4 @@
-id_player,short_name,numberOfLikes,numberOfFollowers
+player_id,short_name,number_of_likes,number_of_followers
 1,Casemiro,967,514
 2,Karim Benzema,87,306
 3,Lionel Messi,425,901

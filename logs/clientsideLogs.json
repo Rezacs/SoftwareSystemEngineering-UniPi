@@ -1,0 +1,1638 @@
+[
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T14:50:08.938437"
+    },
+    {
+        "player_id": 39,
+        "timestamp": "2026-04-10T14:50:17.458417",
+        "event": "sent"
+    },
+    {
+        "player_id": 21,
+        "timestamp": "2026-04-10T14:50:21.224769",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T14:51:24.502565"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T14:52:15.713465"
+    },
+    {
+        "player_id": 28,
+        "timestamp": "2026-04-10T14:52:18.316580",
+        "event": "sent"
+    },
+    {
+        "player_id": 58,
+        "timestamp": "2026-04-10T14:52:21.841171",
+        "event": "sent"
+    },
+    {
+        "player_id": 25,
+        "timestamp": "2026-04-10T14:52:25.585745",
+        "event": "sent"
+    },
+    {
+        "player_id": 25,
+        "timestamp": "2026-04-10T14:52:29.868892",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T14:53:16.035705"
+    },
+    {
+        "player_id": 15,
+        "timestamp": "2026-04-10T14:53:20.965164",
+        "event": "sent"
+    },
+    {
+        "player_id": 36,
+        "timestamp": "2026-04-10T14:53:23.346657",
+        "event": "sent"
+    },
+    {
+        "player_id": 15,
+        "timestamp": "2026-04-10T14:53:25.983027",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T14:55:55.250696"
+    },
+    {
+        "player_id": 30,
+        "timestamp": "2026-04-10T14:56:01.267501",
+        "event": "sent"
+    },
+    {
+        "player_id": 42,
+        "timestamp": "2026-04-10T14:56:05.759394",
+        "event": "sent"
+    },
+    {
+        "player_id": 77,
+        "timestamp": "2026-04-10T14:56:09.279517",
+        "event": "sent"
+    },
+    {
+        "player_id": 89,
+        "timestamp": "2026-04-10T14:56:12.554553",
+        "event": "sent"
+    },
+    {
+        "player_id": 79,
+        "timestamp": "2026-04-10T14:56:16.717793",
+        "event": "sent"
+    },
+    {
+        "player_id": 65,
+        "timestamp": "2026-04-10T14:56:20.785658",
+        "event": "sent"
+    },
+    {
+        "player_id": 25,
+        "timestamp": "2026-04-10T14:56:23.409988",
+        "event": "sent"
+    },
+    {
+        "player_id": 60,
+        "timestamp": "2026-04-10T14:56:26.944484",
+        "event": "sent"
+    },
+    {
+        "player_id": 33,
+        "timestamp": "2026-04-10T14:56:29.314238",
+        "event": "sent"
+    },
+    {
+        "player_id": 96,
+        "timestamp": "2026-04-10T14:56:31.353045",
+        "event": "sent"
+    },
+    {
+        "player_id": 17,
+        "timestamp": "2026-04-10T14:56:36.352718",
+        "event": "sent"
+    },
+    {
+        "player_id": 65,
+        "timestamp": "2026-04-10T14:56:40.595279",
+        "event": "sent"
+    },
+    {
+        "player_id": 61,
+        "timestamp": "2026-04-10T14:56:44.239892",
+        "event": "sent"
+    },
+    {
+        "player_id": 49,
+        "timestamp": "2026-04-10T14:56:47.800437",
+        "event": "sent"
+    },
+    {
+        "player_id": 92,
+        "timestamp": "2026-04-10T14:56:51.686918",
+        "event": "sent"
+    },
+    {
+        "player_id": 94,
+        "timestamp": "2026-04-10T14:56:54.009752",
+        "event": "sent"
+    },
+    {
+        "player_id": 2,
+        "timestamp": "2026-04-10T14:56:58.451032",
+        "event": "sent"
+    },
+    {
+        "player_id": 15,
+        "timestamp": "2026-04-10T14:57:02.437716",
+        "event": "sent"
+    },
+    {
+        "player_id": 54,
+        "timestamp": "2026-04-10T14:57:07.165147",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:01:37.126688"
+    },
+    {
+        "player_id": 76,
+        "timestamp": "2026-04-10T15:01:41.003016",
+        "event": "sent"
+    },
+    {
+        "player_id": 69,
+        "timestamp": "2026-04-10T15:01:44.684319",
+        "event": "sent"
+    },
+    {
+        "player_id": 38,
+        "timestamp": "2026-04-10T15:01:47.322526",
+        "event": "sent"
+    },
+    {
+        "player_id": 75,
+        "timestamp": "2026-04-10T15:01:49.729796",
+        "event": "sent"
+    },
+    {
+        "player_id": 72,
+        "timestamp": "2026-04-10T15:01:51.805125",
+        "event": "sent"
+    },
+    {
+        "player_id": 41,
+        "timestamp": "2026-04-10T15:01:56.136612",
+        "event": "sent"
+    },
+    {
+        "player_id": 26,
+        "timestamp": "2026-04-10T15:01:58.411023",
+        "event": "sent"
+    },
+    {
+        "player_id": 13,
+        "timestamp": "2026-04-10T15:02:00.913302",
+        "event": "sent"
+    },
+    {
+        "player_id": 61,
+        "timestamp": "2026-04-10T15:02:03.584345",
+        "event": "sent"
+    },
+    {
+        "player_id": 25,
+        "timestamp": "2026-04-10T15:02:07.970468",
+        "event": "sent"
+    },
+    {
+        "player_id": 81,
+        "timestamp": "2026-04-10T15:02:11.818962",
+        "event": "sent"
+    },
+    {
+        "player_id": 52,
+        "timestamp": "2026-04-10T15:02:13.893680",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:08:11.981424"
+    },
+    {
+        "player_id": 58,
+        "timestamp": "2026-04-10T15:08:16.625769",
+        "event": "sent"
+    },
+    {
+        "player_id": 9,
+        "timestamp": "2026-04-10T15:08:19.324907",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:12:50.646035"
+    },
+    {
+        "player_id": 19,
+        "timestamp": "2026-04-10T15:12:54.129228",
+        "event": "sent"
+    },
+    {
+        "player_id": 64,
+        "timestamp": "2026-04-10T15:12:56.391570",
+        "event": "sent"
+    },
+    {
+        "player_id": 18,
+        "timestamp": "2026-04-10T15:12:59.892073",
+        "event": "sent"
+    },
+    {
+        "player_id": 94,
+        "timestamp": "2026-04-10T15:13:03.138522",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:13:26.763565"
+    },
+    {
+        "player_id": 7,
+        "timestamp": "2026-04-10T15:13:28.761119",
+        "event": "sent"
+    },
+    {
+        "player_id": 57,
+        "timestamp": "2026-04-10T15:13:31.416640",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:15:06.027040"
+    },
+    {
+        "player_id": 70,
+        "timestamp": "2026-04-10T15:15:09.006656",
+        "event": "sent"
+    },
+    {
+        "player_id": 93,
+        "timestamp": "2026-04-10T15:15:12.350648",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:15:55.589885"
+    },
+    {
+        "player_id": 58,
+        "timestamp": "2026-04-10T15:15:57.720605",
+        "event": "sent"
+    },
+    {
+        "player_id": 47,
+        "timestamp": "2026-04-10T15:15:59.771453",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:19:10.135125"
+    },
+    {
+        "player_id": 72,
+        "timestamp": "2026-04-10T15:19:17.847737",
+        "event": "sent"
+    },
+    {
+        "player_id": 33,
+        "timestamp": "2026-04-10T15:19:21.790227",
+        "event": "sent"
+    },
+    {
+        "player_id": 78,
+        "timestamp": "2026-04-10T15:19:25.246709",
+        "event": "sent"
+    },
+    {
+        "player_id": 54,
+        "timestamp": "2026-04-10T15:19:27.487060",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:21:44.007295"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:28:53.197048"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:28:56.141447"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:29:50.805815"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:29:54.052837"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:30:03.948058"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:30:59.227589"
+    },
+    {
+        "player_id": 8,
+        "timestamp": "2026-04-10T15:31:02.299710",
+        "event": "sent"
+    },
+    {
+        "player_id": 91,
+        "timestamp": "2026-04-10T15:31:05.387195",
+        "event": "sent"
+    },
+    {
+        "player_id": 57,
+        "timestamp": "2026-04-10T15:31:08.492341",
+        "event": "sent"
+    },
+    {
+        "player_id": 7,
+        "timestamp": "2026-04-10T15:31:13.474200",
+        "event": "sent"
+    },
+    {
+        "player_id": 24,
+        "timestamp": "2026-04-10T15:31:16.049318",
+        "event": "sent"
+    },
+    {
+        "player_id": 21,
+        "timestamp": "2026-04-10T15:31:18.246562",
+        "event": "sent"
+    },
+    {
+        "player_id": 75,
+        "timestamp": "2026-04-10T15:31:22.296346",
+        "event": "sent"
+    },
+    {
+        "player_id": 66,
+        "timestamp": "2026-04-10T15:31:24.771690",
+        "event": "sent"
+    },
+    {
+        "player_id": 15,
+        "timestamp": "2026-04-10T15:31:29.256510",
+        "event": "sent"
+    },
+    {
+        "player_id": 56,
+        "timestamp": "2026-04-10T15:31:32.798337",
+        "event": "sent"
+    },
+    {
+        "player_id": 52,
+        "timestamp": "2026-04-10T15:31:37.779596",
+        "event": "sent"
+    },
+    {
+        "player_id": 82,
+        "timestamp": "2026-04-10T15:31:41.142938",
+        "event": "sent"
+    },
+    {
+        "player_id": 31,
+        "timestamp": "2026-04-10T15:31:44.382914",
+        "event": "sent"
+    },
+    {
+        "player_id": 34,
+        "timestamp": "2026-04-10T15:31:47.122828",
+        "event": "sent"
+    },
+    {
+        "player_id": 36,
+        "timestamp": "2026-04-10T15:31:51.872525",
+        "event": "sent"
+    },
+    {
+        "player_id": 81,
+        "timestamp": "2026-04-10T15:31:55.099842",
+        "event": "sent"
+    },
+    {
+        "player_id": 90,
+        "timestamp": "2026-04-10T15:31:57.294973",
+        "event": "sent"
+    },
+    {
+        "player_id": 93,
+        "timestamp": "2026-04-10T15:32:00.326218",
+        "event": "sent"
+    },
+    {
+        "player_id": 54,
+        "timestamp": "2026-04-10T15:32:02.700790",
+        "event": "sent"
+    },
+    {
+        "player_id": 68,
+        "timestamp": "2026-04-10T15:32:05.183092",
+        "event": "sent"
+    },
+    {
+        "player_id": 23,
+        "timestamp": "2026-04-10T15:32:07.712064",
+        "event": "sent"
+    },
+    {
+        "player_id": 70,
+        "timestamp": "2026-04-10T15:32:12.550330",
+        "event": "sent"
+    },
+    {
+        "player_id": 49,
+        "timestamp": "2026-04-10T15:32:15.105996",
+        "event": "sent"
+    },
+    {
+        "player_id": 90,
+        "timestamp": "2026-04-10T15:32:17.812844",
+        "event": "sent"
+    },
+    {
+        "player_id": 9,
+        "timestamp": "2026-04-10T15:32:20.185090",
+        "event": "sent"
+    },
+    {
+        "player_id": 2,
+        "timestamp": "2026-04-10T15:32:24.920979",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:32:31.210161"
+    },
+    {
+        "player_id": 13,
+        "timestamp": "2026-04-10T15:32:34.007917",
+        "event": "sent"
+    },
+    {
+        "player_id": 1,
+        "timestamp": "2026-04-10T15:32:37.594637",
+        "event": "sent"
+    },
+    {
+        "player_id": 48,
+        "timestamp": "2026-04-10T15:32:40.119625",
+        "event": "sent"
+    },
+    {
+        "player_id": 25,
+        "timestamp": "2026-04-10T15:32:43.462677",
+        "event": "sent"
+    },
+    {
+        "player_id": 30,
+        "timestamp": "2026-04-10T15:32:46.670256",
+        "event": "sent"
+    },
+    {
+        "player_id": 63,
+        "timestamp": "2026-04-10T15:32:50.334114",
+        "event": "sent"
+    },
+    {
+        "player_id": 51,
+        "timestamp": "2026-04-10T15:32:54.022457",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:38:45.626344"
+    },
+    {
+        "player_id": 29,
+        "timestamp": "2026-04-10T15:38:49.649584",
+        "event": "sent"
+    },
+    {
+        "player_id": 80,
+        "timestamp": "2026-04-10T15:38:49.667382",
+        "event": "sent"
+    },
+    {
+        "player_id": 94,
+        "timestamp": "2026-04-10T15:38:49.693309",
+        "event": "sent"
+    },
+    {
+        "player_id": 91,
+        "timestamp": "2026-04-10T15:38:49.713742",
+        "event": "sent"
+    },
+    {
+        "player_id": 93,
+        "timestamp": "2026-04-10T15:38:49.735874",
+        "event": "sent"
+    },
+    {
+        "player_id": 2,
+        "timestamp": "2026-04-10T15:38:49.754765",
+        "event": "sent"
+    },
+    {
+        "player_id": 27,
+        "timestamp": "2026-04-10T15:38:49.770665",
+        "event": "sent"
+    },
+    {
+        "player_id": 58,
+        "timestamp": "2026-04-10T15:38:49.799814",
+        "event": "sent"
+    },
+    {
+        "player_id": 81,
+        "timestamp": "2026-04-10T15:38:49.824034",
+        "event": "sent"
+    },
+    {
+        "player_id": 5,
+        "timestamp": "2026-04-10T15:38:49.843515",
+        "event": "sent"
+    },
+    {
+        "player_id": 35,
+        "timestamp": "2026-04-10T15:38:49.863608",
+        "event": "sent"
+    },
+    {
+        "player_id": 16,
+        "timestamp": "2026-04-10T15:38:49.882737",
+        "event": "sent"
+    },
+    {
+        "player_id": 78,
+        "timestamp": "2026-04-10T15:38:49.905370",
+        "event": "sent"
+    },
+    {
+        "player_id": 77,
+        "timestamp": "2026-04-10T15:38:49.923528",
+        "event": "sent"
+    },
+    {
+        "player_id": 21,
+        "timestamp": "2026-04-10T15:38:49.941158",
+        "event": "sent"
+    },
+    {
+        "player_id": 51,
+        "timestamp": "2026-04-10T15:38:49.960653",
+        "event": "sent"
+    },
+    {
+        "player_id": 90,
+        "timestamp": "2026-04-10T15:38:49.979143",
+        "event": "sent"
+    },
+    {
+        "player_id": 64,
+        "timestamp": "2026-04-10T15:38:49.994368",
+        "event": "sent"
+    },
+    {
+        "player_id": 49,
+        "timestamp": "2026-04-10T15:38:50.014898",
+        "event": "sent"
+    },
+    {
+        "player_id": 81,
+        "timestamp": "2026-04-10T15:38:50.039367",
+        "event": "sent"
+    },
+    {
+        "player_id": 41,
+        "timestamp": "2026-04-10T15:38:50.054288",
+        "event": "sent"
+    },
+    {
+        "player_id": 97,
+        "timestamp": "2026-04-10T15:38:50.071754",
+        "event": "sent"
+    },
+    {
+        "player_id": 58,
+        "timestamp": "2026-04-10T15:38:50.086660",
+        "event": "sent"
+    },
+    {
+        "player_id": 51,
+        "timestamp": "2026-04-10T15:38:50.104581",
+        "event": "sent"
+    },
+    {
+        "player_id": 3,
+        "timestamp": "2026-04-10T15:38:50.121346",
+        "event": "sent"
+    },
+    {
+        "player_id": 56,
+        "timestamp": "2026-04-10T15:38:50.141188",
+        "event": "sent"
+    },
+    {
+        "player_id": 57,
+        "timestamp": "2026-04-10T15:38:50.158020",
+        "event": "sent"
+    },
+    {
+        "player_id": 92,
+        "timestamp": "2026-04-10T15:38:50.178985",
+        "event": "sent"
+    },
+    {
+        "player_id": 27,
+        "timestamp": "2026-04-10T15:38:50.198273",
+        "event": "sent"
+    },
+    {
+        "player_id": 98,
+        "timestamp": "2026-04-10T15:38:50.216759",
+        "event": "sent"
+    },
+    {
+        "player_id": 85,
+        "timestamp": "2026-04-10T15:38:50.237896",
+        "event": "sent"
+    },
+    {
+        "player_id": 27,
+        "timestamp": "2026-04-10T15:38:50.258880",
+        "event": "sent"
+    },
+    {
+        "player_id": 88,
+        "timestamp": "2026-04-10T15:38:50.275638",
+        "event": "sent"
+    },
+    {
+        "player_id": 92,
+        "timestamp": "2026-04-10T15:38:50.288939",
+        "event": "sent"
+    },
+    {
+        "player_id": 5,
+        "timestamp": "2026-04-10T15:38:50.307294",
+        "event": "sent"
+    },
+    {
+        "player_id": 39,
+        "timestamp": "2026-04-10T15:38:50.324561",
+        "event": "sent"
+    },
+    {
+        "player_id": 18,
+        "timestamp": "2026-04-10T15:38:50.341641",
+        "event": "sent"
+    },
+    {
+        "player_id": 28,
+        "timestamp": "2026-04-10T15:38:50.357865",
+        "event": "sent"
+    },
+    {
+        "player_id": 95,
+        "timestamp": "2026-04-10T15:38:50.377175",
+        "event": "sent"
+    },
+    {
+        "player_id": 51,
+        "timestamp": "2026-04-10T15:38:50.400563",
+        "event": "sent"
+    },
+    {
+        "player_id": 78,
+        "timestamp": "2026-04-10T15:38:50.424887",
+        "event": "sent"
+    },
+    {
+        "player_id": 76,
+        "timestamp": "2026-04-10T15:38:50.448384",
+        "event": "sent"
+    },
+    {
+        "player_id": 88,
+        "timestamp": "2026-04-10T15:38:50.474053",
+        "event": "sent"
+    },
+    {
+        "player_id": 19,
+        "timestamp": "2026-04-10T15:38:50.495681",
+        "event": "sent"
+    },
+    {
+        "player_id": 66,
+        "timestamp": "2026-04-10T15:38:50.519652",
+        "event": "sent"
+    },
+    {
+        "player_id": 81,
+        "timestamp": "2026-04-10T15:38:50.539225",
+        "event": "sent"
+    },
+    {
+        "player_id": 85,
+        "timestamp": "2026-04-10T15:38:50.557147",
+        "event": "sent"
+    },
+    {
+        "player_id": 50,
+        "timestamp": "2026-04-10T15:38:50.576767",
+        "event": "sent"
+    },
+    {
+        "player_id": 90,
+        "timestamp": "2026-04-10T15:38:50.591706",
+        "event": "sent"
+    },
+    {
+        "player_id": 49,
+        "timestamp": "2026-04-10T15:38:50.608677",
+        "event": "sent"
+    },
+    {
+        "player_id": 96,
+        "timestamp": "2026-04-10T15:38:50.624358",
+        "event": "sent"
+    },
+    {
+        "player_id": 66,
+        "timestamp": "2026-04-10T15:38:50.643897",
+        "event": "sent"
+    },
+    {
+        "player_id": 56,
+        "timestamp": "2026-04-10T15:38:50.665092",
+        "event": "sent"
+    },
+    {
+        "player_id": 9,
+        "timestamp": "2026-04-10T15:38:50.685735",
+        "event": "sent"
+    },
+    {
+        "player_id": 1,
+        "timestamp": "2026-04-10T15:38:50.709058",
+        "event": "sent"
+    },
+    {
+        "player_id": 8,
+        "timestamp": "2026-04-10T15:38:50.728766",
+        "event": "sent"
+    },
+    {
+        "player_id": 7,
+        "timestamp": "2026-04-10T15:38:50.744614",
+        "event": "sent"
+    },
+    {
+        "player_id": 68,
+        "timestamp": "2026-04-10T15:38:50.768146",
+        "event": "sent"
+    },
+    {
+        "player_id": 42,
+        "timestamp": "2026-04-10T15:38:50.793008",
+        "event": "sent"
+    },
+    {
+        "player_id": 40,
+        "timestamp": "2026-04-10T15:38:50.810256",
+        "event": "sent"
+    },
+    {
+        "player_id": 24,
+        "timestamp": "2026-04-10T15:38:50.830925",
+        "event": "sent"
+    },
+    {
+        "player_id": 79,
+        "timestamp": "2026-04-10T15:38:50.850749",
+        "event": "sent"
+    },
+    {
+        "player_id": 76,
+        "timestamp": "2026-04-10T15:38:50.871229",
+        "event": "sent"
+    },
+    {
+        "player_id": 20,
+        "timestamp": "2026-04-10T15:38:50.888463",
+        "event": "sent"
+    },
+    {
+        "player_id": 14,
+        "timestamp": "2026-04-10T15:38:50.905984",
+        "event": "sent"
+    },
+    {
+        "player_id": 75,
+        "timestamp": "2026-04-10T15:38:50.925160",
+        "event": "sent"
+    },
+    {
+        "player_id": 67,
+        "timestamp": "2026-04-10T15:38:50.943907",
+        "event": "sent"
+    },
+    {
+        "player_id": 71,
+        "timestamp": "2026-04-10T15:38:50.967070",
+        "event": "sent"
+    },
+    {
+        "player_id": 94,
+        "timestamp": "2026-04-10T15:38:50.987020",
+        "event": "sent"
+    },
+    {
+        "player_id": 67,
+        "timestamp": "2026-04-10T15:38:51.005758",
+        "event": "sent"
+    },
+    {
+        "player_id": 67,
+        "timestamp": "2026-04-10T15:38:51.026140",
+        "event": "sent"
+    },
+    {
+        "player_id": 95,
+        "timestamp": "2026-04-10T15:38:51.042408",
+        "event": "sent"
+    },
+    {
+        "player_id": 10,
+        "timestamp": "2026-04-10T15:38:51.064033",
+        "event": "sent"
+    },
+    {
+        "player_id": 37,
+        "timestamp": "2026-04-10T15:38:51.081276",
+        "event": "sent"
+    },
+    {
+        "player_id": 37,
+        "timestamp": "2026-04-10T15:38:51.104300",
+        "event": "sent"
+    },
+    {
+        "player_id": 72,
+        "timestamp": "2026-04-10T15:38:51.124895",
+        "event": "sent"
+    },
+    {
+        "player_id": 80,
+        "timestamp": "2026-04-10T15:38:51.143818",
+        "event": "sent"
+    },
+    {
+        "player_id": 52,
+        "timestamp": "2026-04-10T15:38:51.157849",
+        "event": "sent"
+    },
+    {
+        "player_id": 55,
+        "timestamp": "2026-04-10T15:38:51.174350",
+        "event": "sent"
+    },
+    {
+        "player_id": 30,
+        "timestamp": "2026-04-10T15:38:51.197828",
+        "event": "sent"
+    },
+    {
+        "player_id": 76,
+        "timestamp": "2026-04-10T15:38:51.221959",
+        "event": "sent"
+    },
+    {
+        "player_id": 26,
+        "timestamp": "2026-04-10T15:38:51.250255",
+        "event": "sent"
+    },
+    {
+        "player_id": 94,
+        "timestamp": "2026-04-10T15:38:51.287194",
+        "event": "sent"
+    },
+    {
+        "player_id": 40,
+        "timestamp": "2026-04-10T15:38:51.319265",
+        "event": "sent"
+    },
+    {
+        "player_id": 71,
+        "timestamp": "2026-04-10T15:38:51.336112",
+        "event": "sent"
+    },
+    {
+        "player_id": 54,
+        "timestamp": "2026-04-10T15:38:51.359453",
+        "event": "sent"
+    },
+    {
+        "player_id": 52,
+        "timestamp": "2026-04-10T15:38:51.392695",
+        "event": "sent"
+    },
+    {
+        "player_id": 9,
+        "timestamp": "2026-04-10T15:38:51.418521",
+        "event": "sent"
+    },
+    {
+        "player_id": 91,
+        "timestamp": "2026-04-10T15:38:51.438169",
+        "event": "sent"
+    },
+    {
+        "player_id": 61,
+        "timestamp": "2026-04-10T15:38:51.456917",
+        "event": "sent"
+    },
+    {
+        "player_id": 82,
+        "timestamp": "2026-04-10T15:38:51.481013",
+        "event": "sent"
+    },
+    {
+        "player_id": 77,
+        "timestamp": "2026-04-10T15:38:51.504984",
+        "event": "sent"
+    },
+    {
+        "player_id": 19,
+        "timestamp": "2026-04-10T15:38:51.534757",
+        "event": "sent"
+    },
+    {
+        "player_id": 68,
+        "timestamp": "2026-04-10T15:38:51.555916",
+        "event": "sent"
+    },
+    {
+        "player_id": 10,
+        "timestamp": "2026-04-10T15:38:51.573079",
+        "event": "sent"
+    },
+    {
+        "player_id": 83,
+        "timestamp": "2026-04-10T15:38:51.586688",
+        "event": "sent"
+    },
+    {
+        "player_id": 70,
+        "timestamp": "2026-04-10T15:38:51.605549",
+        "event": "sent"
+    },
+    {
+        "player_id": 9,
+        "timestamp": "2026-04-10T15:38:51.625569",
+        "event": "sent"
+    },
+    {
+        "player_id": 90,
+        "timestamp": "2026-04-10T15:38:51.651629",
+        "event": "sent"
+    },
+    {
+        "player_id": 83,
+        "timestamp": "2026-04-10T15:38:51.678355",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:39:02.060978"
+    },
+    {
+        "player_id": 91,
+        "timestamp": "2026-04-10T15:39:04.960007",
+        "event": "sent"
+    },
+    {
+        "player_id": 12,
+        "timestamp": "2026-04-10T15:39:04.983284",
+        "event": "sent"
+    },
+    {
+        "player_id": 96,
+        "timestamp": "2026-04-10T15:39:05.008949",
+        "event": "sent"
+    },
+    {
+        "player_id": 58,
+        "timestamp": "2026-04-10T15:39:05.029942",
+        "event": "sent"
+    },
+    {
+        "player_id": 98,
+        "timestamp": "2026-04-10T15:39:05.049144",
+        "event": "sent"
+    },
+    {
+        "player_id": 22,
+        "timestamp": "2026-04-10T15:39:05.071766",
+        "event": "sent"
+    },
+    {
+        "player_id": 92,
+        "timestamp": "2026-04-10T15:39:05.096097",
+        "event": "sent"
+    },
+    {
+        "player_id": 30,
+        "timestamp": "2026-04-10T15:39:05.110967",
+        "event": "sent"
+    },
+    {
+        "player_id": 87,
+        "timestamp": "2026-04-10T15:39:05.125229",
+        "event": "sent"
+    },
+    {
+        "player_id": 42,
+        "timestamp": "2026-04-10T15:39:05.141626",
+        "event": "sent"
+    },
+    {
+        "player_id": 36,
+        "timestamp": "2026-04-10T15:39:05.155830",
+        "event": "sent"
+    },
+    {
+        "player_id": 15,
+        "timestamp": "2026-04-10T15:39:05.175226",
+        "event": "sent"
+    },
+    {
+        "player_id": 82,
+        "timestamp": "2026-04-10T15:39:05.194624",
+        "event": "sent"
+    },
+    {
+        "player_id": 8,
+        "timestamp": "2026-04-10T15:39:05.221717",
+        "event": "sent"
+    },
+    {
+        "player_id": 21,
+        "timestamp": "2026-04-10T15:39:05.244173",
+        "event": "sent"
+    },
+    {
+        "player_id": 14,
+        "timestamp": "2026-04-10T15:39:05.260466",
+        "event": "sent"
+    },
+    {
+        "player_id": 59,
+        "timestamp": "2026-04-10T15:39:05.277991",
+        "event": "sent"
+    },
+    {
+        "player_id": 65,
+        "timestamp": "2026-04-10T15:39:05.292860",
+        "event": "sent"
+    },
+    {
+        "player_id": 3,
+        "timestamp": "2026-04-10T15:39:05.313236",
+        "event": "sent"
+    },
+    {
+        "player_id": 80,
+        "timestamp": "2026-04-10T15:39:05.326258",
+        "event": "sent"
+    },
+    {
+        "player_id": 15,
+        "timestamp": "2026-04-10T15:39:05.349704",
+        "event": "sent"
+    },
+    {
+        "player_id": 78,
+        "timestamp": "2026-04-10T15:39:05.363392",
+        "event": "sent"
+    },
+    {
+        "player_id": 44,
+        "timestamp": "2026-04-10T15:39:05.384476",
+        "event": "sent"
+    },
+    {
+        "player_id": 52,
+        "timestamp": "2026-04-10T15:39:05.406954",
+        "event": "sent"
+    },
+    {
+        "player_id": 75,
+        "timestamp": "2026-04-10T15:39:05.422763",
+        "event": "sent"
+    },
+    {
+        "player_id": 46,
+        "timestamp": "2026-04-10T15:39:05.445158",
+        "event": "sent"
+    },
+    {
+        "player_id": 72,
+        "timestamp": "2026-04-10T15:39:05.460158",
+        "event": "sent"
+    },
+    {
+        "player_id": 9,
+        "timestamp": "2026-04-10T15:39:05.480605",
+        "event": "sent"
+    },
+    {
+        "player_id": 25,
+        "timestamp": "2026-04-10T15:39:05.494982",
+        "event": "sent"
+    },
+    {
+        "player_id": 23,
+        "timestamp": "2026-04-10T15:39:05.513395",
+        "event": "sent"
+    },
+    {
+        "player_id": 32,
+        "timestamp": "2026-04-10T15:39:05.527426",
+        "event": "sent"
+    },
+    {
+        "player_id": 76,
+        "timestamp": "2026-04-10T15:39:05.545465",
+        "event": "sent"
+    },
+    {
+        "player_id": 64,
+        "timestamp": "2026-04-10T15:39:05.558190",
+        "event": "sent"
+    },
+    {
+        "player_id": 23,
+        "timestamp": "2026-04-10T15:39:05.574104",
+        "event": "sent"
+    },
+    {
+        "player_id": 43,
+        "timestamp": "2026-04-10T15:39:05.590546",
+        "event": "sent"
+    },
+    {
+        "player_id": 91,
+        "timestamp": "2026-04-10T15:39:05.612499",
+        "event": "sent"
+    },
+    {
+        "player_id": 2,
+        "timestamp": "2026-04-10T15:39:05.629097",
+        "event": "sent"
+    },
+    {
+        "player_id": 83,
+        "timestamp": "2026-04-10T15:39:05.650334",
+        "event": "sent"
+    },
+    {
+        "player_id": 23,
+        "timestamp": "2026-04-10T15:39:05.665290",
+        "event": "sent"
+    },
+    {
+        "player_id": 1,
+        "timestamp": "2026-04-10T15:39:05.684140",
+        "event": "sent"
+    },
+    {
+        "player_id": 27,
+        "timestamp": "2026-04-10T15:39:05.701031",
+        "event": "sent"
+    },
+    {
+        "player_id": 48,
+        "timestamp": "2026-04-10T15:39:05.724707",
+        "event": "sent"
+    },
+    {
+        "player_id": 21,
+        "timestamp": "2026-04-10T15:39:05.741738",
+        "event": "sent"
+    },
+    {
+        "player_id": 7,
+        "timestamp": "2026-04-10T15:39:05.755653",
+        "event": "sent"
+    },
+    {
+        "player_id": 24,
+        "timestamp": "2026-04-10T15:39:05.772911",
+        "event": "sent"
+    },
+    {
+        "player_id": 64,
+        "timestamp": "2026-04-10T15:39:05.789111",
+        "event": "sent"
+    },
+    {
+        "player_id": 59,
+        "timestamp": "2026-04-10T15:39:05.805725",
+        "event": "sent"
+    },
+    {
+        "player_id": 9,
+        "timestamp": "2026-04-10T15:39:05.822932",
+        "event": "sent"
+    },
+    {
+        "player_id": 9,
+        "timestamp": "2026-04-10T15:39:05.842667",
+        "event": "sent"
+    },
+    {
+        "player_id": 71,
+        "timestamp": "2026-04-10T15:39:05.862079",
+        "event": "sent"
+    },
+    {
+        "player_id": 62,
+        "timestamp": "2026-04-10T15:39:05.883336",
+        "event": "sent"
+    },
+    {
+        "player_id": 79,
+        "timestamp": "2026-04-10T15:39:05.906011",
+        "event": "sent"
+    },
+    {
+        "player_id": 78,
+        "timestamp": "2026-04-10T15:39:05.924737",
+        "event": "sent"
+    },
+    {
+        "player_id": 60,
+        "timestamp": "2026-04-10T15:39:05.943894",
+        "event": "sent"
+    },
+    {
+        "player_id": 43,
+        "timestamp": "2026-04-10T15:39:05.960301",
+        "event": "sent"
+    },
+    {
+        "player_id": 92,
+        "timestamp": "2026-04-10T15:39:05.977487",
+        "event": "sent"
+    },
+    {
+        "player_id": 96,
+        "timestamp": "2026-04-10T15:39:05.990986",
+        "event": "sent"
+    },
+    {
+        "player_id": 94,
+        "timestamp": "2026-04-10T15:39:06.006149",
+        "event": "sent"
+    },
+    {
+        "player_id": 32,
+        "timestamp": "2026-04-10T15:39:06.023553",
+        "event": "sent"
+    },
+    {
+        "player_id": 6,
+        "timestamp": "2026-04-10T15:39:06.041802",
+        "event": "sent"
+    },
+    {
+        "player_id": 61,
+        "timestamp": "2026-04-10T15:39:06.057823",
+        "event": "sent"
+    },
+    {
+        "player_id": 73,
+        "timestamp": "2026-04-10T15:39:06.074534",
+        "event": "sent"
+    },
+    {
+        "player_id": 85,
+        "timestamp": "2026-04-10T15:39:06.092518",
+        "event": "sent"
+    },
+    {
+        "player_id": 73,
+        "timestamp": "2026-04-10T15:39:06.110481",
+        "event": "sent"
+    },
+    {
+        "player_id": 98,
+        "timestamp": "2026-04-10T15:39:06.128500",
+        "event": "sent"
+    },
+    {
+        "player_id": 49,
+        "timestamp": "2026-04-10T15:39:06.146956",
+        "event": "sent"
+    },
+    {
+        "player_id": 32,
+        "timestamp": "2026-04-10T15:39:06.163011",
+        "event": "sent"
+    },
+    {
+        "player_id": 17,
+        "timestamp": "2026-04-10T15:39:06.181778",
+        "event": "sent"
+    },
+    {
+        "player_id": 68,
+        "timestamp": "2026-04-10T15:39:06.197320",
+        "event": "sent"
+    },
+    {
+        "player_id": 74,
+        "timestamp": "2026-04-10T15:39:06.215255",
+        "event": "sent"
+    },
+    {
+        "player_id": 55,
+        "timestamp": "2026-04-10T15:39:06.231054",
+        "event": "sent"
+    },
+    {
+        "player_id": 90,
+        "timestamp": "2026-04-10T15:39:06.250853",
+        "event": "sent"
+    },
+    {
+        "player_id": 39,
+        "timestamp": "2026-04-10T15:39:06.270110",
+        "event": "sent"
+    },
+    {
+        "player_id": 87,
+        "timestamp": "2026-04-10T15:39:06.288006",
+        "event": "sent"
+    },
+    {
+        "player_id": 14,
+        "timestamp": "2026-04-10T15:39:06.304089",
+        "event": "sent"
+    },
+    {
+        "player_id": 22,
+        "timestamp": "2026-04-10T15:39:06.323729",
+        "event": "sent"
+    },
+    {
+        "player_id": 54,
+        "timestamp": "2026-04-10T15:39:06.339075",
+        "event": "sent"
+    },
+    {
+        "player_id": 35,
+        "timestamp": "2026-04-10T15:39:06.359887",
+        "event": "sent"
+    },
+    {
+        "player_id": 34,
+        "timestamp": "2026-04-10T15:39:06.380790",
+        "event": "sent"
+    },
+    {
+        "player_id": 43,
+        "timestamp": "2026-04-10T15:39:06.400869",
+        "event": "sent"
+    },
+    {
+        "player_id": 75,
+        "timestamp": "2026-04-10T15:39:06.420015",
+        "event": "sent"
+    },
+    {
+        "player_id": 50,
+        "timestamp": "2026-04-10T15:39:06.440747",
+        "event": "sent"
+    },
+    {
+        "player_id": 65,
+        "timestamp": "2026-04-10T15:39:06.459151",
+        "event": "sent"
+    },
+    {
+        "player_id": 69,
+        "timestamp": "2026-04-10T15:39:06.476064",
+        "event": "sent"
+    },
+    {
+        "player_id": 72,
+        "timestamp": "2026-04-10T15:39:06.495481",
+        "event": "sent"
+    },
+    {
+        "player_id": 11,
+        "timestamp": "2026-04-10T15:39:06.513381",
+        "event": "sent"
+    },
+    {
+        "player_id": 77,
+        "timestamp": "2026-04-10T15:39:06.528781",
+        "event": "sent"
+    },
+    {
+        "player_id": 71,
+        "timestamp": "2026-04-10T15:39:06.545710",
+        "event": "sent"
+    },
+    {
+        "player_id": 11,
+        "timestamp": "2026-04-10T15:39:06.563169",
+        "event": "sent"
+    },
+    {
+        "player_id": 85,
+        "timestamp": "2026-04-10T15:39:06.581249",
+        "event": "sent"
+    },
+    {
+        "player_id": 90,
+        "timestamp": "2026-04-10T15:39:06.597079",
+        "event": "sent"
+    },
+    {
+        "player_id": 69,
+        "timestamp": "2026-04-10T15:39:06.617100",
+        "event": "sent"
+    },
+    {
+        "player_id": 29,
+        "timestamp": "2026-04-10T15:39:06.633294",
+        "event": "sent"
+    },
+    {
+        "player_id": 95,
+        "timestamp": "2026-04-10T15:39:06.650638",
+        "event": "sent"
+    },
+    {
+        "player_id": 81,
+        "timestamp": "2026-04-10T15:39:06.667822",
+        "event": "sent"
+    },
+    {
+        "player_id": 66,
+        "timestamp": "2026-04-10T15:39:06.686321",
+        "event": "sent"
+    },
+    {
+        "player_id": 81,
+        "timestamp": "2026-04-10T15:39:06.706627",
+        "event": "sent"
+    },
+    {
+        "player_id": 63,
+        "timestamp": "2026-04-10T15:39:06.724318",
+        "event": "sent"
+    },
+    {
+        "player_id": 28,
+        "timestamp": "2026-04-10T15:39:06.740288",
+        "event": "sent"
+    },
+    {
+        "player_id": 94,
+        "timestamp": "2026-04-10T15:39:06.764091",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:40:40.539674"
+    },
+    {
+        "player_id": 54,
+        "timestamp": "2026-04-10T15:40:42.946137",
+        "event": "sent"
+    },
+    {
+        "player_id": 13,
+        "timestamp": "2026-04-10T15:40:46.087894",
+        "event": "sent"
+    },
+    {
+        "player_id": 7,
+        "timestamp": "2026-04-10T15:40:48.587625",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:42:06.499760"
+    },
+    {
+        "player_id": 94,
+        "timestamp": "2026-04-10T15:42:14.562266",
+        "event": "sent"
+    },
+    {
+        "player_id": 86,
+        "timestamp": "2026-04-10T15:42:19.262430",
+        "event": "sent"
+    },
+    {
+        "player_id": 42,
+        "timestamp": "2026-04-10T15:42:24.254372",
+        "event": "sent"
+    },
+    {
+        "player_id": 31,
+        "timestamp": "2026-04-10T15:42:26.979846",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:47:00.406860"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:47:05.889610"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:47:28.182686"
+    },
+    {
+        "player_id": 75,
+        "timestamp": "2026-04-10T15:47:30.555636",
+        "event": "sent"
+    },
+    {
+        "player_id": 66,
+        "timestamp": "2026-04-10T15:47:34.389373",
+        "event": "sent"
+    },
+    {
+        "player_id": 77,
+        "timestamp": "2026-04-10T15:47:37.075484",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:47:41.818641"
+    },
+    {
+        "player_id": 78,
+        "timestamp": "2026-04-10T15:47:45.163703",
+        "event": "sent"
+    },
+    {
+        "player_id": 19,
+        "timestamp": "2026-04-10T15:47:47.413520",
+        "event": "sent"
+    },
+    {
+        "player_id": 96,
+        "timestamp": "2026-04-10T15:47:51.766969",
+        "event": "sent"
+    },
+    {
+        "player_id": 49,
+        "timestamp": "2026-04-10T15:47:54.341839",
+        "event": "sent"
+    },
+    {
+        "player_id": 96,
+        "timestamp": "2026-04-10T15:47:57.086961",
+        "event": "sent"
+    },
+    {
+        "event": "launch",
+        "timestamp": "2026-04-10T15:48:12.534826"
+    }
+]

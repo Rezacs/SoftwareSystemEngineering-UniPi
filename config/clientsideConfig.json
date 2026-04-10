@@ -4,8 +4,7 @@
         "listen_port": 5008,
         "ingestion_system": {
             "ip": "127.0.0.1",
-            "port": 5001,
-            "endpoint": "/run"
+            "port": 5001
         },
         "classification_system": {
             "ip": "127.0.0.1",

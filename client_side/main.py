@@ -7,12 +7,12 @@ from pathlib import Path
 from flask import Flask, request, jsonify
 import pandas as pd
 import requests
-
+import math
 app = Flask(__name__)
 
 # Volatile storage
 results_storage = {}
-streaming_active = False  # Flag to track background worker status
+streaming_active = False
 
 ##########################################
 # CONFIG & INITIAL LOGGING
@@ -88,34 +88,32 @@ def generate_testing_csv(current_phase):
 # STREAMING WORKER
 ##########################################
 
-def stream_worker(current_phase, limit, data_pool):
+def stream_worker(current_phase, limit, record_list):
     global streaming_active
     streaming_active = True
-    
+
     ingestion_cfg = config['network']['ingestion_system']
-    url = f"http://{ingestion_cfg['ip']}:{ingestion_cfg['port']}{ingestion_cfg['endpoint']}"
-    total_available = len(data_pool)
+    url = f"http://{ingestion_cfg['ip']}:{ingestion_cfg['port']}/run"
+    total_available = len(record_list)
 
     for i in range(limit):
-        index = i % total_available
-        record = data_pool.iloc[index].to_dict()
+        record = record_list[i % total_available]
         p_id = record.get('player_id')
-        
-        # Log the outgoing record
+        print(f"Record: {record}")
         log_event("clientsideLogs.json", {
-            "player_id": p_id, 
-            "timestamp": datetime.now().isoformat(), 
+            "player_id": p_id,
+            "timestamp": datetime.now().isoformat(),
             "event": "sent"
         })
-        
+
         try:
-            requests.post(url, json=record, timeout=5)
-            print(f"Sent [{i+1}/{limit}]: {p_id}")
+            response = requests.post(url, json=record, timeout=5)
+            print(f"Sent [{i+1}/{limit}]: {p_id} → {response.status_code}")
         except:
             print(f"Target {url} unreachable.")
 
         time.sleep(random.uniform(2, 5))
-    
+
     print("\n[SYSTEM] Sequence finished.")
     streaming_active = False
 
@@ -140,7 +138,6 @@ def run_flask():
 ##########################################
 
 if __name__ == "__main__":
-    # Start Flask in a non-blocking thread so the console stays interactive
     threading.Thread(target=run_flask, daemon=True).start()
     
     while True:
@@ -162,23 +159,33 @@ if __name__ == "__main__":
                     candidate_path = (REPO_ROOT / candidate_path).resolve()
                 if candidate_path.exists():
                     df = pd.read_csv(candidate_path)
-                    if 'id_player' in df.columns: df = df.rename(columns={'id_player': 'player_id'})
+                    df = df.where(pd.notnull(df), None).sample(frac=1).reset_index(drop=True)
                     pool_list.append(df)
-            data_pool = pd.concat(pool_list, axis=0, ignore_index=True)
         else:
             prod_path = Path(config['paths']['prod_file'])
             if not prod_path.is_absolute():
                 prod_path = (REPO_ROOT / prod_path).resolve()
-            data_pool = pd.read_csv(prod_path)
-        
-        data_pool = data_pool.where(pd.notnull(data_pool), None).sample(frac=1).reset_index(drop=True)
+            df = pd.read_csv(prod_path)
+            df = df.where(pd.notnull(df), None).sample(frac=1).reset_index(drop=True)
+            pool_list = [df]
+
+        # Build flat interleaved list, each record with only its own columns
+        record_list = []
+        for df in pool_list:
+            for _, row in df.iterrows():
+                record_list.append({
+                k: v for k, v in row.to_dict().items() 
+                if v is not None and not (isinstance(v, float) and math.isnan(v))
+                })
+        random.shuffle(record_list)
 
         # Start background stream
-        threading.Thread(target=stream_worker, args=(phase_choice, stream_limit, data_pool), daemon=True).start()
-
+        threading.Thread(target=stream_worker, args=(phase_choice, stream_limit, record_list), daemon=True).start()
+        
         # Wait for worker to finish
         print("Waiting for streaming to complete...")
         while streaming_active:
+            
             time.sleep(1)
 
         # Final Prompt

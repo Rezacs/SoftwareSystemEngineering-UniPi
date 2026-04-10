@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from typing import List, Optional
 
 import joblib
@@ -61,7 +61,8 @@ class TrainingOrchestrator:
         as a PNG, and returns a LearningPlot for the view layer.
         """
         print(f"[TrainingOrchestrator] CALIBRATE — {num_epochs} epochs …")
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        output_path = Path(output_path)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
 
         mlp = self._build_mlp(max_iter=num_epochs)
         mlp.fit(X_train.values, y_train)
@@ -103,7 +104,8 @@ class TrainingOrchestrator:
         Persists the model to disk with joblib.
         """
         print(f"[TrainingOrchestrator] Training '{classifier_id}' …")
-        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+        model_path = Path(model_path)
+        model_path.parent.mkdir(parents=True, exist_ok=True)
 
         mlp = self._build_mlp()
         mlp.fit(X_train.values, y_train)

@@ -6,7 +6,7 @@ from src.utils.logger import logger
 from src.core.logging_manager import LoggingManager
 
 import json
-import os
+from pathlib import Path
 
 
 class Orchestrator:
@@ -191,11 +191,12 @@ class Orchestrator:
 
     def _save_json(self, filename, data):
 
-        os.makedirs(self.paths_cfg["output_dir"], exist_ok=True)
+        output_dir = Path(self.paths_cfg["output_dir"])
+        output_dir.mkdir(parents=True, exist_ok=True)
 
-        path = os.path.join(self.paths_cfg["output_dir"], filename)
+        path = output_dir / filename
 
-        with open(path, "w") as f:
+        with path.open("w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
             
 # from sklearn import metrics

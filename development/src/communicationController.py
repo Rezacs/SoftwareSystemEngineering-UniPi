@@ -1,6 +1,6 @@
 import json
-import os
 import threading
+from pathlib import Path
 from typing import Callable, Optional
 
 import requests
@@ -29,8 +29,8 @@ class CommunicationController:
         self._production_ip        = production_ip
         self._production_port      = production_port
         self._production_endpoint  = production_endpoint
-        self._received_data_path   = received_data_path
-        self._rejected_report_path = rejected_report_path
+        self._received_data_path   = Path(received_data_path)
+        self._rejected_report_path = Path(rejected_report_path)
 
         self._app: Flask = Flask(__name__)
         self._on_data_received: Optional[Callable[[dict], None]] = None
@@ -57,8 +57,8 @@ class CommunicationController:
             # ---------------------------
 
             # Save RAW data for audit/debugging
-            os.makedirs(os.path.dirname(self._received_data_path), exist_ok=True)
-            with open(self._received_data_path, "w", encoding="UTF-8") as f:
+            self._received_data_path.parent.mkdir(parents=True, exist_ok=True)
+            with self._received_data_path.open("w", encoding="UTF-8") as f:
                 json.dump(payload, f, indent="\t")
 
             if self._on_data_received is not None:
@@ -113,10 +113,11 @@ class CommunicationController:
             f"{self._production_ip}:{self._production_port} …"
         )
         try:
-            with open(model_path, "rb") as fh:
+            model_file = Path(model_path)
+            with model_file.open("rb") as fh:
                 r = requests.post(
                     url,
-                    files={"classifier": (os.path.basename(model_path), fh, "application/octet-stream")},
+                    files={"classifier": (model_file.name, fh, "application/octet-stream")},
                     timeout=30,
                 )
             r.raise_for_status()
@@ -135,15 +136,16 @@ class CommunicationController:
         Saves the testing report JSON locally so it can be reviewed.
         Called by test_passed() when approved = False.
         """
+        report_path = Path(report_path)
         try:
-            with open(report_path, "r", encoding="UTF-8") as f:
+            with report_path.open("r", encoding="UTF-8") as f:
                 report = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError) as exc:
             print(f"[CommunicationController] Cannot read report: {exc}")
             return False
 
-        os.makedirs(os.path.dirname(self._rejected_report_path), exist_ok=True)
-        with open(self._rejected_report_path, "w", encoding="UTF-8") as f:
+        self._rejected_report_path.parent.mkdir(parents=True, exist_ok=True)
+        with self._rejected_report_path.open("w", encoding="UTF-8") as f:
             json.dump(report, f, indent="\t")
 
         print(

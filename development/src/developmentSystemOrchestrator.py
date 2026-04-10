@@ -1,6 +1,5 @@
 
 import json
-import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -21,18 +20,18 @@ from src.communicationController import CommunicationController
 
 # ── Config/log paths resolved from repository root (cross-platform) ─────────
 REPO_ROOT = Path(__file__).resolve().parents[2]
-CONFIG_PATH = str(REPO_ROOT / "config" / "developmentConfig.json")
-LOG_PATH = str(REPO_ROOT / "logs" / "developmentLog.json")
+CONFIG_PATH = REPO_ROOT / "config" / "developmentConfig.json"
+LOG_PATH = REPO_ROOT / "logs" / "developmentLog.json"
 print(f"[Orchestrator] Loading configuration from: {CONFIG_PATH}")
 
 
 def _load_config() -> dict:
-    if not os.path.isfile(CONFIG_PATH):
+    if not CONFIG_PATH.is_file():
         raise FileNotFoundError(
             f"Configuration file not found: {CONFIG_PATH}\n"
             f"Make sure ../config/developmentConfig.json exists before running."
         )
-    with open(CONFIG_PATH, "r", encoding="UTF-8") as f:
+    with CONFIG_PATH.open("r", encoding="UTF-8") as f:
         return json.load(f)
 
 
@@ -60,12 +59,12 @@ class DevelopmentSystemOrchestrator:
         pipe = cfg["pipeline"]
 
         # paths
-        self._status_file_path       = pth["status_file"]
-        self._classifier_folder      = pth["classifier_folder"]
-        self._learning_curve_path    = pth["learning_curve"]
-        self._validation_report_path = pth["validation_report"]
-        self._testing_report_path    = pth["testing_report"]
-        self._user_input_path        = pth["user_input"]
+        self._status_file_path       = Path(pth["status_file"])
+        self._classifier_folder      = Path(pth["classifier_folder"])
+        self._learning_curve_path    = Path(pth["learning_curve"])
+        self._validation_report_path = Path(pth["validation_report"])
+        self._testing_report_path    = Path(pth["testing_report"])
+        self._user_input_path        = Path(pth["user_input"])
 
         # model
         self._feature_cols = mdl["feature_cols"]
@@ -121,14 +120,14 @@ class DevelopmentSystemOrchestrator:
         }
 
     def _load_status(self) -> Dict[str, Any]:
-        if os.path.isfile(self._status_file_path):
-            with open(self._status_file_path, "r", encoding="UTF-8") as f:
+        if self._status_file_path.is_file():
+            with self._status_file_path.open("r", encoding="UTF-8") as f:
                 return json.load(f)
         return self._default_status()
 
     def _save_status(self) -> None:
-        os.makedirs(os.path.dirname(self._status_file_path), exist_ok=True)
-        with open(self._status_file_path, "w", encoding="UTF-8") as f:
+        self._status_file_path.parent.mkdir(parents=True, exist_ok=True)
+        with self._status_file_path.open("w", encoding="UTF-8") as f:
             json.dump(self._status, f, indent="\t")
 
     def _update_status(self, updates: Dict[str, Any]) -> None:
@@ -145,9 +144,9 @@ class DevelopmentSystemOrchestrator:
         """Write a phase-specific template to user_input.json."""
         phase    = self._status["phase"]
         existing: dict = {}
-        if os.path.isfile(self._user_input_path):
+        if self._user_input_path.is_file():
             try:
-                with open(self._user_input_path, "r", encoding="UTF-8") as f:
+                with self._user_input_path.open("r", encoding="UTF-8") as f:
                     existing = json.load(f)
             except (json.JSONDecodeError, OSError):
                 existing = {}
@@ -164,8 +163,8 @@ class DevelopmentSystemOrchestrator:
         else:
             payload = existing
 
-        os.makedirs(os.path.dirname(self._user_input_path), exist_ok=True)
-        with open(self._user_input_path, "w", encoding="UTF-8") as f:
+        self._user_input_path.parent.mkdir(parents=True, exist_ok=True)
+        with self._user_input_path.open("w", encoding="UTF-8") as f:
             json.dump(payload, f, indent="\t")
 
     def _get_user_input(self) -> dict:
@@ -176,7 +175,7 @@ class DevelopmentSystemOrchestrator:
         if self._testing_mode:
             return self._simulate_user_input()
         try:
-            with open(self._user_input_path, "r", encoding="UTF-8") as f:
+            with self._user_input_path.open("r", encoding="UTF-8") as f:
                 return json.load(f)
         except FileNotFoundError:
             print(f"[Orchestrator] ERROR: {self._user_input_path} not found.")
@@ -191,14 +190,14 @@ class DevelopmentSystemOrchestrator:
         if phase == "LearningCurve":
             return {"max_iter": 300, "good_max_iter": True}
         elif phase == "ValidationReport":
-            with open(self._validation_report_path, "r", encoding="UTF-8") as f:
+            with self._validation_report_path.open("r", encoding="UTF-8") as f:
                 report = json.load(f)
             index = next(
                 (item["index"] for item in report["best_classifiers"] if item["valid"]), 0
             )
             return {"best_model": index}
         elif phase == "Results":
-            with open(self._testing_report_path, "r", encoding="UTF-8") as f:
+            with self._testing_report_path.open("r", encoding="UTF-8") as f:
                 report = json.load(f)
             return {"approved": report["errors"]["passed"]}
         return {}
@@ -233,7 +232,7 @@ class DevelopmentSystemOrchestrator:
         )
 
     def _retrieve_classifier_data(self, model_index: int) -> Optional[dict]:
-        with open(self._validation_report_path, "r", encoding="UTF-8") as f:
+        with self._validation_report_path.open("r", encoding="UTF-8") as f:
             report = json.load(f)
         entry = next(
             (item for item in report["best_classifiers"] if item["index"] == model_index), None
@@ -266,11 +265,11 @@ class DevelopmentSystemOrchestrator:
 
     def _init_log(self) -> None:
         """Initialize the log file if it doesn't exist and prepare the session."""
-        os.makedirs(os.path.dirname(self._log_path), exist_ok=True)
+        self._log_path.parent.mkdir(parents=True, exist_ok=True)
         
         data = {}
-        if os.path.isfile(self._log_path):
-            with open(self._log_path, "r", encoding="UTF-8") as f:
+        if self._log_path.is_file():
+            with self._log_path.open("r", encoding="UTF-8") as f:
                 try:
                     data = json.load(f)
                 except json.JSONDecodeError:
@@ -279,15 +278,15 @@ class DevelopmentSystemOrchestrator:
         if self._session_key not in data:
             data[self._session_key] = []
             
-        with open(self._log_path, "w", encoding="UTF-8") as f:
+        with self._log_path.open("w", encoding="UTF-8") as f:
             json.dump(data, f, indent="\t")
 
     def _log_event(self, process: str, decision: str) -> None:
         """Appends a human-decision event to the log."""
-        if not os.path.isfile(self._log_path):
+        if not self._log_path.is_file():
             self._init_log()
 
-        with open(self._log_path, "r+", encoding="UTF-8") as f:
+        with self._log_path.open("r+", encoding="UTF-8") as f:
             data = json.load(f)
             event = {
                 "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -301,9 +300,10 @@ class DevelopmentSystemOrchestrator:
 
     def _finalize_log(self, output_type: str) -> None:
         """Finalizes the session by adding output and renaming the key to current timestamp."""
-        if not os.path.isfile(self._log_path): return
+        if not self._log_path.is_file():
+            return
 
-        with open(self._log_path, "r+", encoding="UTF-8") as f:
+        with self._log_path.open("r+", encoding="UTF-8") as f:
             data = json.load(f)
             if self._session_key in data:
                 session_data = data.pop(self._session_key)
@@ -507,7 +507,7 @@ class DevelopmentSystemOrchestrator:
         print("[Orchestrator] GENERATE TEST REPORT …")
         best_data  = self._status["best_classifier_data"]
         cl_id      = best_data["index"]
-        model_path = os.path.join(self._classifier_folder, f"model_{cl_id}.sav")
+        model_path = self._classifier_folder / f"model_{cl_id}.sav"
 
         X_test, y_test = self._get_frames("test_set")
 
@@ -538,7 +538,7 @@ class DevelopmentSystemOrchestrator:
         self._log_event("Results", f"Final approval: {approved}")
         best_data = self._status["best_classifier_data"]
         cl_id = best_data["index"]
-        model_path = os.path.join(self._classifier_folder, f"model_{cl_id}.sav")
+        model_path = self._classifier_folder / f"model_{cl_id}.sav"
 
         if approved:
             print("\n" + "!" * 60)

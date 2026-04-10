@@ -1,6 +1,7 @@
 from preparation.raw_session_receiver import RawSessionReceiver
 from preparation.prepared_session_creator import PreparedSessionCreator
 from preparation.preparation_system_config import PreparationSystemConfiguration
+from pathlib import Path
 
 from flask import Flask, request, jsonify
 
@@ -18,7 +19,10 @@ class PreparationSystemOrchestrator:
                                 the system.
     """
 
-    def __init__(self,config_file_path : str = "config/preparationConfig.json"):
+    def __init__(self,config_file_path : str = None):
+
+        if config_file_path is None:
+            config_file_path = Path(__file__).resolve().parents[1] / "config" / "preparationConfig.json"
         
         print(f"[INFO] Preparation system orchestrator initialization...")
 

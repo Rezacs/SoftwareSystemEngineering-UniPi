@@ -1,9 +1,9 @@
 import json
-import os
 import time
 import random
 import threading
 from datetime import datetime
+from pathlib import Path
 from flask import Flask, request, jsonify
 import pandas as pd
 import requests
@@ -18,23 +18,24 @@ streaming_active = False  # Flag to track background worker status
 # CONFIG & INITIAL LOGGING
 ##########################################
 
-CONFIG_PATH = r"../config/clientsideCofig.json"
-LOG_DIR = r"../logs"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+CONFIG_PATH = REPO_ROOT / "config" / "clientsideConfig.json"
+LOG_DIR = REPO_ROOT / "logs"
 
 def load_config():
-    with open(CONFIG_PATH, 'r') as f:
+    with CONFIG_PATH.open('r', encoding='utf-8') as f:
         return json.load(f)
 
 def log_event(filename, event_data):
-    os.makedirs(LOG_DIR, exist_ok=True)
-    path = os.path.join(LOG_DIR, filename)
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    path = LOG_DIR / filename
     logs = []
-    if os.path.exists(path):
-        with open(path, 'r') as f:
+    if path.exists():
+        with path.open('r', encoding='utf-8') as f:
             try: logs = json.load(f)
             except: logs = []
     logs.append(event_data)
-    with open(path, 'w') as f:
+    with path.open('w', encoding='utf-8') as f:
         json.dump(logs, indent=4, fp=f)
 
 config = load_config()
@@ -55,12 +56,12 @@ def generate_testing_csv(current_phase):
     aggregated_data = {}
 
     for log_file in target_logs:
-        path = os.path.join(LOG_DIR, log_file)
-        if not os.path.exists(path):
+        path = LOG_DIR / log_file
+        if not path.exists():
             print(f"Warning: {log_file} not found in logs folder.")
             continue
             
-        with open(path, 'r') as f:
+        with path.open('r', encoding='utf-8') as f:
             try:
                 entries = json.load(f)
                 for entry in entries:
@@ -77,7 +78,7 @@ def generate_testing_csv(current_phase):
 
     if aggregated_data:
         test_df = pd.DataFrame(aggregated_data.values())
-        output_path = os.path.join(LOG_DIR, "testing_log.csv")
+        output_path = LOG_DIR / "testing_log.csv"
         test_df.to_csv(output_path, index=False)
         print(f"SUCCESS: Testing log saved to {output_path}")
     else:
@@ -156,13 +157,19 @@ if __name__ == "__main__":
         pool_list = []
         if phase_choice == "0":
             for file_path in config['paths']['dev_files']:
-                if os.path.exists(file_path):
-                    df = pd.read_csv(file_path)
+                candidate_path = Path(file_path)
+                if not candidate_path.is_absolute():
+                    candidate_path = (REPO_ROOT / candidate_path).resolve()
+                if candidate_path.exists():
+                    df = pd.read_csv(candidate_path)
                     if 'id_player' in df.columns: df = df.rename(columns={'id_player': 'player_id'})
                     pool_list.append(df)
             data_pool = pd.concat(pool_list, axis=0, ignore_index=True)
         else:
-            data_pool = pd.read_csv(config['paths']['prod_file'])
+            prod_path = Path(config['paths']['prod_file'])
+            if not prod_path.is_absolute():
+                prod_path = (REPO_ROOT / prod_path).resolve()
+            data_pool = pd.read_csv(prod_path)
         
         data_pool = data_pool.where(pd.notnull(data_pool), None).sample(frac=1).reset_index(drop=True)
 

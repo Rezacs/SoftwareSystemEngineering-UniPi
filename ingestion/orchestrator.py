@@ -6,11 +6,15 @@ import numpy as np
 import pandas as pd
 import requests
 from flask import Flask, request, jsonify
+from pathlib import Path
 
 
 class IngestionSystemOrchestrator:
 
-    def __init__(self,config_file_path = "config/ingestionConfig.json"):
+    def __init__(self,config_file_path = None):
+
+        if config_file_path is None:
+            config_file_path = Path(__file__).resolve().parents[1] / "config" / "ingestionConfig.json"
 
         print(f"[INFO] Ingestion system orchestrator initialization...")
 
@@ -51,7 +55,12 @@ class IngestionSystemOrchestrator:
         """)
 
 
-    def run(self,input_path="data/outputs/client_message.json",output_path="data/outputs/raw_session.json"):
+    def run(self,input_path=None,output_path=None):
+
+        if input_path is None:
+            input_path = Path(__file__).resolve().parents[1] / "data" / "outputs" / "client_message.json"
+        if output_path is None:
+            output_path = Path(__file__).resolve().parents[1] / "data" / "outputs" / "raw_session.json"
 
         record , table = self.receiver.receive_record()
 

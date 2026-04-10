@@ -3,7 +3,6 @@ Entry point for the Development System.
 """
 
 import json
-import os
 import threading
 from pathlib import Path
 
@@ -92,9 +91,9 @@ if __name__ == "__main__":
     testing_mode = ask_testing_mode()
     cfg = _read_config()
 
-    status_path = cfg["paths"]["status_file"]
-    learning_sets_path = cfg["paths"]["learning_sets"]
-    received_data_path = cfg["paths"]["received_data"]
+    status_path = Path(cfg["paths"]["status_file"])
+    learning_sets_path = Path(cfg["paths"]["learning_sets"])
+    received_data_path = Path(cfg["paths"]["received_data"])
     listen_port = int(cfg["network"]["listen_port"])
 
     # ── Setup Persistence Events ───────────────────────────────────────────
@@ -105,8 +104,8 @@ if __name__ == "__main__":
         try:
             parse_learning_set(payload)  # only this remains for validation
 
-            os.makedirs(os.path.dirname(learning_sets_path), exist_ok=True)
-            with open(learning_sets_path, "w", encoding="UTF-8") as f:
+            learning_sets_path.parent.mkdir(parents=True, exist_ok=True)
+            with learning_sets_path.open("w", encoding="UTF-8") as f:
                 json.dump(payload, f, indent="\t")
 
             received_payload.clear()
@@ -133,14 +132,14 @@ if __name__ == "__main__":
     # ── THE CONTINUOUS LOOP ────────────────────────────────────────────────
     while True:
         # Check if we are resuming a saved state
-        resuming = (
-            os.path.isfile(status_path)
-            and json.load(open(status_path, encoding="UTF-8")).get("phase", "Starting") != "Starting"
-        )
+        resuming = False
+        if status_path.is_file():
+            with status_path.open(encoding="UTF-8") as sf:
+                resuming = json.load(sf).get("phase", "Starting") != "Starting"
 
         if resuming:
             print("[Main] RESUMING: Found existing status. Loading persisted learning set...")
-            with open(learning_sets_path, "r", encoding="UTF-8") as f:
+            with learning_sets_path.open("r", encoding="UTF-8") as f:
                 current_payload = json.load(f)
         else:
             print(f"\n[Main] IDLE: Waiting for new payload on port {listen_port}...")
@@ -155,4 +154,5 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"[Main] Error during execution: {e}")
             # If a crash happens, we reset the status file to avoid an infinite crash-loop
-            if os.path.exists(status_path): os.remove(status_path)
+            if status_path.exists():
+                status_path.unlink()

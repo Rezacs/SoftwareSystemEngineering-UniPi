@@ -1,5 +1,5 @@
 import json
-import os
+from pathlib import Path
 
 import joblib
 import pandas as pd
@@ -30,8 +30,9 @@ class TestingOrchestrator:
         testing_error = 1.0 - mlp.score(X_test.values, y_test)
         passed        = testing_error <= self._generalization_threshold
 
-        os.makedirs(os.path.dirname(self._report_path), exist_ok=True)
-        with open(self._report_path, "w", encoding="UTF-8") as f:
+        report_path = Path(self._report_path)
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        with report_path.open("w", encoding="UTF-8") as f:
             json.dump({
                 "classifier_id":            clf_id,
                 "metric":                   "classification_error (1 - accuracy)",

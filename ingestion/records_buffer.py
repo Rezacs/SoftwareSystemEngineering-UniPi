@@ -1,6 +1,6 @@
-import os
 import sqlite3
 import pandas as pd
+from pathlib import Path
 from ingestion.raw_session_creator import RawSessionCreator
 
 """
@@ -19,10 +19,11 @@ class RecordsBuffer:
             Can use os.fspath(path) when passing this parameter.
         """
 
-        if os.path.exists(db_path):
-            os.remove(db_path)
+        database_path = Path(db_path)
+        if database_path.exists():
+            database_path.unlink()
 
-        self.__database_path = db_path
+        self.__database_path = database_path
 
     def __del__(self):
         if hasattr(self, 'db_connection') and self.db_connection:
@@ -148,7 +149,7 @@ class RecordsBuffer:
         :return: True if any row was affected, False otherwise.
         """
         try:
-            db_connection = sqlite3.connect(self.__database_path, timeout=15)
+            db_connection = sqlite3.connect(str(self.__database_path), timeout=15)
             res = dataframe.to_sql("records", db_connection, if_exists="append", index=False)
         except sqlite3.Error as er:
             print(er.sqlite_errorcode)  # Prints 275
@@ -181,13 +182,13 @@ class RecordsBuffer:
         :return:
         """
         try:
-            os.remove(self.__database_path)
+            self.__database_path.unlink()
         except FileNotFoundError:
             return
     
     def init_db(self):
                
-        self.db_connection = sqlite3.connect(self.__database_path, timeout=15, check_same_thread=False)
+        self.db_connection = sqlite3.connect(str(self.__database_path), timeout=15, check_same_thread=False)
         # Creation of the records table
         table = """CREATE TABLE IF NOT EXISTS records 
                 (ID INTEGER PRIMARY KEY AUTOINCREMENT,

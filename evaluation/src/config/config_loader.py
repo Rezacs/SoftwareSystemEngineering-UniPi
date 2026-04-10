@@ -1,5 +1,5 @@
 import json
-import os
+from pathlib import Path
 
 
 class Config:
@@ -18,23 +18,17 @@ class Config:
             # Go from:
             # src/config/config_loader.py
             # -> up to parent of 7-evaluation
-            parent_dir = os.path.dirname(
-                os.path.dirname(
-                    os.path.dirname(
-                        os.path.dirname(__file__)
-                    )
-                )
-            )
+            parent_dir = Path(__file__).resolve().parents[3]
 
             # Build config path
-            config_path = os.path.join(parent_dir, "config", "evaluationConfig.json")
+            config_path = parent_dir / "config" / "evaluationConfig.json"
 
             # Validate file exists
-            if not os.path.exists(config_path):
+            if not config_path.exists():
                 raise FileNotFoundError(f"Config file not found: {config_path}")
 
             # Load JSON
-            with open(config_path, "r") as f:
+            with config_path.open("r", encoding="utf-8") as f:
                 instance._config = json.load(f)
 
             cls._instance = instance

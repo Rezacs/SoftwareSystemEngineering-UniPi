@@ -1,24 +1,15 @@
-import os
 import json
 from datetime import datetime, timezone
+from pathlib import Path
 
 
 class LoggingManager:
 
     def __init__(self):
 
-        self._project_root = os.path.dirname(os.path.abspath(__file__))
+        self._project_root = Path(__file__).resolve().parent
 
-        self._log_path = os.path.abspath(
-            os.path.join(
-                self._project_root,
-                "..",
-                "..",
-                "..",
-                "logs",
-                "evaluationLog.json"
-            )
-        )
+        self._log_path = self._project_root.parents[2] / "logs" / "evaluationLog.json"
 
         self._session_key = None
 
@@ -30,30 +21,30 @@ class LoggingManager:
 
     def _init_log(self):
 
-        os.makedirs(os.path.dirname(self._log_path), exist_ok=True)
+        self._log_path.parent.mkdir(parents=True, exist_ok=True)
 
-        if not os.path.isfile(self._log_path):
+        if not self._log_path.is_file():
 
-            with open(self._log_path, "w", encoding="utf-8") as f:
+            with self._log_path.open("w", encoding="utf-8") as f:
                 json.dump({}, f, indent=4)
 
             return
 
         # FIX corrupted/empty existing file
         try:
-            with open(self._log_path, "r", encoding="utf-8") as f:
+            with self._log_path.open("r", encoding="utf-8") as f:
                 json.load(f)
 
         except (json.JSONDecodeError, ValueError):
 
-            with open(self._log_path, "w", encoding="utf-8") as f:
+            with self._log_path.open("w", encoding="utf-8") as f:
                 json.dump({}, f, indent=4)
 
     def start_session(self):
 
         self._session_key = f"TEMP_{self._utc_now()}"
 
-        with open(self._log_path, "r+", encoding="utf-8") as f:
+        with self._log_path.open("r+", encoding="utf-8") as f:
 
             data = json.load(f)
 
@@ -65,7 +56,7 @@ class LoggingManager:
 
     def log_decision(self, decision):
 
-        with open(self._log_path, "r+", encoding="utf-8") as f:
+        with self._log_path.open("r+", encoding="utf-8") as f:
 
             data = json.load(f)
 
@@ -83,7 +74,7 @@ class LoggingManager:
 
     def finalize_log(self, output_type):
 
-        with open(self._log_path, "r+", encoding="utf-8") as f:
+        with self._log_path.open("r+", encoding="utf-8") as f:
 
             data = json.load(f)
 

@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import requests
+from pathlib import Path
 
 #@AUTHOR CARLO
 #DON'T DELETE THIS
@@ -123,6 +124,11 @@ if __name__ == "__main__":
     SERVER_URL = 'http://127.0.0.1:5001/run'
     
     # The first file in this list drives the main loop
-    CSV_FILES = ['../data/inputs/raws_football_db.csv', '../data/inputs/raws_medical_db.csv', '../data/inputs/raws_social_db.csv']
+    project_root = Path(__file__).resolve().parents[1]
+    CSV_FILES = [
+        project_root / 'data' / 'inputs' / 'raws_football_db.csv',
+        project_root / 'data' / 'inputs' / 'raws_medical_db.csv',
+        project_root / 'data' / 'inputs' / 'raws_social_db.csv',
+    ]
     
     stream_synchronized_player_data(CSV_FILES, SERVER_URL)

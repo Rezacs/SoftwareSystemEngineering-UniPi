@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 class PreparationSystemConfiguration:
     """
@@ -18,8 +19,9 @@ class PreparationSystemConfiguration:
         Load the parameters from a configuration file
         """
         try:
+            config_file_path = Path(config_file_path)
             
-            with open(config_file_path) as f:
+            with config_file_path.open(encoding="utf-8") as f:
 
                 config = json.load(f) 
  

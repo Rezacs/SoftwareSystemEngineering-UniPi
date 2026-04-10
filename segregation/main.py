@@ -4,7 +4,6 @@ Runs the orchestrator with mode selection (Stop&Go or Testing).
 """
 
 import json
-import os
 import threading
 import time
 from pathlib import Path
@@ -91,7 +90,7 @@ if __name__ == "__main__":
     testing_mode = ask_testing_mode()
     cfg = _read_config()
     
-    workflow_state_path = os.path.join("data", "output", "segregation_workflow_state.json")
+    workflow_state_path = REPO_ROOT / "data" / "output" / "segregation_workflow_state.json"
     
     # ── Start persistent background server ─────────────────────────────────
     print("[Main] Starting REST API server in background...")

@@ -1,5 +1,5 @@
 import json
-import os
+from pathlib import Path
 from typing import List, Optional
 
 import pandas as pd
@@ -56,9 +56,10 @@ class ValidationOrchestrator:
         """
         print("[ValidationOrchestrator] SET HYPERPARAMS & GENERATE VALIDATION REPORT …")
         classifiers: List[Classifier] = []
+        classifier_folder = Path(self._classifier_folder)
 
         for idx, hp in enumerate(self._hp_configs, start=1):
-            model_path = os.path.join(self._classifier_folder, f"model_{idx}.sav")
+            model_path = classifier_folder / f"model_{idx}.sav"
             self._training_orchestrator.set_parameters({
                 "num_layers":  hp.num_layers,
                 "num_neurons": hp.num_neurons,
@@ -91,8 +92,9 @@ class ValidationOrchestrator:
         selected_id = best.classifier_id if best else ""
         approved    = best is not None
 
-        os.makedirs(os.path.dirname(self._report_path), exist_ok=True)
-        with open(self._report_path, "w", encoding="UTF-8") as f:
+        report_path = Path(self._report_path)
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        with report_path.open("w", encoding="UTF-8") as f:
             json.dump({
                 "overfitting_threshold": self._overfitting_threshold,
                 "best_classifiers":      candidates,

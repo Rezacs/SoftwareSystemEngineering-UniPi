@@ -3,7 +3,7 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 from datetime import datetime
-import os
+from pathlib import Path
 
 
 class VisualReport:
@@ -15,9 +15,9 @@ class VisualReport:
 
         # ================= CONFIG =================
         eval_cfg = config["evaluation"]
-        output_dir = config["paths"]["output_dir"]
+        output_dir = Path(config["paths"]["output_dir"])
 
-        os.makedirs(output_dir, exist_ok=True)
+        output_dir.mkdir(parents=True, exist_ok=True)
 
         tolerance = eval_cfg["error_threshold"]
         max_errors = eval_cfg["max_errors"]
@@ -145,16 +145,13 @@ class VisualReport:
         )
 
         # ================= SAVE =================
-        filename = os.path.join(
-            output_dir,
-            f"dashboard_{now.strftime('%Y%m%d_%H%M%S')}.png"
-        )
+        filename = output_dir / f"dashboard_{now.strftime('%Y%m%d_%H%M%S')}.png"
 
         plt.savefig(filename, bbox_inches="tight")
         plt.close()
 
         return {
-            "file": filename,
+            "file": str(filename),
             "errors": errors,
             "max_consecutive": max_consecutive
         }

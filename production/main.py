@@ -2,7 +2,7 @@ from src.config import ensure_directories
 from src.productionSystemOrchestrator import ProductionSystemOrchestrator
 from src.communicationController import CommunicationController
 import webbrowser
-import os
+from pathlib import Path
 
 
 if __name__ == "__main__":
@@ -10,8 +10,8 @@ if __name__ == "__main__":
 
     ensure_directories()
 
-    dashboard_path = os.path.abspath("frontend/dashboard.html")
-    webbrowser.open(f"file://{dashboard_path}")
+    dashboard_path = Path(__file__).resolve().parent / "frontend" / "dashboard.html"
+    webbrowser.open(dashboard_path.as_uri())
 
     orchestrator = ProductionSystemOrchestrator()
     communication_controller = CommunicationController(orchestrator)

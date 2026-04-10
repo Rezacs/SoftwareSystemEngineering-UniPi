@@ -1,5 +1,5 @@
 import json
-import os
+from pathlib import Path
 from jsonschema import validate, ValidationError
 
 
@@ -7,13 +7,13 @@ class SchemaValidator:
 
     def __init__(self):
 
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        path = os.path.join(base_dir, "data", "schema", "label_schema.json")
+        base_dir = Path(__file__).resolve().parents[2]
+        path = base_dir / "data" / "schema" / "label_schema.json"
 
-        if not os.path.exists(path):
+        if not path.exists():
             raise FileNotFoundError(f"Schema not found: {path}")
 
-        with open(path, "r") as f:
+        with path.open("r", encoding="utf-8") as f:
             self.schema = json.load(f)
 
     def validate(self, data):

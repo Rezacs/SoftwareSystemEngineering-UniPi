@@ -17,8 +17,8 @@
         "dev_files": [
             "Data/inputs/raws_football_db.csv",
             "Data/inputs/raws_medical_db.csv",
-            "Data/inputs/raws_social_db.csv"
-        ],
-        "prod_file": "Data/inputs/unified_players_db_missing.csv"
+            "Data/inputs/raws_social_db.csv",
+            "Data/inputs/unified_players_db_missing.csv"
+        ]
     }
 }

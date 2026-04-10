@@ -151,32 +151,27 @@ if __name__ == "__main__":
         stream_limit = int(input("Enter number of records to stream: "))
 
         # Prepare Data
+        # Prepare Data — same logic for both phases, always load all dev_files
         pool_list = []
-        if phase_choice == "0":
-            for file_path in config['paths']['dev_files']:
-                candidate_path = Path(file_path)
-                if not candidate_path.is_absolute():
-                    candidate_path = (REPO_ROOT / candidate_path).resolve()
+        for file_path in config['paths']['dev_files']:
+            candidate_path = Path(file_path)
+            if not candidate_path.is_absolute():
+                candidate_path = (REPO_ROOT / candidate_path).resolve()
                 if candidate_path.exists():
                     df = pd.read_csv(candidate_path)
                     df = df.where(pd.notnull(df), None).sample(frac=1).reset_index(drop=True)
                     pool_list.append(df)
-        else:
-            prod_path = Path(config['paths']['prod_file'])
-            if not prod_path.is_absolute():
-                prod_path = (REPO_ROOT / prod_path).resolve()
-            df = pd.read_csv(prod_path)
-            df = df.where(pd.notnull(df), None).sample(frac=1).reset_index(drop=True)
-            pool_list = [df]
+            else:
+                print(f"Warning: {candidate_path} not found, skipping.")
 
         # Build flat interleaved list, each record with only its own columns
         record_list = []
         for df in pool_list:
             for _, row in df.iterrows():
                 record_list.append({
-                k: v for k, v in row.to_dict().items() 
+                k: v for k, v in row.to_dict().items()
                 if v is not None and not (isinstance(v, float) and math.isnan(v))
-                })
+            })
         random.shuffle(record_list)
 
         # Start background stream

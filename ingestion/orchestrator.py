@@ -75,7 +75,7 @@ class IngestionSystemOrchestrator:
         if output_path is None:
             output_path = Path(__file__).resolve().parents[1] / "data" / "outputs" / "raw_session.json"
 
-        record , table = self.receiver.receive_record()
+        record = self.receiver.receive_record()
 
         if record is None:
             return jsonify({"Error": "Bad data"}), 400

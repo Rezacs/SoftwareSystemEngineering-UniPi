@@ -6,6 +6,8 @@ from pathlib import Path
 from flask import Flask, request, jsonify
 
 import requests
+import json
+import datetime
 
 
 class PreparationSystemOrchestrator:
@@ -19,10 +21,20 @@ class PreparationSystemOrchestrator:
                                 the system.
     """
 
-    def __init__(self,config_file_path : str = None):
+    def __init__(self,config_file_path : str = None,testing_mode : bool = False):
 
         if config_file_path is None:
             config_file_path = Path(__file__).resolve().parents[1] / "config" / "preparationConfig.json"
+
+        self.testing_mode=testing_mode
+
+        if self.testing_mode:
+
+            self.log_file_path=Path(__file__).resolve().parents[1] / "logs" / "PreparationLog.json"
+
+            with open (self.log_file_path,'r') as tmp_log:
+                
+                self.log=json.load(tmp_log)
         
         print(f"[INFO] Preparation system orchestrator initialization...")
 
@@ -33,6 +45,7 @@ class PreparationSystemOrchestrator:
                Phase:             {self.preparation_system_config.phase}
                Classification System: {self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}
                Segregation System: {self.preparation_system_config.segregation_system_ip}:{self.preparation_system_config.segregation_system_port}
+               Testing mode: {self.testing_mode}
                --------------------------------------
         """)
 
@@ -85,7 +98,10 @@ class PreparationSystemOrchestrator:
                 "label" : d.get("label")
             }
             prepared_sessions.append(prepared_session)
-        print("Sending prepared session at endpoint")
+        
+        if self.testing_mode:
+            log=[]
+
         if self.preparation_system_config.phase==0:
 
             for p in prepared_sessions:
@@ -94,6 +110,24 @@ class PreparationSystemOrchestrator:
                 url = f"http://{self.preparation_system_config.segregation_system_ip}:{self.preparation_system_config.segregation_system_port}/prepared-sessions"
                 risp = requests.post(url, json=p)
                 print(risp)
+                if self.testing_mode:
+                    last_timestamp=datetime.datetime.now().isoformat()
+                    last_action={
+                        "timestamp" : last_timestamp,
+                        "phase" : 0,
+                        "action" : "prepared session sent to segregation system"
+                    }
+                    log.append(last_action)
+            
+            #update the log file
+            if self.testing_mode:
+
+                self.log[f"{last_timestamp}"]=log
+
+                with open(self.log_file_path, 'w') as file:
+
+                    json.dump(self.log, file, indent=4)
+
             return jsonify({"Message": "Prepared session correctly sent to segregation system"}), 200
 
         for p in prepared_sessions:
@@ -101,6 +135,23 @@ class PreparationSystemOrchestrator:
             url = f"http://{self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}/session"
             risp = requests.post(url, json=p)
             print(risp)
+            if self.testing_mode:
+                last_timestamp=datetime.datetime.now().isoformat()
+                last_action={
+                        "timestamp" : last_timestamp,
+                        "phase" : self.preparation_system_config.phase,
+                        "action" : "prepared session sent to classification system"
+                }
+                log.append(last_action)
+
+        if self.testing_mode:
+
+            self.log[f"{last_timestamp}"]=log
+
+            with open(self.log_file_path, 'w') as file:
+
+                json.dump(self.log, file, indent=4)
+
         return jsonify({"Message": "Prepared session correctly sent to classification system"}), 200
 
         

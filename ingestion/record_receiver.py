@@ -1,8 +1,6 @@
-import json
 import numpy as np
 import pandas as pd
-from ingestion.record import Record
-from flask import Flask, request, jsonify
+from flask import request
 
 """
 Class which should wait to receive the records

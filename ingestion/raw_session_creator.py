@@ -1,7 +1,7 @@
 from datetime import datetime
 import pandas as pd
 import uuid
-
+import sys
 
 class RawSessionCreator:
 
@@ -34,7 +34,13 @@ class RawSessionCreator:
 
         number_of_samples=len(dataframe)
 
-        number_of_missing_values=dataframe.isna().sum().sum()
+        number_of_missing_values=(dataframe == -1).sum().sum()
+
+        missing_label =( dataframe["label"] == -1).sum()
+
+        if missing_label > 0:
+
+            return sys.maxsize
 
         return number_of_missing_values/number_of_samples if number_of_samples > 0 else 0.0
         

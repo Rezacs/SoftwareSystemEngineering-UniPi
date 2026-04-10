@@ -80,10 +80,10 @@ def human_decision():
     # ================= APPLY DECISION =================
     result = orchestrator.finalize_decision(decision, mode="HUMAN")
 
-    logger.info("🔄 Resetting system for next batch...")
+   # logger.info("🔄 Resetting system for next batch...")
 
     # ================= RESET STATE =================
-    state.clear_batch()
+    #state.clear_batch()
 
     return jsonify(result)
 

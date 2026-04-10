@@ -48,7 +48,7 @@ LATEST_SESSION_PATH = BASE_DIR / CONFIG["paths"]["latest_session"]
 STATUS_PATH = BASE_DIR / CONFIG["paths"]["status"]
 LATEST_LABEL_PATH = BASE_DIR / CONFIG["paths"]["latest_label"]
 EVALUATION_PAYLOAD_PATH = BASE_DIR / CONFIG["paths"]["evaluation_payload"]
-LOG_PATH = BASE_DIR / CONFIG["paths"]["log"]
+LOG_PATH = PROJECT_ROOT / "logs" / "productionLog.json"
 
 FEATURE_COLUMNS = CONFIG["classification"]["feature_columns"]
 EVALUATION_ENABLED = CONFIG["evaluation"]["enabled"]

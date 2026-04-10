@@ -19,7 +19,10 @@ class ProductionSystemOrchestrator:
             metadata["model_filename"]
         )
 
-        self._log_event("classifier_deployed", deployment_info)
+        self._log_event(
+            process_name="Deploy Classifier",
+            decision_text=f"approved classifier: {deployment_info['classifier_id']}"
+        )
         print(f"[ProductionSystemOrchestrator] Classifier deployed: {deployment_info}")
         return deployment_info
 
@@ -34,7 +37,10 @@ class ProductionSystemOrchestrator:
         with open(LATEST_LABEL_PATH, "w", encoding="utf-8") as f:
             json.dump(classification_result, f, indent=4)
 
-        self._log_event("session_classified", classification_result)
+        self._log_event(
+            process_name="Classify Session",
+            decision_text=f"predicted rating: {classification_result['rating']} for player {classification_result['player_id']}"
+        )
         print(f"[ProductionSystemOrchestrator] Session classified: {classification_result}")
         return classification_result
 
@@ -47,28 +53,42 @@ class ProductionSystemOrchestrator:
             "evaluation": evaluation_response
         }
 
-        self._log_event("label_sent", delivery_info)
+        self._log_event(
+            process_name="Send Label",
+            decision_text=f"client={client_response['status']}, evaluation={evaluation_response['status']}",
+            output_text="production report"
+        )
         print(f"[ProductionSystemOrchestrator] Outputs sent: {delivery_info}")
 
         return delivery_info
 
-    def _log_event(self, event_type: str, data: dict):
-        log_entry = {
-            "event": event_type,
-            "timestamp": datetime.now().isoformat(),
-            "data": data
-        }
+def _log_event(self, process_name: str, decision_text: str, output_text: str = None):
+    timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
 
-        try:
-            if LOG_PATH.exists():
-                with open(LOG_PATH, "r", encoding="utf-8") as f:
-                    logs = json.load(f)
-            else:
-                logs = []
-        except Exception:
-            logs = []
+    log_entry = {
+        "timestamp": timestamp,
+        "process": process_name,
+        "decision": decision_text
+    }
 
-        logs.append(log_entry)
+    try:
+        if LOG_PATH.exists():
+            with open(LOG_PATH, "r", encoding="utf-8") as f:
+                logs = json.load(f)
+        else:
+            logs = {}
+    except Exception:
+        logs = {}
 
-        with open(LOG_PATH, "w", encoding="utf-8") as f:
-            json.dump(logs, f, indent=4)
+    if timestamp not in logs:
+        logs[timestamp] = []
+
+    logs[timestamp].append(log_entry)
+
+    if output_text is not None:
+        logs[timestamp].append({
+            "output": output_text
+        })
+
+    with open(LOG_PATH, "w", encoding="utf-8") as f:
+        json.dump(logs, f, indent=4)

@@ -15,7 +15,7 @@ class LoggingManager:
                 "..",
                 "..",
                 "..",
-                "log",
+                "logs",
                 "evaluationLog.json"
             )
         )
@@ -33,6 +33,18 @@ class LoggingManager:
         os.makedirs(os.path.dirname(self._log_path), exist_ok=True)
 
         if not os.path.isfile(self._log_path):
+
+            with open(self._log_path, "w", encoding="utf-8") as f:
+                json.dump({}, f, indent=4)
+
+            return
+
+        # FIX corrupted/empty existing file
+        try:
+            with open(self._log_path, "r", encoding="utf-8") as f:
+                json.load(f)
+
+        except (json.JSONDecodeError, ValueError):
 
             with open(self._log_path, "w", encoding="utf-8") as f:
                 json.dump({}, f, indent=4)

@@ -115,9 +115,9 @@ class IngestionSystemOrchestrator:
             for record in records:
                 #labels.append({"playerID" : record["playerID"], "source" : "expert", "rating" : record["rating"]})
                 #json={"UUID": raw_session["UUID"] , "created_at" : raw_session["created_at"], "labels" : labels}
-                json={"player_id" : record["player_id"],"label" : record["label"]}
+                json_label={"player_id" : record["player_id"],"label" : record["label"]}
                 url = f"http://{self.ingestion_system_config.evaluation_system_ip}:{self.ingestion_system_config.evaluation_system_port}/expert-label"
-                risp = requests.post(url, json=json)
+                risp = requests.post(url, json=json_label)
                 if self.testing_mode:
                     last_action={
                         "timestamp" : datetime.datetime.now().isoformat(),

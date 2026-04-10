@@ -30,7 +30,7 @@ class PreparationSystemOrchestrator:
 
         if self.testing_mode:
 
-            self.log_file_path=Path(__file__).resolve().parents[1] / "logs" / "PreparationLog.json"
+            self.log_file_path=Path(__file__).resolve().parents[1] / "logs" / "preparationLog.json"
 
             with open (self.log_file_path,'r') as tmp_log:
                 

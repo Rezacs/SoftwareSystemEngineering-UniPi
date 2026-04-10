@@ -39,7 +39,7 @@ class ProductionSystemOrchestrator:
 
         self._log_event(
             process_name="Classify Session",
-            decision_text=f"predicted rating: {classification_result['rating']} for player {classification_result['player_id']}"
+            decision_text=f"predicted rating: {classification_result['label']} for player {classification_result['player_id']}"
         )
         print(f"[ProductionSystemOrchestrator] Session classified: {classification_result}")
         return classification_result

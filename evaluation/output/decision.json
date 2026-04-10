@@ -1,0 +1,8 @@
+{
+  "decision": "ACCEPT",
+  "metrics": {
+    "total_samples": 4,
+    "errors": 3,
+    "max_consecutive": 3
+  }
+}

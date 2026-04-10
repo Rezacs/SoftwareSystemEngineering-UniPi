@@ -99,7 +99,7 @@ def stream_worker(current_phase, limit, record_list):
     for i in range(limit):
         record = record_list[i % total_available]
         p_id = record.get('player_id')
-        print(f"Record: {record}")
+        #print(f"Record: {record}")
         log_event("clientsideLogs.json", {
             "player_id": p_id,
             "timestamp": datetime.now().isoformat(),
@@ -112,7 +112,7 @@ def stream_worker(current_phase, limit, record_list):
         except:
             print(f"Target {url} unreachable.")
 
-        time.sleep(random.uniform(2, 5))
+        #time.sleep(random.uniform(2, 5))
 
     print("\n[SYSTEM] Sequence finished.")
     streaming_active = False
@@ -181,7 +181,7 @@ if __name__ == "__main__":
         print("Waiting for streaming to complete...")
         while streaming_active:
             
-            time.sleep(1)
+            time.sleep(0.2)
 
         # Final Prompt
         ready = input("\nStreaming done. Are you ready to plot the logs? (y/n): ").lower()

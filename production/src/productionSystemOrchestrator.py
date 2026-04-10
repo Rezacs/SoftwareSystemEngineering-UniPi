@@ -44,6 +44,37 @@ class ProductionSystemOrchestrator:
         print(f"[ProductionSystemOrchestrator] Session classified: {classification_result}")
         return classification_result
 
+    def _log_event(self, process_name: str, decision_text: str, output_text: str = None):
+        timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        log_entry = {
+        "timestamp": timestamp,
+        "process": process_name,
+        "decision": decision_text
+        }
+
+        try:
+            if LOG_PATH.exists():
+                with open(LOG_PATH, "r", encoding="utf-8") as f:
+                    logs = json.load(f)
+            else:
+                logs = {}
+        except Exception:
+            logs = {}
+
+        if timestamp not in logs:
+            logs[timestamp] = []
+
+        logs[timestamp].append(log_entry)
+
+        if output_text is not None:
+            logs[timestamp].append({
+            "output": output_text
+        })
+
+        with open(LOG_PATH, "w", encoding="utf-8") as f:
+            json.dump(logs, f, indent=4)
+
     def process_classification_result(self, classification_result: dict, communication_controller):
         client_response = communication_controller.send_label_to_client(classification_result)
         evaluation_response = self.evaluation_sender.send_label_to_evaluation(classification_result)
@@ -62,33 +93,3 @@ class ProductionSystemOrchestrator:
 
         return delivery_info
 
-def _log_event(self, process_name: str, decision_text: str, output_text: str = None):
-    timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-
-    log_entry = {
-        "timestamp": timestamp,
-        "process": process_name,
-        "decision": decision_text
-    }
-
-    try:
-        if LOG_PATH.exists():
-            with open(LOG_PATH, "r", encoding="utf-8") as f:
-                logs = json.load(f)
-        else:
-            logs = {}
-    except Exception:
-        logs = {}
-
-    if timestamp not in logs:
-        logs[timestamp] = []
-
-    logs[timestamp].append(log_entry)
-
-    if output_text is not None:
-        logs[timestamp].append({
-            "output": output_text
-        })
-
-    with open(LOG_PATH, "w", encoding="utf-8") as f:
-        json.dump(logs, f, indent=4)

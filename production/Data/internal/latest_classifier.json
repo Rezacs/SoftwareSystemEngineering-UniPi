@@ -1,7 +1,7 @@
 {
     "classifier_id": "model_1",
     "model_filename": "model_1.sav",
-    "classifier_path": "D:\\SSE_Project\\SoftwareSystemEngineering-UniPi\\6-production\\Data\\classifiers\\model_1.sav",
-    "deployment_timestamp": "2026-04-08T16:53:25.825232",
+    "classifier_path": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\production\\Data\\classifiers\\model_1.sav",
+    "deployment_timestamp": "2026-04-10T16:05:37.085564",
     "active": true
 }

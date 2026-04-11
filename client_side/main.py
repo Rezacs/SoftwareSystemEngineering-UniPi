@@ -211,7 +211,7 @@ def receive_label():
         }
         new_df = pd.DataFrame([new_row])
 
-        if LABELS_CSV_PATH.exists():
+        if LABELS_CSV_PATH.exists() and LABELS_CSV_PATH.stat().st_size > 0:
             existing_df = pd.read_csv(LABELS_CSV_PATH)
             combined_df = pd.concat([existing_df, new_df], ignore_index=True)
         else:
@@ -241,6 +241,25 @@ if __name__ == "__main__":
     })
 
     while True:
+    # ── Clear all logs at the start of each experiment ──
+        for log_file in [
+            "clientsideLogs.json",
+            "ingestionLog.json",
+            "preparationLog.json",
+            "segregationLog.json",
+            "developmentLog.json",
+            "productionLog.json",
+            "evaluationLog.json"
+        ]:
+            path = LOG_DIR / log_file
+            if path.exists():
+                path.write_text("{}" if log_file != "clientsideLogs.json" else "[]", encoding="utf-8")
+
+        # Write initial timestamp fresh
+        log_event("clientsideLogs.json", {
+            "initial_experiment_timestamp": datetime.now().isoformat()
+        })
+
         print("\n" + "="*40)
         print("CLIENT SYSTEM CONTROL PANEL")
         print("="*40)

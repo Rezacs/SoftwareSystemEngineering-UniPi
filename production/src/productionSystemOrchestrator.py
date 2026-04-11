@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 from src.classifierController import ClassifierController
 from src.evaluationSender import EvaluationSender
@@ -13,7 +13,7 @@ class ProductionSystemOrchestrator:
 
 
     def _log_event(self, process_name: str, decision_text: str, output_text: str = None):
-        timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+        timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
         log_entry = {
         "timestamp": timestamp,

@@ -1,7 +1,7 @@
 {
   "hosting_ip": "127.0.0.1",
   "hosting_port": 5001,
-  "phase": 0,
+  "phase": 2,
   "missing_samples_treshold": 20,
   "sufficient_records_treshold": 6,
   "json_schema_path" : "data/schema/records_schema.json",

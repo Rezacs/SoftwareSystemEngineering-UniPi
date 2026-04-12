@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 from flask import request
+import json
+from pathlib import Path
+from jsonschema import validate, ValidationError
 
 """
 Class which should wait to receive the records
@@ -9,33 +12,47 @@ in this case loads the data from csv files
 
 
 class RecordReceiver:
-    record_required_keys = {"player_id"}
-    medical_sample_required_keys = {"days_missed", "games_missed"}
-    social_sample_required_keys = {"number_of_likes", "number_of_followers"}
-    stats_sample_required_keys = {"skill_overall"}
-    sample_label_required_keys = {"label"}
 
-    def __init__(self):
-        self.record_counter=0
+    
+    def __init__(self,schema_path : str):
+         
+        try:
+            schema_path = Path(__file__).resolve().parents[0] / schema_path
+            
+            with schema_path.open(encoding="utf-8") as f:
+                # We just load the entire JSON file as our schema
+                self.schema = json.load(f) 
+
+            print("[INFO] JSON Schema correctly loaded")
+
+        except FileNotFoundError:
+            print("ERROR> Record receiver : JSON schema file not found")
+            raise
+        except json.JSONDecodeError:
+            print("ERROR> Record receiver : Error decoding json file")
+            raise
 
     def validate_json_schema(self, record: dict) -> bool:
-        
-        record_check_passed = self.record_required_keys.issubset(record.keys()) or \
-                              self.medical_sample_required_keys.issubset(record.keys()) or \
-                              self.social_sample_required_keys.issubset(record.keys())  or \
-                              self.stats_sample_required_keys.issubset(record.keys()) or \
-                              self.sample_label_required_keys.issubset(record.keys())
-        if not record_check_passed:
+
+        try:
+            # The bouncer: compares the record against the loaded schema
+            validate(instance=record, schema=self.schema)
+
+            return True
+            
+        except ValidationError as e:
+            # If it fails, the library tells us exactly why 
+            
+            print(f"[INFO] Validation failed: {e.message}")
+
             return False
-        
-        return True
     
     def clean_json(self,record: dict) -> bool:
         #Clean the columns
         #remove all the unexpected columns
-        keys_to_keep = ["player_id", "days_missed", "games_missed","number_of_likes","number_of_followers","skill_overall","label"]
+        allowed_keys = self.schema.get("properties", {}).keys()
 
-        cleaned_dict = {key: value for key, value in record.items() if key in keys_to_keep}
+        cleaned_dict = {key: value for key, value in record.items() if key in allowed_keys}
 
         return cleaned_dict
 
@@ -46,11 +63,17 @@ class RecordReceiver:
         """
         record = request.get_json()
 
+        #print(f"Record received: \n{record}")
+
+        record=self.clean_json(record)
+
+        #print(f"Record cleaned: \n{record}")
+
         if not self.validate_json_schema(record):
 
             return None
         
-        record=self.clean_json(record)
+        
         
         for key, value in record.items():
             if value is None or value == "":

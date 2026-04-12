@@ -1,0 +1,30 @@
+{
+    "type": "object",
+    "required": [
+        "player_id"
+    ],
+    "minProperties": 2,
+    "properties": {
+        "player_id": {
+            "type": ["integer"]
+        },
+        "label": {
+            "type": ["integer", "null"]
+        },
+        "skill_overall": {
+            "type": ["integer", "null"]
+        },
+        "number_of_likes": {
+            "type": ["integer", "null"]
+        },
+        "number_of_followers": {
+            "type": ["integer", "null"]
+        },
+        "days_missed": {
+            "type": ["integer", "null"]
+        },
+        "games_missed": {
+            "type": ["integer", "null"]
+        }
+    }
+}

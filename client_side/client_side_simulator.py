@@ -102,14 +102,14 @@ def stream_synchronized_player_data(csv_files, server_url):
                 print(f"\n[Source: {file2}] - No data found for Player {current_id}. Skipping.")
 
         # --- STEP C: Find and send row from CSV 3 ---
-        if 'id_player' in df3.columns:
-            match3 = df3[df3['id_player'] == current_id]
+        if 'player_id' in df3.columns:
+            match3 = df3[df3['player_id'] == current_id]
             if not match3.empty:
                 r3 = match3.iloc[0].to_dict()
                 record3 = {
-                    "player_id" : r3['id_player'],
-                    "number_of_likes" :r3['numberOfLikes'],
-                    "number_of_followers" : r3['numberOfFollowers']
+                    "player_id" : r3['player_id'],
+                    "number_of_likes" :r3['number_of_likes'],
+                    "number_of_followers" : r3['number_of_followers']
                 }
                 if not wait_and_send(record3, file3, server_url):
                     print("Transmission stopped.")

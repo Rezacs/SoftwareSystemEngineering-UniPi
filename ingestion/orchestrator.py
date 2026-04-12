@@ -2,13 +2,15 @@ from ingestion.record_receiver import RecordReceiver
 from ingestion.raw_session_creator import RawSessionCreator
 from ingestion.ingestion_system_config import IngestionSystemConfiguration
 from ingestion.records_buffer import RecordsBuffer
-import numpy as np
+import time
 import pandas as pd
 import requests
 import json
 import datetime
 from flask import Flask, jsonify
 from pathlib import Path
+import socket
+import sys
 
 
 class IngestionSystemOrchestrator:
@@ -24,16 +26,29 @@ class IngestionSystemOrchestrator:
 
             self.log_file_path=Path(__file__).resolve().parents[1] / "logs" / "IngestionLog.json"
 
-            with open (self.log_file_path,'r') as tmp_log:
-                
-                self.log=json.load(tmp_log)
+            try:
 
+                with open(self.log_file_path, 'r') as f:
+                    self.log = json.load(f)
+
+                
+            except FileNotFoundError:
+                print(f"[INFO] Log file not found at {self.log_file_path}. Starting with an empty log.")
+                self.log = {}  # Initialize an empty default structure
+
+            # 2. Catches if the file exists but has bad/empty JSON
+            except json.JSONDecodeError as e:
+                print(f"\n[WARNING] Log file is corrupted or empty: {e}")
+                print("Falling back to an empty log to prevent a crash.")
+                self.log = {}
+
+            self.tmp_log=[]
 
         print(f"[INFO] Ingestion system orchestrator initialization...")
 
         self.ingestion_system_config = IngestionSystemConfiguration(config_file_path)
 
-        self.receiver = RecordReceiver()
+        self.receiver = RecordReceiver(self.ingestion_system_config.json_schema_path)
 
         print(f"[INFO] Record receiver initialized")
 
@@ -49,6 +64,9 @@ class IngestionSystemOrchestrator:
             print("[ERROR] Error encountered initializing the database")
             exit(1)
 
+        #Creation of url to speak with Evaluation system and preparation system
+        self.evaluation_url=f"http://{self.ingestion_system_config.evaluation_system_ip}:{self.ingestion_system_config.evaluation_system_port}/{self.ingestion_system_config.evaluation_system_endpoint}"
+        self.preparation_url=f"http://{self.ingestion_system_config.preparation_system_ip}:{self.ingestion_system_config.preparation_system_port}/{self.ingestion_system_config.preparation_system_endpoint}"
 
         self.app = Flask(__name__)
 
@@ -61,11 +79,35 @@ class IngestionSystemOrchestrator:
                Phase:             {self.ingestion_system_config.phase}
                Thresholds:        Missing_Samples: {self.ingestion_system_config.missing_samples_treshold}, Sufficient_Records: {self.ingestion_system_config.sufficient_record_treshold}
                Evaluation System: {self.ingestion_system_config.evaluation_system_ip}:{self.ingestion_system_config.evaluation_system_port}
+               Evaluation System endpoint : /{self.ingestion_system_config.evaluation_system_endpoint}
                Preparation System: {self.ingestion_system_config.preparation_system_ip}:{self.ingestion_system_config.preparation_system_port}
+               Preparation System endpoint : /{self.ingestion_system_config.preparation_system_endpoint}
                Testing mode : {self.testing_mode}
                --------------------------------------
         """)
 
+    def log_event(self,event : dict) -> datetime.datetime:
+
+        event["timestamp"]=datetime.datetime.now().isoformat()
+
+        self.tmp_log.append(event)
+
+        return event["timestamp"]
+
+    def write_log_file(self,last_timestamp : datetime.datetime):
+
+        self.log[f"{last_timestamp}"]=self.tmp_log
+
+        with open(self.log_file_path, 'w') as file:
+            json.dump(self.log, file, indent=4)
+
+    def http_200_response(self):
+        #If the record received are valid this is what the client side system will receive in every case
+        return jsonify({"Message": "Data correctly received"}), 200
+    
+    def http_400_response(self):
+        #If the record received isn't valid this is what the client side system will receive
+        return jsonify({"Error": "Bad data"}), 400
 
     def run(self,input_path=None,output_path=None):
 
@@ -75,10 +117,23 @@ class IngestionSystemOrchestrator:
         if output_path is None:
             output_path = Path(__file__).resolve().parents[1] / "data" / "outputs" / "raw_session.json"
 
+        start_time=time.perf_counter()
+
+        if self.testing_mode:
+            self.tmp_log=[]
+
         record = self.receiver.receive_record()
 
         if record is None:
-            return jsonify({"Error": "Bad data"}), 400
+            end_time=time.perf_counter()
+            event={
+                "ID" : "I0",
+                "process" : "Record received, is invalid",
+                "latency" : end_time-start_time
+            }
+            timestamp=self.log_event(event)
+            self.write_log_file(timestamp)
+            return self.http_400_response()
 
         record = pd.DataFrame(record, index=[0]).reset_index(drop=True)
 
@@ -86,13 +141,23 @@ class IngestionSystemOrchestrator:
             print(f"[INFO] Record inserted in the Buffer")
         else:
             print(f"[ERROR] Error occurred inserting the record in the buffer")
+            return self.http_200_response()
 
         #Check if it is possible to create a raw session
 
         n_rows=self.records_buffer.getNumberOfAvailableRecords()
 
         if not self.raw_session_creator.isNumberOfRecordsSufficient(n_rows):
-            return jsonify({"Message": "Data correctly received"}), 200
+            end_time=time.perf_counter()
+            event={
+                "ID" : "I1",
+                "process" : "Record stored, not enough record to create a raw session",
+                "latency" : end_time-start_time
+            }
+            timestamp=self.log_event(event)
+            self.write_log_file(timestamp)
+            print(f"[INFO] Record stored, not enough record to create a raw session")
+            return self.http_200_response()
 
         #create raw session
 
@@ -103,63 +168,137 @@ class IngestionSystemOrchestrator:
         #mark missing samples and check if raw session is valid
 
         if self.raw_session_creator.mark_missing_samples(raw_session) > self.ingestion_system_config.missing_samples_treshold:
-            return jsonify({"Message" : "Received data are incomplete"}),200
+            end_time=time.perf_counter()
+            event={
+                "ID" : "I2",
+                "action" : "Invalid raw session, discarded",
+                "latency" : end_time-start_time
+            }
+            timestamp=self.log_event(event)
+            self.write_log_file(timestamp)
+            print(f"[INFO] Raw session discarded")
+            return self.http_200_response()
         
-        if self.testing_mode:
-            log=[]
 
         #check if is evaluation phase
         if self.ingestion_system_config.phase==1:
             #send label to evaluation system
             records = raw_session["records"]
             for record in records:
-                #labels.append({"playerID" : record["playerID"], "source" : "expert", "rating" : record["rating"]})
-                #json={"UUID": raw_session["UUID"] , "created_at" : raw_session["created_at"], "labels" : labels}
+                
                 json_label={"player_id" : record["player_id"],"label" : record["label"]}
-                url = f"http://{self.ingestion_system_config.evaluation_system_ip}:{self.ingestion_system_config.evaluation_system_port}/expert-label"
-                risp = requests.post(url, json=json_label)
-                if self.testing_mode:
-                    last_action={
-                        "timestamp" : datetime.datetime.now().isoformat(),
-                        "phase" : 1,
-                        "action" : "label sent to evaluation system"
-                    }
-                    log.append(last_action)
-                #print(risp)
-                #pass
+
+                try:
+                    risp = requests.post(self.evaluation_url, json=json_label,timeout=3)
+
+                    #risp.raise_for_status()
+
+                    if self.testing_mode:
+                        end_time=time.perf_counter()
+                        event={
+                            "ID" : "I3",
+                            "phase" : 1,
+                            "action" : "label sent to evaluation system",
+                            "latency" : end_time-start_time
+                        }
+                        self.log_event(event)
+
+                except requests.exceptions.Timeout:
+                    error_msg = f"Connection to {self.evaluation_url} timed out after 3 seconds."
+                    print(f"\nERROR: {error_msg}")
+                    return self.http_200_response()
+    
+                except requests.exceptions.ConnectionError:
+                    error_msg = f"Could not connect to {self.evaluation_url}. Is it running?"
+                    print(f"\nERROR: {error_msg}")
+                    return self.http_200_response()
+    
+                except requests.exceptions.HTTPError as http_err:
+                    print(f"\nERROR: The server returned an HTTP error: {http_err}")
+                    return self.http_200_response() 
+    
+                except requests.exceptions.RequestException as e:
+                    print(f"\nERROR: An unexpected network error occurred: {e}")
+                    return self.http_200_response()
+                
                 
 
         
         #send data preparation system
-        url = f"http://{self.ingestion_system_config.preparation_system_ip}:{self.ingestion_system_config.preparation_system_port}/run"
-        risp = requests.post(url, json=raw_session)
-        print(risp)
+        try:
+            risp = requests.post(self.preparation_url, json=raw_session,timeout=3)
 
-        if self.testing_mode:
-            last_timestamp=datetime.datetime.now().isoformat()
-            last_action={
-                        "timestamp" : last_timestamp,
+            #risp.raise_for_status()
+            print(risp)
+
+            if self.testing_mode:
+                end_time=time.perf_counter()
+                event={
+                        "ID" : "I4",
                         "phase" : self.ingestion_system_config.phase,
-                        "action" : "raw session sent to preparation system"
-            }
-            log.append(last_action)
+                        "action" : "raw session sent to preparation system",
+                        "latency" : end_time-start_time
+                }
+                timestamp=self.log_event(event)
 
-            #write json log file
-            self.log[f"{last_timestamp}"]=log
+                #write json log file
+                self.write_log_file(timestamp)
 
-            with open(self.log_file_path, 'w') as file:
-                json.dump(self.log, file, indent=4)
+            if not self.records_buffer.delete_records(ids):
+                print(f"ERROR: an error occured extracting records from buffer")
+                
 
-        if not self.records_buffer.delete_records(ids):
-            return jsonify({"Message":"Error occured extracting records from buffer"}),500
+            print(f"[INFO] Raw session correctly sent to preparation system")
+        
+        except requests.exceptions.Timeout:
+            print(f"\nERROR: Connection to {self.preparation_url} timed out after 3 seconds.")
+    
+        except requests.exceptions.ConnectionError:
+            print(f"\nERROR: Could not connect to {self.preparation_url}. Is the evaluation server running?")
+    
+        except requests.exceptions.HTTPError as http_err:
+            print(f"\nERROR: The server returned an HTTP error: {http_err}")
+            # Printing the text often reveals the exact error message the server sent back
+            print(f"Server message: {risp.text}") 
+    
+        except requests.exceptions.RequestException as e:
+            # This is the base class for all requests exceptions. It acts as a safety net.
+            print(f"\nERROR: An unexpected network error occurred: {e}")
 
-        return jsonify({"Message":"Raw session correctly sent to preparation system"}),200
+        finally:
+            return self.http_200_response()
 
 
+    def check_ip_port(self):
+    
+        target_ip = self.ingestion_system_config.hosting_ip
+        target_port = self.ingestion_system_config.hosting_port
 
+        # 1. Create a dummy network socket
+        test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+        try:
+            # 2. Attempt to bind to the IP and Port
+            test_socket.bind((target_ip, target_port))
+        
+            # 3. If it succeeds, the port is free! 
+            #  close test socket so Flask can use it.
+            test_socket.close()
+        
+        except OSError as e:
+            # e.winerror is specific to Windows. For Linux/Mac, you'd use e.errno == 98 / 99
+            if getattr(e, 'winerror', e.errno) in (10048, 98):
+                print(f"\nERROR: Port {target_port} is already in use!")
+            else:
+                print(f"\nERROR: Network configuration issue!")
+                print(f"Cannot bind to IP: '{target_ip}'. Make sure this IP belongs to your machine.")
+                print(f"System details: {e}")
+            
+            print("Shutting down this system to prevent conflicts...\n")
+            sys.exit(1)
         
     
-    def start(self): # todo 127.0.0.1   192.168.97.85
+    def start(self):
         """
         Start Flask server
 
@@ -167,5 +306,7 @@ class IngestionSystemOrchestrator:
 
         print("[INFO] Starting Flask server...")
 
+        self.check_ip_port()
+            
         self.app.run(host=self.ingestion_system_config.hosting_ip, port=self.ingestion_system_config.hosting_port)
     

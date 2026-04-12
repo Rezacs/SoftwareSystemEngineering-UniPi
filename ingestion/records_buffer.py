@@ -117,7 +117,7 @@ class RecordsBuffer:
             cursor.executemany(upsert_sql, data_tuples)
             self.db_connection.commit()
 
-            """
+            
             #PRINT CODE
             
             print("\n--- Current State of 'records' Table ---")
@@ -129,7 +129,6 @@ class RecordsBuffer:
             print(current_table.to_string()) 
             print("----------------------------------------\n")
 
-            """
 
             return True
 
@@ -193,7 +192,7 @@ class RecordsBuffer:
         table = """CREATE TABLE IF NOT EXISTS records 
                 (ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 player_id INTEGER UNIQUE,
-                skill_overall FLOAT DEFAULT -1.0,
+                skill_overall INTEGER DEFAULT -1,
                 number_of_likes INTEGER DEFAULT -1,
                 number_of_followers INTEGER DEFAULT -1,
                 days_missed INTEGER DEFAULT -1,

@@ -61,24 +61,30 @@ def parse_ts(ts_str):
 
 
 def generate_testing_csv(current_phase):
-    print("\n[SYSTEM] Aggregating logs for performance analysis...")
+    print(f"\n[SYSTEM] Aggregating logs for {('Development' if current_phase == '0' else 'Production')} phase...")
 
-    shared_logs = ["ingestionLog.json", "preparationLog.json"]
+    # Shared logs across all phases
+    all_logs = ["ingestionLog.json", "preparationLog.json"]
+    
+    # --- UPDATED: Phase 0 now includes Production System ---
     if current_phase == "0":
-        phase_logs = ["segregationLog.json", "developmentLog.json"]
+        # We include production here to see "hand-off" or "deployment" latencies 
+        # that happen at the end of the development cycle
+        all_logs += ["segregationLog.json", "developmentLog.json", "productionLog.json"]
     else:
-        phase_logs = ["productionLog.json", "evaluationLog.json"]
+        # Standard Production phase logs
+        all_logs += ["productionLog.json", "evaluationLog.json"]
 
-    all_logs = shared_logs + phase_logs
+    # Deduplicate in case productionLog was added twice
+    all_logs = list(dict.fromkeys(all_logs))
 
     rows = []
 
     for log_file in all_logs:
         path = LOG_DIR / log_file
-        system_name = log_file.replace(".json", "")
+        system_name = log_file.replace("Log.json", "")
 
         if not path.exists():
-            print(f"Warning: {log_file} not found, skipping.")
             continue
 
         with path.open('r', encoding='utf-8') as f:
@@ -88,42 +94,41 @@ def generate_testing_csv(current_phase):
                 print(f"Error reading {log_file}: {e}")
                 continue
 
-        if not isinstance(data, dict) or not data:
-            print(f"Warning: {log_file} is empty or not a dict.")
-            continue
+            if not isinstance(data, dict):
+                continue
 
-        # Each outer key is a session
-        for session_key, entries in data.items():
+        # Process the new dictionary structure
+        for session_ts, entries in data.items():
             for entry in entries:
-                process = entry.get("process")
-                initial_ts = parse_ts(entry.get("initial_ts"))
-                final_ts = parse_ts(entry.get("final_ts"))
-
-                if process and initial_ts and final_ts:
-                    latency = round((final_ts - initial_ts).total_seconds(), 3)
-                    rows.append({
-                        "system":    system_name,
-                        "process":   process,
-                        "latency_s": latency,
-                    })
+                # Capture the data exactly as formatted in your new logs
+                rows.append({
+                    "system": system_name,
+                    "session_id": session_ts, # Using the timestamp key as the ID
+                    "process": entry.get("process"),
+                    "latency_s": entry.get("latency", 0),
+                    "outcome": entry.get("outcome", "")
+                })
 
     if not rows:
-        print("FAILED: No process entries found.")
+        print("FAILED: No process entries found in logs.")
         return
 
-    phase_name  = "development" if current_phase == "0" else "production"
+    phase_name = "development" if current_phase == "0" else "production"
     output_path = LOG_DIR / f"testing_log_{phase_name}.csv"
 
     new_df = pd.DataFrame(rows)
 
     if output_path.exists():
-        existing_df = pd.read_csv(output_path)
-        combined_df = pd.concat([existing_df, new_df], ignore_index=True)
+        try:
+            existing_df = pd.read_csv(output_path)
+            combined_df = pd.concat([existing_df, new_df], ignore_index=True)
+        except:
+            combined_df = new_df
     else:
         combined_df = new_df
 
     combined_df.to_csv(output_path, index=False)
-    print(f"SUCCESS: Rows appended → {output_path}")
+    print(f"SUCCESS: Logs for {all_logs} combined into → {output_path}")
 
 ##########################################
 # STREAMING WORKER

@@ -16,5 +16,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    orchestrator = PreparationSystemOrchestrator(args.config_file_path,args.testing_mode)
+    orchestrator = PreparationSystemOrchestrator(args.config_file_path)
     orchestrator.start()

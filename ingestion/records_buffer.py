@@ -219,23 +219,22 @@ class RecordsBuffer:
         self.read_sql(query,[id])
 
     def getNumberOfAvailableRecords(self):
-        query = "SELECT COUNT(*) FROM RECORDS"
+        query = "SELECT COUNT(*) FROM RECORDS WHERE label <> -1"
         cursor=self.db_connection.cursor()
         cursor.execute(query)
         result = cursor.fetchone()
         count = result[0]
         return count
 
-    def retrieve_last_records(self, rows_to_fetch: int) -> pd.DataFrame:
+    def retrieve_last_records(self) -> pd.DataFrame:
         # 1. Fetch records using ORDER BY, starting from the older ones to to newest one
         # (Assuming you have an 'id' or 'created_at' column to define order)
-        select_query = "SELECT * FROM records ORDER BY ID ASC LIMIT ?"
+        select_query = "SELECT * FROM records WHERE label <> -1"
     
         # Read into DataFrame
         df = pd.read_sql(
             select_query, 
-            self.db_connection, 
-            params=[rows_to_fetch]
+            self.db_connection
         )
     
         # 2. If no records were fetched, return early

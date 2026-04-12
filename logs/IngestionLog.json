@@ -1,1 +1,542 @@
-{}
+{
+    "2026-04-13T00:33:34.167541": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.023047199938446283
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.02334890002384782
+        }
+    ],
+    "2026-04-13T00:33:35.136410": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.019617500016465783
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.01987989991903305
+        }
+    ],
+    "2026-04-13T00:33:36.150436": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.02025980013422668
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.020764500135555863
+        }
+    ],
+    "2026-04-13T00:33:37.179716": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.01835089991800487
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.018526700092479587
+        }
+    ],
+    "2026-04-13T00:33:38.137772": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.01138020004145801
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.011688000056892633
+        }
+    ],
+    "2026-04-13T00:33:38.758366": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.011997099965810776
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.012639899970963597
+        }
+    ],
+    "2026-04-13T00:33:39.278590": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.01833319989964366
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.018597699934616685
+        }
+    ],
+    "2026-04-13T00:33:39.659682": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.018233699956908822
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.018586100079119205
+        }
+    ],
+    "2026-04-13T00:33:40.011555": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.010734699899330735
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.011125999968498945
+        }
+    ],
+    "2026-04-13T00:33:40.473551": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.020194300217553973
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.020598300034180284
+        }
+    ],
+    "2026-04-13T00:33:41.067576": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.018729799892753363
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.019213399849832058
+        }
+    ],
+    "2026-04-13T00:33:41.548728": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.014370199991390109
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.014477899996563792
+        }
+    ],
+    "2026-04-13T00:33:43.033069": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.01726390002295375
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.017537300009280443
+        }
+    ],
+    "2026-04-13T00:33:44.595491": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.020171700045466423
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.020389700075611472
+        }
+    ],
+    "2026-04-13T00:33:45.751774": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.018825700040906668
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.0192095001693815
+        }
+    ],
+    "2026-04-13T00:50:21.058509": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.023272800026461482
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.024100500158965588
+        }
+    ],
+    "2026-04-13T00:50:22.565232": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.009995799977332354
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.010305299889296293
+        }
+    ],
+    "2026-04-13T00:50:23.438407": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.01825629989616573
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.01857770001515746
+        }
+    ],
+    "2026-04-13T00:50:23.753515": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.012739300029352307
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.013234900077804923
+        }
+    ],
+    "2026-04-13T00:50:24.129937": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.01750049996189773
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.01769869984127581
+        }
+    ],
+    "2026-04-13T00:50:24.383280": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.013837199890986085
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.013954600086435676
+        }
+    ],
+    "2026-04-13T00:50:24.633547": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.010028399992734194
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.010199700016528368
+        }
+    ],
+    "2026-04-13T00:50:24.880717": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.015557399950921535
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.015729199862107635
+        }
+    ],
+    "2026-04-13T00:50:25.103090": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.016791400033980608
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.017087799962610006
+        }
+    ],
+    "2026-04-13T00:50:25.317266": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.010521300137043
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.010720800142735243
+        }
+    ],
+    "2026-04-13T00:50:25.546191": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.01808429998345673
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.01833459991030395
+        }
+    ],
+    "2026-04-13T00:50:25.835618": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.018568800063803792
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.018847400089725852
+        }
+    ],
+    "2026-04-13T00:50:26.047308": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.010702800005674362
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.011223700130358338
+        }
+    ],
+    "2026-04-13T00:50:26.411398": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.017154899891465902
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.017242299858480692
+        }
+    ],
+    "2026-04-13T00:50:26.687943": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.010741600068286061
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.010910799959674478
+        }
+    ],
+    "2026-04-13T00:52:04.360186": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.021451300010085106
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.02167139993980527
+        }
+    ],
+    "2026-04-13T00:52:05.297077": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.03684419998899102
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.03701680013909936
+        }
+    ],
+    "2026-04-13T00:52:05.808820": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.016137500060722232
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.01630649995058775
+        }
+    ],
+    "2026-04-13T00:52:06.297687": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.01627560006454587
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.016574200009927154
+        }
+    ],
+    "2026-04-13T00:52:06.576733": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.016198599943891168
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.01664760010316968
+        }
+    ],
+    "2026-04-13T00:52:06.779819": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.010819100076332688
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.011263699969276786
+        }
+    ],
+    "2026-04-13T00:52:06.948752": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.0114633000921458
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.011975300032645464
+        }
+    ],
+    "2026-04-13T00:52:07.207713": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.01539990003220737
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.015526100061833858
+        }
+    ],
+    "2026-04-13T00:52:07.372622": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.010479100048542023
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.011073400033637881
+        }
+    ],
+    "2026-04-13T00:52:07.593893": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.019648100016638637
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.0200314000248909
+        }
+    ],
+    "2026-04-13T00:52:08.064330": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.019394000060856342
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.019882200052961707
+        }
+    ],
+    "2026-04-13T00:52:08.446727": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.012204900151118636
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.012362899957224727
+        }
+    ],
+    "2026-04-13T00:52:08.828101": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.014473099960014224
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.014783599879592657
+        }
+    ],
+    "2026-04-13T00:52:09.236369": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.019052899908274412
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.019441100070253015
+        }
+    ],
+    "2026-04-13T00:52:09.746168": [
+        {
+            "process": "I0",
+            "outcome": "Record stored",
+            "latency": 0.018546100007370114
+        },
+        {
+            "process": "I1",
+            "outcome": "0-Not enough record to create a raw session",
+            "latency": 0.01908780005760491
+        }
+    ]
+}

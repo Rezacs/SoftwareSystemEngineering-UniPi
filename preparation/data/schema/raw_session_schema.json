@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": [
+        "UUID",
+        "created_at",
+        "records"
+    ],
+    "properties": {
+        "UUID": {
+            "type": "string"
+        },
+        "created_at": {
+            "type": "string"
+        },
+        "records": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "UUID",
+                    "player_id",
+                    "days_missed",
+                    "games_missed",
+                    "number_of_likes",
+                    "number_of_followers",
+                    "skill_overall",
+                    "label"
+                ],
+                "properties": {
+                    "UUID": { "type": "string" },
+                    "player_id": { "type": ["integer", "string"] },
+                    "days_missed": { "type": "integer" },
+                    "games_missed": { "type": "integer" },
+                    "number_of_likes": { "type": "integer" },
+                    "number_of_followers": { "type": "integer" },
+                    "skill_overall": { "type": "integer" },
+                    "label": { "type": ["integer", "string", "null"] }
+                }
+            }
+        }
+    }
+}

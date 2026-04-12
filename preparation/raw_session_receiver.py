@@ -1,4 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import  request
+from pathlib import Path
+from jsonschema import validate, ValidationError
+import json
 
 """
 Class which should wait to receive the raw session
@@ -7,32 +10,38 @@ Class which should wait to receive the raw session
 
 class RawSessionReceiver:
 
-    raw_session_required_keys = {"UUID", "created_at", "records"}
-    records_required_keys = {"UUID", "player_id","days_missed", "games_missed","number_of_likes", "number_of_followers","skill_overall","label"}
+    def __init__(self,schema_path : str):
+         
+        try:
+            schema_path = Path(__file__).resolve().parents[0] / schema_path
+            
+            with schema_path.open(encoding="utf-8") as f:
+                # load the entire JSON file as our schema
+                self.schema = json.load(f) 
 
+            print("[INFO] JSON Schema correctly loaded")
+
+        except FileNotFoundError:
+            print("ERROR> Raw session receiver : JSON schema file not found")
+            raise
+        except json.JSONDecodeError:
+            print("ERROR> Raw session receiver : Error decoding json file")
+            raise
 
     def validate_json_schema(self, raw_session: dict) -> bool:
-        # 1. Validate the top-level session keys first
-        if not self.raw_session_required_keys.issubset(raw_session.keys()):
-            print("RAW_SESSION_RECEIVER: Invalid raw session attributes")
-            return False
+    
+        try:
+            # compares the raw session against the loaded schema
+            validate(instance=raw_session, schema=self.schema)
 
-        # 2. Safely grab the records (using .get() prevents a KeyError if the key is missing)
-        records = raw_session.get("records", [])
-        
-        # Optional but recommended: ensure 'records' is actually a list
-        if not isinstance(records, list):
-            print("RAW_SESSION_RECEIVER : records not a list")
-            return False
+            return True
+            
+        except ValidationError as e:
+            # If it fails, the library tells us exactly why 
+            
+            print(f"[INFO] Validation failed: {e.message}")
 
-        # 3. Validate each individual record
-        for record in records:
-            if not self.records_required_keys.issubset(record.keys()):
-                print("RAW_SESSION_RECEIVER : record not valid")
-                return False
-        
-        # 4. If the code survives all the checks above, the session is perfectly valid!
-        return True
+            return False
     
     def receive_raw_session(self):
         """

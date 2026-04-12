@@ -34,7 +34,7 @@ timeout /t 2 >nul
 start "Production System" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\production" && python main.py"
 timeout /t 2 >nul
 
-start "Evaluation System" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\evaluation\src" && python main.py"
+start "Evaluation System" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\evaluation" && python -m src.main"
 goto END
 
 :WITHOUT_VENV

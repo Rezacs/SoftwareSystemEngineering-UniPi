@@ -34,7 +34,7 @@ if [[ "$USE_VENV" =~ ^[Yy]$ ]]; then
     sleep 2
     run_in_new_tab "Production System" "cd \"$ROOT/production\" && $ACTIVATE_CMD && python3 main.py"
     sleep 2
-    run_in_new_tab "Evaluation System" "cd \"$ROOT/evaluation\" && $ACTIVATE_CMD && python3 -m src.main"
+    run_in_new_tab "Evaluation System" "cd \"$ROOT/evaluation\" && $ACTIVATE_CMD && python -m src.main"
 
 else
     # Commands WITHOUT Virtual Environment
@@ -50,5 +50,5 @@ else
     sleep 2
     run_in_new_tab "Production System" "cd \"$ROOT/production\" && python3 main.py"
     sleep 2
-    run_in_new_tab "Evaluation System" "cd \"$ROOT/evaluation/src\" && python3 main.py"
+    run_in_new_tab "Evaluation System" "cd \"$ROOT/evaluation/src\" && python -m src.main"
 fi

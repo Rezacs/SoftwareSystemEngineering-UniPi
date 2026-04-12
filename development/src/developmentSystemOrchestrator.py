@@ -1,10 +1,10 @@
-
 import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 import time
 from typing import Any, Dict, List, Optional
+import atexit
 
 import pandas as pd
 
@@ -52,7 +52,7 @@ class DevelopmentSystemOrchestrator:
     ) -> None:
         # ── load config ────────────────────────────────────────────────
         cfg = _load_config()
-        
+
         net  = cfg["network"]
         pth  = cfg["paths"]
         mdl  = cfg["model"]
@@ -93,19 +93,19 @@ class DevelopmentSystemOrchestrator:
 
         # communication (all network params from config)
         self._comm = CommunicationController(
-            listen_host         = net["listen_host"],
-            listen_port         = int(net["listen_port"]),
-            segregation_ip      = net["segregation_system"]["ip"],
-            segregation_port    = int(net["segregation_system"]["port"]),
-            production_ip       = net["production_system"]["ip"],
-            production_port     = int(net["production_system"]["port"]),
-            production_endpoint = net["production_system"]["endpoint"],
-            received_data_path  = pth["received_data"],
-            rejected_report_path= pth["rejected_report"],
+            listen_host          = net["listen_host"],
+            listen_port          = int(net["listen_port"]),
+            segregation_ip       = net["segregation_system"]["ip"],
+            segregation_port     = int(net["segregation_system"]["port"]),
+            production_ip        = net["production_system"]["ip"],
+            production_port      = int(net["production_system"]["port"]),
+            production_endpoint  = net["production_system"]["endpoint"],
+            received_data_path   = pth["received_data"],
+            rejected_report_path = pth["rejected_report"],
         )
-        
-        # log 
-        self._log_path = LOG_PATH
+
+        # log
+        self._log_path    = LOG_PATH
         self._session_key = "current_session"
 
     # ── status persistence ─────────────────────────────────────────────
@@ -117,6 +117,7 @@ class DevelopmentSystemOrchestrator:
             "avg_params":           {},
             "best_classifier_data": None,
             "iteration":            0,
+            "calibration_done":     False,  # ← add this
         }
 
     def _load_status(self) -> Dict[str, Any]:
@@ -188,7 +189,11 @@ class DevelopmentSystemOrchestrator:
         """Auto-generate a plausible human decision (testing mode only)."""
         phase = self._status["phase"]
         if phase == "LearningCurve":
-            return {"max_iter": 300, "good_max_iter": True}
+            calibration_done = self._status.get("calibration_done", False)
+            if not calibration_done:
+                self._update_status({"calibration_done": True})
+                return {"max_iter": self._default_max_iter, "good_max_iter": False}
+            return {"max_iter": self._default_max_iter, "good_max_iter": True}
         elif phase == "ValidationReport":
             with self._validation_report_path.open("r", encoding="UTF-8") as f:
                 report = json.load(f)
@@ -205,23 +210,20 @@ class DevelopmentSystemOrchestrator:
     # ── stop&go helper ─────────────────────────────────────────────────
 
     def _stop(self, message: str) -> None:
-        # stop helper to handle different stopping points in the BPMN
+        """Stop helper to handle different stopping points in the BPMN."""
         self._write_user_input_template()
         print(f"\n[Orchestrator] {message}")
         print(f"  → 1. Edit: {self._user_input_path}")
-        
+
         if not self._testing_mode:
-            
             while True:
                 choice = input(f"  → Have you saved your decisions in the JSON? (y/n): ").strip().lower()
                 if choice == 'y':
-                   
                     self._execute_development()
                     break
                 else:
                     print("  [Waiting...] Please update the file before continuing.")
         else:
-           
             self._execute_development()
 
     # ── internal helpers ───────────────────────────────────────────────
@@ -245,28 +247,28 @@ class DevelopmentSystemOrchestrator:
             score_min=self._score_min,
             score_max=self._score_max,
         )
-    
+
     def _build_hyper_param_configs(self, cfg: dict) -> List[HyperParameters]:
-        """
-    Construct HyperParameters internally from config.
-        """
+        """Construct HyperParameters internally from config."""
         hp_list = cfg.get("hyperparameters", [])
         return [
-        HyperParameters(
-            classifier_id  = hp["classifier_id"],
-            num_layers     = int(hp["num_layers"]),
-            num_neurons    = int(hp["num_neurons"]),
-            num_iterations = int(hp["num_iterations"]),
-        )
-        for hp in hp_list
-    ]
+            HyperParameters(
+                classifier_id  = hp["classifier_id"],
+                num_layers     = int(hp["num_layers"]),
+                num_neurons    = int(hp["num_neurons"]),
+                num_iterations = int(hp["num_iterations"]),
+            )
+            for hp in hp_list
+        ]
 
-    # ── Logging Logic ──────────────────────────────────────────────────
+    # ── logging ────────────────────────────────────────────────────────
+
+    def _now(self) -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     def _init_log(self) -> None:
-        """Initialize the log file if it doesn't exist and prepare the session."""
+        """Initialize the log file and stamp the session beginning."""
         self._log_path.parent.mkdir(parents=True, exist_ok=True)
-        
         data = {}
         if self._log_path.is_file():
             with self._log_path.open("r", encoding="UTF-8") as f:
@@ -274,54 +276,82 @@ class DevelopmentSystemOrchestrator:
                     data = json.load(f)
                 except json.JSONDecodeError:
                     data = {}
-
         if self._session_key not in data:
-            data[self._session_key] = []
-            
+            data[self._session_key] = [{"beginning_ts": self._now()}]
         with self._log_path.open("w", encoding="UTF-8") as f:
             json.dump(data, f, indent="\t")
 
-    def _log_event(self, process: str, decision: str) -> None:
-        """Appends a human-decision event to the log."""
+    def _log_start_event(self, process: str, label: str) -> None:
+        """Opens a new event entry with initial_ts; decision and final_ts are filled later."""
         if not self._log_path.is_file():
             self._init_log()
-
         with self._log_path.open("r+", encoding="UTF-8") as f:
             data = json.load(f)
             event = {
-                "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "process": process,
-                "decision": decision
+                "process":    process,
+                "label":      label,
+                "initial_ts": self._now(),
+                "final_ts":   None,
+                "decision":   None,
             }
             data[self._session_key].append(event)
             f.seek(0)
             json.dump(data, f, indent="\t")
             f.truncate()
 
+    def _log_close_event(self, process: str, decision: str) -> None:
+        """Closes the most recent open event for the given process."""
+        with self._log_path.open("r+", encoding="UTF-8") as f:
+            data = json.load(f)
+            for event in reversed(data[self._session_key]):
+                if event.get("process") == process and event.get("final_ts") is None:
+                    event["final_ts"] = self._now()
+                    event["decision"] = decision
+                    break
+            f.seek(0)
+            json.dump(data, f, indent="\t")
+            f.truncate()
+
     def _finalize_log(self, output_type: str) -> None:
-        """Finalizes the session by adding output and renaming the key to current timestamp."""
+        """Finalizes the session: appends output entry and renames key to timestamp."""
         if not self._log_path.is_file():
             return
-
         with self._log_path.open("r+", encoding="UTF-8") as f:
             data = json.load(f)
             if self._session_key in data:
                 session_data = data.pop(self._session_key)
-                # Add final output entry
                 session_data.append({"output": output_type})
-                
-                # Create final key with current ISO timestamp
-                final_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-                data[final_timestamp] = session_data
-                
+                data[self._now()] = session_data
                 f.seek(0)
                 json.dump(data, f, indent="\t")
                 f.truncate()
-                
+
+    def _emergency_finalize(self) -> None:
+        """Fallback finalizer in case the process exits without completing normally."""
+        if not self._log_path.is_file():
+            return
+        with self._log_path.open("r+", encoding="UTF-8") as f:
+            data = json.load(f)
+            if self._session_key in data:
+                session_data = data.pop(self._session_key)
+                session_data.append({"output": "interrupted"})
+                data[self._now()] = session_data
+                f.seek(0)
+                json.dump(data, f, indent="\t")
+                f.truncate()
+
     # ── state machine entry point ──────────────────────────────────────
 
-    def run(self) -> None:
+    def run(self, fresh: bool = False) -> None:
         """BPMN start event: CALIBRATION SET RECEIVED."""
+        if fresh:
+            self._reset_status()
+
+        # always close any leftover session from a previous interrupted run
+        self._emergency_finalize()
+    
+        atexit.register(self._emergency_finalize)
+
         print("=" * 60)
         print("DevelopmentSystemOrchestrator: run()")
         print(f"  Phase resumed : '{self._status['phase']}'")
@@ -358,8 +388,10 @@ class DevelopmentSystemOrchestrator:
     # ── BPMN tasks ─────────────────────────────────────────────────────
 
     def set_average_hyperparams(self) -> None:
-        """BPMN Task: SET AVERAGE HYPERPARAMS"""
-        val_orch   = ValidationOrchestrator(
+        """BPMN Task: SET AVERAGE HYPERPARAMS — D1"""
+        self._log_start_event("D1", "set average hyperparams")
+
+        val_orch = ValidationOrchestrator(
             hp_configs=self._hyper_param_configs,
             classifier_folder=self._classifier_folder,
             report_path=self._validation_report_path,
@@ -368,6 +400,10 @@ class DevelopmentSystemOrchestrator:
         )
         avg_params = val_orch.retrieve_average_parameters()
         print(f"[Orchestrator] SET AVERAGE HYPERPARAMS: {avg_params}")
+
+        params_str = ", ".join(f"{k}: {v}" for k, v in avg_params.items())
+        self._log_close_event("D1", params_str)
+
         self._update_status({"avg_params": avg_params, "phase": "LearningCurve"})
 
         if not self._testing_mode:
@@ -382,9 +418,9 @@ class DevelopmentSystemOrchestrator:
         """
         BPMN Tasks:
           • DATA SCIENTIST: SET #ITERATIONS
-          • CALIBRATE
+          • CALIBRATE — D2
           • GENERATE CALIBRATION REPORT
-          • DATA SCIENTIST: CHECK CALIBRATION PLOT
+          • DATA SCIENTIST: CHECK CALIBRATION PLOT — D4
 
         BPMN Gateway: #ITERATIONS FINE?
           NO  → regenerate calibration report with updated max_iter
@@ -396,8 +432,9 @@ class DevelopmentSystemOrchestrator:
         if not good_iter:
             max_iter = user_input.get("max_iter", self._status["max_iter"])
             self._update_status({"max_iter": max_iter})
-            self._log_event("learning curve", f"set #iterations to {max_iter}")
             print(f"[Orchestrator] CALIBRATE — {max_iter} epochs …")
+
+            self._log_start_event("D2", "calibrate")
 
             X_train, y_train = self._get_frames("training_set")
             to = self._make_training_orchestrator()
@@ -408,6 +445,9 @@ class DevelopmentSystemOrchestrator:
             plot = to.generate_calibration_report(X_train, y_train, self._learning_curve_path)
             self._learning_plot_view.display_learning_plot(plot)
 
+            self._log_close_event("D2", f"max_iter: {max_iter}")
+            self._log_start_event("D4", "check calibration plot")
+
             if not self._testing_mode:
                 self._stop(
                     f"BPMN: DATA SCIENTIST: CHECK CALIBRATION PLOT — "
@@ -417,7 +457,7 @@ class DevelopmentSystemOrchestrator:
             else:
                 self._execute_development()
         else:
-            self._log_event("set #iterations", f"approved iterations: {self._status['max_iter']}")
+            self._log_close_event("D4", f"approved iterations: {self._status['max_iter']}")
             print(f"[Orchestrator] #ITERATIONS FINE — {self._status['max_iter']} approved.")
             self._update_status({"phase": "Validation"})
             self._execute_development()
@@ -425,11 +465,13 @@ class DevelopmentSystemOrchestrator:
     def generate_validation_report(self) -> None:
         """
         BPMN Tasks:
-          • SET HYPERPARAMS
-          • GENERATE VALIDATION REPORT
-          • DATA SCIENTIST: CHECK VALIDATION RESULTS
+          • SET HYPERPARAMS + GENERATE VALIDATION REPORT — D3
+          • DATA SCIENTIST: CHECK VALIDATION RESULTS — D5
         """
         print("[Orchestrator] SET HYPERPARAMS & GENERATE VALIDATION REPORT …")
+
+        self._log_start_event("D3", "generate validation report")
+
         X_train, y_train = self._get_frames("training_set")
         X_val,   y_val   = self._get_frames("validation_set")
 
@@ -445,7 +487,10 @@ class DevelopmentSystemOrchestrator:
         )
         report = val_orch.generate_validation_report(X_train, y_train, X_val, y_val)
         self._validation_report_view.display_validation_report(report)
+
+        self._log_close_event("D3", f"classifiers evaluated: {len(self._hyper_param_configs)}")
         self._update_status({"phase": "ValidationReport"})
+        self._log_start_event("D5", "check validation results")
 
         if not self._testing_mode:
             self._stop(
@@ -463,8 +508,9 @@ class DevelopmentSystemOrchestrator:
           YES → advance to generate_test_report()
         """
         best_model_index = self._get_user_input().get("best_model", 0)
-        decision_text = f"selected model index {best_model_index}" if best_model_index != 0 else "rejected all models"
-        self._log_event("ValidationReport", decision_text)
+        decision_text    = f"selected model index {best_model_index}" if best_model_index != 0 else "rejected all models"
+
+        self._log_close_event("D5", decision_text)
         print(f"[Orchestrator] IS THERE A VALID CLASSIFIER? → index={best_model_index}")
 
         if best_model_index == 0:
@@ -499,32 +545,37 @@ class DevelopmentSystemOrchestrator:
         self._execute_development()
 
     def generate_test_report(self) -> None:
-        """
-        BPMN Tasks:
-          • GENERATE TEST REPORT
-          • DATA SCIENTIST: CHECK TEST RESULTS
-        """
         print("[Orchestrator] GENERATE TEST REPORT …")
-        best_data  = self._status["best_classifier_data"]
-        cl_id      = best_data["index"]
-        model_path = self._classifier_folder / f"model_{cl_id}.sav"
 
-        X_test, y_test = self._get_frames("test_set")
+        self._log_start_event("D6", "generate test report")
 
-        test_orch = TestingOrchestrator(
+        try:
+            best_data  = self._status["best_classifier_data"]
+            cl_id      = best_data["index"]
+            model_path = self._classifier_folder / f"model_{cl_id}.sav"
+
+            X_test, y_test = self._get_frames("test_set")
+
+            test_orch = TestingOrchestrator(
             report_path=self._testing_report_path,
             generalization_threshold=self._generalization_threshold,
-        )
-        report = test_orch.test_classifier(model_path, best_data, X_test, y_test)
-        self._testing_report_view.display_training_report(report)
+            )
+            report = test_orch.test_classifier(model_path, best_data, X_test, y_test)
+            self._testing_report_view.display_training_report(report)
+
+            passed = report.result
+            score  = report.testing_error
+            self._log_close_event("D6", f"passed: {passed}, generalization: {score}")
+
+        except Exception as e:
+            self._log_close_event("D6", f"error: {e}")
+            raise
+
         self._update_status({"phase": "Results"})
+        self._log_start_event("D7", "check test results")
 
         if not self._testing_mode:
-            self._stop(
-                f"BPMN: DATA SCIENTIST: CHECK TEST RESULTS — "
-                f"inspect {self._testing_report_path}. "
-                f"Set 'approved': true to accept, false to reject."
-            )
+            self._stop(...)
         else:
             self._execute_development()
 
@@ -535,9 +586,11 @@ class DevelopmentSystemOrchestrator:
             YES → send classifier to production, reset to IDLE
         """
         approved = self._get_user_input().get("approved", False)
-        self._log_event("Results", f"Final approval: {approved}")
-        best_data = self._status["best_classifier_data"]
-        cl_id = best_data["index"]
+
+        self._log_close_event("D7", f"Final approval: {approved}")
+
+        best_data  = self._status["best_classifier_data"]
+        cl_id      = best_data["index"]
         model_path = self._classifier_folder / f"model_{cl_id}.sav"
 
         if approved:
@@ -547,10 +600,8 @@ class DevelopmentSystemOrchestrator:
             self._comm.send_classifier(model_path)
             self._finalize_log("classifier")
             self._reset_status()
-            
         else:
             print("\n[Orchestrator] TEST REJECTED: Saving report and resetting to IDLE.")
             self._comm.save_rejected_report(self._testing_report_path)
             self._finalize_log("testing report")
             self._reset_status()
-           

@@ -1,9 +1,9 @@
 {
 	"classifier_id": "manual_alpha",
 	"metric": "classification_error (1 - accuracy)",
-	"testing_error": 0.8,
+	"testing_error": 0.9091,
 	"generalization_threshold": 0.9,
 	"errors": {
-		"passed": true
+		"passed": false
 	}
 }

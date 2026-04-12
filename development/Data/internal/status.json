@@ -3,5 +3,6 @@
 	"max_iter": 200,
 	"avg_params": {},
 	"best_classifier_data": null,
-	"iteration": 0
+	"iteration": 0,
+	"calibration_done": false
 }

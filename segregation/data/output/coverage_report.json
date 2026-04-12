@@ -18,15 +18,15 @@
         },
         "social_influence_score": {
             "covered": true,
-            "min": 0.0,
-            "max": 945.0999999999999,
-            "unique_values": 96
+            "min": 93.79999999999998,
+            "max": 928.1999999999999,
+            "unique_values": 70
         },
         "injuries_impact_score": {
             "covered": true,
-            "min": 0.0,
-            "max": 206.1,
-            "unique_values": 92
+            "min": 2.5,
+            "max": 199.1,
+            "unique_values": 65
         }
     }
 }

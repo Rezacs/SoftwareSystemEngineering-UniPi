@@ -11,6 +11,7 @@ class ProductionSystemOrchestrator:
     def __init__(self):
         self.classifier_controller = ClassifierController()
         self.evaluation_sender = EvaluationSender()
+        self.tmp_log = []
 
 
     def _log_event(self, initial_timestamp: str, process_code: str, latency: float, outcome: str):

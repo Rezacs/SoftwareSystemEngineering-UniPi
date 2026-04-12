@@ -19,10 +19,10 @@ goto WITHOUT_VENV
 start "Client Side System" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\client_side" && python main.py"
 timeout /t 2 >nul
 
-start "Ingestion Launcher" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%" && python ingestion_launcher.py"
+start "Ingestion Launcher" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%" && python -m ingestion.main"
 timeout /t 2 >nul
 
-start "Preparation Launcher" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%" && python preparation_launcher.py"
+start "Preparation Launcher" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%" && python -m preparation.main"
 timeout /t 2 >nul
 
 start "Segregation System" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\segregation" && python main.py"

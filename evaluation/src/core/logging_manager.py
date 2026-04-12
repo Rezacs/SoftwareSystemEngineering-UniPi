@@ -5,17 +5,22 @@ from pathlib import Path
 
 _log_lock = threading.Lock()
 
+
 class LoggingManager:
 
     def __init__(self):
         self._project_root = Path(__file__).resolve().parent
-        self._log_path     = self._project_root.parents[2] / "logs" / "evaluationLog.json"
-        self._session_key  = None
+        self._log_path = self._project_root.parents[2] / "logs" / "evaluationLog.json"
+        self._session_key = None
         self._current_process = None
+        self._session_start_ts = None 
         self._init_log()
 
     def _utc_now(self):
-        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        return datetime.now(timezone.utc)
+
+    def _format_ts(self, dt):
+        return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
     def _init_log(self):
         self._log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -29,7 +34,7 @@ class LoggingManager:
             try:
                 with self._log_path.open("r", encoding="utf-8") as f:
                     json.load(f)
-            except (json.JSONDecodeError, ValueError):
+            except:
                 with self._log_path.open("w", encoding="utf-8") as f:
                     json.dump({}, f, indent=4)
 
@@ -37,7 +42,7 @@ class LoggingManager:
         try:
             with self._log_path.open("r", encoding="utf-8") as f:
                 return json.load(f)
-        except (json.JSONDecodeError, ValueError):
+        except:
             return {}
 
     def _write(self, data):
@@ -49,32 +54,38 @@ class LoggingManager:
     # =========================================================
 
     def start_session(self):
-        self._session_key = f"TEMP_{self._utc_now()}"
+        self._session_start_ts = self._utc_now()
+        self._session_key = f"TEMP_{self._format_ts(self._session_start_ts)}"
+
         with _log_lock:
             data = self._read()
-            data[self._session_key] = [
-                {
-                    "beginning_ts": self._utc_now()
-                }
-            ]
+            data[self._session_key] = []
             self._write(data)
 
     # =========================================================
-    # ================= PROCESS LOGGING =======================
+    # ================= PROCESS ===============================
     # =========================================================
 
     def start_process(self, process_name):
         self._current_process = {
             "process": process_name,
-            "initial_ts": self._utc_now()
+            "start_time": self._utc_now()
         }
 
     def end_process(self, outcome):
         if not self._current_process:
-            return  # safety guard
+            return
 
-        self._current_process["final_ts"] = self._utc_now()
-        self._current_process["outcome"] = outcome
+        end_time = self._utc_now()
+        start_time = self._current_process["start_time"]
+
+        latency = (end_time - start_time).total_seconds()
+
+        process_entry = {
+            "process": self._current_process["process"],
+            "latency": f"{latency:.4f}",
+            "outcome": outcome
+        }
 
         with _log_lock:
             data = self._read()
@@ -82,10 +93,10 @@ class LoggingManager:
             if self._session_key not in data:
                 data[self._session_key] = []
 
-            data[self._session_key].append(self._current_process)
+            data[self._session_key].append(process_entry)
             self._write(data)
 
-        self._current_process = None  # reset
+        self._current_process = None
 
     # =========================================================
     # ================= FINALIZE ==============================
@@ -94,9 +105,12 @@ class LoggingManager:
     def finalize_log(self):
         with _log_lock:
             data = self._read()
+
             session_data = data.pop(self._session_key, [])
 
-            # move to final timestamp key
-            data[self._utc_now()] = session_data
+            # KEY = SESSION START TIME
+            final_key = self._format_ts(self._session_start_ts)
+
+            data[final_key] = session_data
 
             self._write(data)

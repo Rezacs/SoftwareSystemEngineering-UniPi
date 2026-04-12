@@ -1,1346 +1,506 @@
 {
-    "2026-04-12T14:25:22Z": [
-        {
-            "beginning_ts": "2026-04-12T14:25:22Z"
-        },
+    "2026-04-12T20:29:33Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:25:22Z",
-            "final_ts": "2026-04-12T14:25:22Z",
+            "latency": "0.0130",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:34Z": [
+        {
+            "process": "E1",
+            "latency": "0.0147",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:35Z": [
+        {
+            "process": "E1",
+            "latency": "0.0122",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:36Z": [
+        {
+            "process": "E1",
+            "latency": "0.0052",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:37Z": [
+        {
+            "process": "E1",
+            "latency": "0.0127",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:38Z": [
+        {
+            "process": "E1",
+            "latency": "0.0118",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:39Z": [
+        {
+            "process": "E1",
+            "latency": "0.0054",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:40Z": [
+        {
+            "process": "E1",
+            "latency": "0.0115",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:41Z": [
+        {
+            "process": "E1",
+            "latency": "0.0036",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:42Z": [
+        {
+            "process": "E1",
+            "latency": "0.0092",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:43Z": [
+        {
+            "process": "E1",
+            "latency": "0.0101",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:44Z": [
+        {
+            "process": "E1",
+            "latency": "0.0099",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:45Z": [
+        {
+            "process": "E1",
+            "latency": "0.0045",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:46Z": [
+        {
+            "process": "E1",
+            "latency": "0.0044",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:47Z": [
+        {
+            "process": "E1",
+            "latency": "0.0097",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:48Z": [
+        {
+            "process": "E1",
+            "latency": "0.0042",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:49Z": [
+        {
+            "process": "E1",
+            "latency": "0.0091",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:50Z": [
+        {
+            "process": "E1",
+            "latency": "0.0097",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:51Z": [
+        {
+            "process": "E1",
+            "latency": "0.0099",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:29:52Z": [
+        {
+            "process": "E1",
+            "latency": "0.0103",
             "outcome": "Label Sufficient: YES"
         },
         {
             "process": "E2",
-            "initial_ts": "2026-04-12T14:25:22Z",
-            "final_ts": "2026-04-12T14:25:22Z",
-            "outcome": "Classifier Good: YES"
-        }
-    ],
-    "2026-04-12T14:26:58Z": [
-        {
-            "beginning_ts": "2026-04-12T14:26:58Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:26:58Z",
-            "final_ts": "2026-04-12T14:26:58Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:27:04Z": [
-        {
-            "beginning_ts": "2026-04-12T14:27:04Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:27:04Z",
-            "final_ts": "2026-04-12T14:27:04Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:27:08Z": [
-        {
-            "beginning_ts": "2026-04-12T14:27:08Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:27:08Z",
-            "final_ts": "2026-04-12T14:27:08Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:27:11Z": [
-        {
-            "beginning_ts": "2026-04-12T14:27:11Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:27:11Z",
-            "final_ts": "2026-04-12T14:27:11Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:27:14Z": [
-        {
-            "beginning_ts": "2026-04-12T14:27:14Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:27:14Z",
-            "final_ts": "2026-04-12T14:27:14Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:27:22Z": [
-        {
-            "beginning_ts": "2026-04-12T14:27:22Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:27:22Z",
-            "final_ts": "2026-04-12T14:27:22Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:27:25Z": [
-        {
-            "beginning_ts": "2026-04-12T14:27:25Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:27:25Z",
-            "final_ts": "2026-04-12T14:27:25Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:27:28Z": [
-        {
-            "beginning_ts": "2026-04-12T14:27:28Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:27:28Z",
-            "final_ts": "2026-04-12T14:27:28Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:27:31Z": [
-        {
-            "beginning_ts": "2026-04-12T14:27:31Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:27:31Z",
-            "final_ts": "2026-04-12T14:27:31Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:27:34Z": [
-        {
-            "beginning_ts": "2026-04-12T14:27:34Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:27:34Z",
-            "final_ts": "2026-04-12T14:27:34Z",
-            "outcome": "Label Sufficient: YES"
-        },
-        {
-            "process": "E2",
-            "initial_ts": "2026-04-12T14:27:34Z",
-            "final_ts": "2026-04-12T14:27:34Z",
-            "outcome": "Classifier Good: YES"
-        }
-    ],
-    "2026-04-12T14:40:39Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:39Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:39Z",
-            "final_ts": "2026-04-12T14:40:39Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:40Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:40Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:40Z",
-            "final_ts": "2026-04-12T14:40:40Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:41Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:41Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:41Z",
-            "final_ts": "2026-04-12T14:40:41Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:42Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:42Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:42Z",
-            "final_ts": "2026-04-12T14:40:42Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:43Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:43Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:43Z",
-            "final_ts": "2026-04-12T14:40:43Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:44Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:44Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:44Z",
-            "final_ts": "2026-04-12T14:40:44Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:45Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:45Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:45Z",
-            "final_ts": "2026-04-12T14:40:45Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:46Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:46Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:46Z",
-            "final_ts": "2026-04-12T14:40:46Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:47Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:47Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:47Z",
-            "final_ts": "2026-04-12T14:40:47Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:48Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:48Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:48Z",
-            "final_ts": "2026-04-12T14:40:48Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:49Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:49Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:49Z",
-            "final_ts": "2026-04-12T14:40:49Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:50Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:50Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:50Z",
-            "final_ts": "2026-04-12T14:40:50Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:51Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:51Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:51Z",
-            "final_ts": "2026-04-12T14:40:51Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:52Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:52Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:52Z",
-            "final_ts": "2026-04-12T14:40:52Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:53Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:53Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:53Z",
-            "final_ts": "2026-04-12T14:40:53Z",
-            "outcome": "Label Sufficient: YES"
-        },
-        {
-            "process": "E2",
-            "initial_ts": "2026-04-12T14:40:53Z",
-            "final_ts": "2026-04-12T14:40:53Z",
-            "outcome": "Classifier Good: YES"
-        }
-    ],
-    "2026-04-12T14:40:54Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:54Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:54Z",
-            "final_ts": "2026-04-12T14:40:54Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:55Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:55Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:55Z",
-            "final_ts": "2026-04-12T14:40:55Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:56Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:56Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:56Z",
-            "final_ts": "2026-04-12T14:40:56Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:57Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:57Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:57Z",
-            "final_ts": "2026-04-12T14:40:57Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:58Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:58Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:58Z",
-            "final_ts": "2026-04-12T14:40:58Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:40:59Z": [
-        {
-            "beginning_ts": "2026-04-12T14:40:59Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:40:59Z",
-            "final_ts": "2026-04-12T14:40:59Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:41:00Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:00Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:41:00Z",
-            "final_ts": "2026-04-12T14:41:00Z",
-            "outcome": "Label Sufficient: YES"
-        },
-        {
-            "process": "E2",
-            "initial_ts": "2026-04-12T14:41:00Z",
-            "final_ts": "2026-04-12T14:41:00Z",
+            "latency": "0.0006",
             "outcome": "Classifier Good: NO"
         }
     ],
-    "2026-04-12T14:41:01Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:01Z"
-        },
+    "2026-04-12T20:29:53Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:01Z",
-            "final_ts": "2026-04-12T14:41:01Z",
+            "latency": "0.0056",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:02Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:02Z"
-        },
+    "2026-04-12T20:29:54Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:02Z",
-            "final_ts": "2026-04-12T14:41:02Z",
+            "latency": "0.0096",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:03Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:03Z"
-        },
+    "2026-04-12T20:29:55Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:03Z",
-            "final_ts": "2026-04-12T14:41:03Z",
+            "latency": "0.0101",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:04Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:04Z"
-        },
+    "2026-04-12T20:29:56Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:04Z",
-            "final_ts": "2026-04-12T14:41:04Z",
+            "latency": "0.0044",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:05Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:05Z"
-        },
+    "2026-04-12T20:29:57Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:05Z",
-            "final_ts": "2026-04-12T14:41:05Z",
+            "latency": "0.0103",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:06Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:06Z"
-        },
+    "2026-04-12T20:29:58Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:06Z",
-            "final_ts": "2026-04-12T14:41:06Z",
+            "latency": "0.0100",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:07Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:07Z"
-        },
+    "2026-04-12T20:29:59Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:07Z",
-            "final_ts": "2026-04-12T14:41:07Z",
+            "latency": "0.0103",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:08Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:08Z"
-        },
+    "2026-04-12T20:30:00Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:08Z",
-            "final_ts": "2026-04-12T14:41:08Z",
+            "latency": "0.0100",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:09Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:09Z"
-        },
+    "2026-04-12T20:30:01Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:09Z",
-            "final_ts": "2026-04-12T14:41:09Z",
+            "latency": "0.0101",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:10Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:10Z"
-        },
+    "2026-04-12T20:30:02Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:10Z",
-            "final_ts": "2026-04-12T14:41:10Z",
+            "latency": "0.0099",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:11Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:11Z"
-        },
+    "2026-04-12T20:30:03Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:11Z",
-            "final_ts": "2026-04-12T14:41:11Z",
+            "latency": "0.0044",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:12Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:12Z"
-        },
+    "2026-04-12T20:30:04Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:12Z",
-            "final_ts": "2026-04-12T14:41:12Z",
+            "latency": "0.0101",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:13Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:13Z"
-        },
+    "2026-04-12T20:30:05Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:13Z",
-            "final_ts": "2026-04-12T14:41:13Z",
+            "latency": "0.0105",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:14Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:14Z"
-        },
+    "2026-04-12T20:30:06Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:14Z",
-            "final_ts": "2026-04-12T14:41:14Z",
+            "latency": "0.0100",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:41:15Z": [
-        {
-            "beginning_ts": "2026-04-12T14:41:14Z"
-        },
+    "2026-04-12T20:30:07Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:41:14Z",
-            "final_ts": "2026-04-12T14:41:14Z",
+            "latency": "0.0040",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:30:08Z": [
+        {
+            "process": "E1",
+            "latency": "0.0096",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:31:56Z": [
+        {
+            "process": "E1",
+            "latency": "0.0091",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:31:57Z": [
+        {
+            "process": "E1",
+            "latency": "0.0096",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:31:58Z": [
+        {
+            "process": "E1",
+            "latency": "0.0046",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:31:59Z": [
+        {
+            "process": "E1",
+            "latency": "0.0037",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:32:00Z": [
+        {
+            "process": "E1",
+            "latency": "0.0089",
+            "outcome": "Label Sufficient: NO"
+        }
+    ],
+    "2026-04-12T20:32:01Z": [
+        {
+            "process": "E1",
+            "latency": "0.0095",
             "outcome": "Label Sufficient: YES"
         },
         {
             "process": "E2",
-            "initial_ts": "2026-04-12T14:41:15Z",
-            "final_ts": "2026-04-12T14:41:15Z",
+            "latency": "0.0006",
             "outcome": "Classifier Good: NO"
         }
     ],
-    "2026-04-12T14:42:18Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:18Z"
-        },
+    "2026-04-12T20:32:02Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:18Z",
-            "final_ts": "2026-04-12T14:42:18Z",
+            "latency": "0.0054",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:19Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:19Z"
-        },
+    "2026-04-12T20:32:03Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:19Z",
-            "final_ts": "2026-04-12T14:42:19Z",
+            "latency": "0.0046",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:20Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:20Z"
-        },
+    "2026-04-12T20:32:04Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:20Z",
-            "final_ts": "2026-04-12T14:42:20Z",
+            "latency": "0.0041",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:21Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:21Z"
-        },
+    "2026-04-12T20:32:05Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:21Z",
-            "final_ts": "2026-04-12T14:42:21Z",
+            "latency": "0.0036",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:22Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:22Z"
-        },
+    "2026-04-12T20:32:06Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:22Z",
-            "final_ts": "2026-04-12T14:42:22Z",
+            "latency": "0.0050",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:23Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:23Z"
-        },
+    "2026-04-12T20:32:07Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:23Z",
-            "final_ts": "2026-04-12T14:42:23Z",
+            "latency": "0.0050",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:24Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:24Z"
-        },
+    "2026-04-12T20:32:08Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:24Z",
-            "final_ts": "2026-04-12T14:42:24Z",
+            "latency": "0.0043",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:25Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:25Z"
-        },
+    "2026-04-12T20:32:09Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:25Z",
-            "final_ts": "2026-04-12T14:42:25Z",
+            "latency": "0.0034",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:26Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:26Z"
-        },
+    "2026-04-12T20:32:10Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:26Z",
-            "final_ts": "2026-04-12T14:42:26Z",
+            "latency": "0.0047",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:27Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:27Z"
-        },
+    "2026-04-12T20:32:11Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:27Z",
-            "final_ts": "2026-04-12T14:42:27Z",
+            "latency": "0.0043",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:28Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:28Z"
-        },
+    "2026-04-12T20:32:12Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:28Z",
-            "final_ts": "2026-04-12T14:42:28Z",
+            "latency": "0.0053",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:29Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:29Z"
-        },
+    "2026-04-12T20:32:13Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:29Z",
-            "final_ts": "2026-04-12T14:42:29Z",
+            "latency": "0.0037",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:30Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:30Z"
-        },
+    "2026-04-12T20:32:14Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:30Z",
-            "final_ts": "2026-04-12T14:42:30Z",
+            "latency": "0.0050",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:31Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:31Z"
-        },
+    "2026-04-12T20:32:15Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:31Z",
-            "final_ts": "2026-04-12T14:42:31Z",
+            "latency": "0.0051",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:32Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:32Z"
-        },
+    "2026-04-12T20:32:16Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:32Z",
-            "final_ts": "2026-04-12T14:42:32Z",
+            "latency": "0.0031",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:33Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:33Z"
-        },
+    "2026-04-12T20:32:17Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:33Z",
-            "final_ts": "2026-04-12T14:42:33Z",
+            "latency": "0.0038",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:34Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:34Z"
-        },
+    "2026-04-12T20:32:18Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:34Z",
-            "final_ts": "2026-04-12T14:42:34Z",
+            "latency": "0.0051",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:35Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:35Z"
-        },
+    "2026-04-12T20:32:19Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:35Z",
-            "final_ts": "2026-04-12T14:42:35Z",
+            "latency": "0.0046",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:36Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:36Z"
-        },
+    "2026-04-12T20:32:20Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:36Z",
-            "final_ts": "2026-04-12T14:42:36Z",
+            "latency": "0.0050",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:37Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:37Z"
-        },
+    "2026-04-12T20:32:21Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:37Z",
-            "final_ts": "2026-04-12T14:42:37Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:42:38Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:38Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:42:38Z",
-            "final_ts": "2026-04-12T14:42:38Z",
+            "latency": "0.0052",
             "outcome": "Label Sufficient: YES"
         },
         {
             "process": "E2",
-            "initial_ts": "2026-04-12T14:42:38Z",
-            "final_ts": "2026-04-12T14:42:38Z",
+            "latency": "0.0003",
             "outcome": "Classifier Good: NO"
         }
     ],
-    "2026-04-12T14:42:39Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:39Z"
-        },
+    "2026-04-12T20:32:22Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:39Z",
-            "final_ts": "2026-04-12T14:42:39Z",
+            "latency": "0.0064",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:40Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:40Z"
-        },
+    "2026-04-12T20:32:23Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:40Z",
-            "final_ts": "2026-04-12T14:42:40Z",
+            "latency": "0.0031",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:41Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:41Z"
-        },
+    "2026-04-12T20:32:24Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:41Z",
-            "final_ts": "2026-04-12T14:42:41Z",
+            "latency": "0.0039",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:42Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:42Z"
-        },
+    "2026-04-12T20:32:25Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:42Z",
-            "final_ts": "2026-04-12T14:42:42Z",
+            "latency": "0.0031",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:43Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:43Z"
-        },
+    "2026-04-12T20:32:26Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:43Z",
-            "final_ts": "2026-04-12T14:42:43Z",
+            "latency": "0.0048",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:44Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:44Z"
-        },
+    "2026-04-12T20:32:27Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:44Z",
-            "final_ts": "2026-04-12T14:42:44Z",
+            "latency": "0.0045",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:45Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:45Z"
-        },
+    "2026-04-12T20:32:28Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:45Z",
-            "final_ts": "2026-04-12T14:42:45Z",
+            "latency": "0.0050",
             "outcome": "Label Sufficient: NO"
         }
     ],
-    "2026-04-12T14:42:46Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:46Z"
-        },
+    "2026-04-12T20:32:29Z": [
         {
             "process": "E1",
-            "initial_ts": "2026-04-12T14:42:46Z",
-            "final_ts": "2026-04-12T14:42:46Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:42:47Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:47Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:42:47Z",
-            "final_ts": "2026-04-12T14:42:47Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:42:48Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:48Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:42:48Z",
-            "final_ts": "2026-04-12T14:42:48Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:42:49Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:49Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:42:49Z",
-            "final_ts": "2026-04-12T14:42:49Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:42:50Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:50Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:42:50Z",
-            "final_ts": "2026-04-12T14:42:50Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:42:51Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:51Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:42:51Z",
-            "final_ts": "2026-04-12T14:42:51Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:42:52Z": [
-        {
-            "beginning_ts": "2026-04-12T14:42:52Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:42:52Z",
-            "final_ts": "2026-04-12T14:42:52Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:43:53Z": [
-        {
-            "beginning_ts": "2026-04-12T14:43:53Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:43:53Z",
-            "final_ts": "2026-04-12T14:43:53Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:43:54Z": [
-        {
-            "beginning_ts": "2026-04-12T14:43:54Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:43:54Z",
-            "final_ts": "2026-04-12T14:43:54Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:43:55Z": [
-        {
-            "beginning_ts": "2026-04-12T14:43:55Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:43:55Z",
-            "final_ts": "2026-04-12T14:43:55Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:43:56Z": [
-        {
-            "beginning_ts": "2026-04-12T14:43:56Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:43:56Z",
-            "final_ts": "2026-04-12T14:43:56Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:43:57Z": [
-        {
-            "beginning_ts": "2026-04-12T14:43:57Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:43:57Z",
-            "final_ts": "2026-04-12T14:43:57Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:43:58Z": [
-        {
-            "beginning_ts": "2026-04-12T14:43:58Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:43:58Z",
-            "final_ts": "2026-04-12T14:43:58Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:43:59Z": [
-        {
-            "beginning_ts": "2026-04-12T14:43:59Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:43:59Z",
-            "final_ts": "2026-04-12T14:43:59Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:00Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:00Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:00Z",
-            "final_ts": "2026-04-12T14:44:00Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:01Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:01Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:01Z",
-            "final_ts": "2026-04-12T14:44:01Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:02Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:02Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:02Z",
-            "final_ts": "2026-04-12T14:44:02Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:03Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:03Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:03Z",
-            "final_ts": "2026-04-12T14:44:03Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:04Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:04Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:04Z",
-            "final_ts": "2026-04-12T14:44:04Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:05Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:05Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:05Z",
-            "final_ts": "2026-04-12T14:44:05Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:06Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:06Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:06Z",
-            "final_ts": "2026-04-12T14:44:06Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:07Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:07Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:07Z",
-            "final_ts": "2026-04-12T14:44:07Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:08Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:08Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:08Z",
-            "final_ts": "2026-04-12T14:44:08Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:09Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:09Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:09Z",
-            "final_ts": "2026-04-12T14:44:09Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:10Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:10Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:10Z",
-            "final_ts": "2026-04-12T14:44:10Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:11Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:11Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:11Z",
-            "final_ts": "2026-04-12T14:44:11Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:12Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:12Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:12Z",
-            "final_ts": "2026-04-12T14:44:12Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:13Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:13Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:13Z",
-            "final_ts": "2026-04-12T14:44:13Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:14Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:14Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:14Z",
-            "final_ts": "2026-04-12T14:44:14Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:15Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:15Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:15Z",
-            "final_ts": "2026-04-12T14:44:15Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:16Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:16Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:16Z",
-            "final_ts": "2026-04-12T14:44:16Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:17Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:17Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:17Z",
-            "final_ts": "2026-04-12T14:44:17Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:18Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:18Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:18Z",
-            "final_ts": "2026-04-12T14:44:18Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:19Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:19Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:19Z",
-            "final_ts": "2026-04-12T14:44:19Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:20Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:20Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:20Z",
-            "final_ts": "2026-04-12T14:44:20Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:21Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:21Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:21Z",
-            "final_ts": "2026-04-12T14:44:21Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:22Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:22Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:22Z",
-            "final_ts": "2026-04-12T14:44:22Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:23Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:23Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:23Z",
-            "final_ts": "2026-04-12T14:44:23Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:24Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:24Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:24Z",
-            "final_ts": "2026-04-12T14:44:24Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:25Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:25Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:25Z",
-            "final_ts": "2026-04-12T14:44:25Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:26Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:26Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:26Z",
-            "final_ts": "2026-04-12T14:44:26Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:27Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:27Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:27Z",
-            "final_ts": "2026-04-12T14:44:27Z",
-            "outcome": "Label Sufficient: NO"
-        }
-    ],
-    "2026-04-12T14:44:28Z": [
-        {
-            "beginning_ts": "2026-04-12T14:44:28Z"
-        },
-        {
-            "process": "E1",
-            "initial_ts": "2026-04-12T14:44:28Z",
-            "final_ts": "2026-04-12T14:44:28Z",
+            "latency": "0.0051",
             "outcome": "Label Sufficient: NO"
         }
     ]

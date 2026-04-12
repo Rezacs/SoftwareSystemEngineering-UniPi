@@ -25,7 +25,7 @@ timeout /t 2 >nul
 start "Preparation Launcher" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%" && python preparation_launcher.py"
 timeout /t 2 >nul
 
-start "Ingestion System" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\ingestion" && python ingestion_launcher.py"
+start "Segregation System" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\segregation" && python main.py"
 timeout /t 2 >nul
 
 start "Development System" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\development" && python main.py"

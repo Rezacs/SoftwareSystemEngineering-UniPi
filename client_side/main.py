@@ -138,6 +138,8 @@ def stream_worker(current_phase, limit, record_list):
     total_available = len(record_list)
 
     for i in range(limit):
+        if i > 0 and i % total_available == 0:  # every time a full cycle completes
+            random.shuffle(record_list)
         record = record_list[i % total_available]
         p_id = record.get('player_id')
         if p_id is not None:

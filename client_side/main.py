@@ -24,6 +24,7 @@ streaming_active = False
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = REPO_ROOT / "config" / "clientsideConfig.json"
 LOG_DIR = REPO_ROOT / "logs"
+GENERAL_CONFIG_PATH = REPO_ROOT / "config" / "GeneralConfig.json"
 
 def load_config():
     with CONFIG_PATH.open('r', encoding='utf-8') as f:
@@ -191,6 +192,18 @@ def run_flask():
     app.run(host=config['network']['listen_host'], 
             port=config['network']['listen_port'], 
             use_reloader=False)
+    
+def get_phase_from_config():
+    """Reads the phase from GeneralConfig.json."""
+    try:
+        with GENERAL_CONFIG_PATH.open('r', encoding='utf-8') as f:
+            gen_cfg = json.load(f)
+            # Assuming the key in your JSON is "phase" and values are 0 or 1
+            # Adjust the key name ["phase"] if it is named differently in your file
+            return str(gen_cfg.get("phase", "0")) 
+    except Exception as e:
+        print(f"[ERROR] Could not read GeneralConfig.json: {e}")
+        return "0" # Default to Development if file fails
 
 ##########################################
 # MAIN CONTROL LOOP
@@ -226,8 +239,17 @@ if __name__ == "__main__":
         print("CLIENT SYSTEM CONTROL PANEL")
         print("="*40)
         
-        phase_choice = input("Select Phase: [0] Development, [1] Production: ")
-        stream_limit = int(input("Enter number of records to stream: "))
+        # --- CHANGED: Reading from file instead of input ---
+        phase_choice = get_phase_from_config()
+        phase_label = "Development" if phase_choice == "0" else "Production"
+        print(f"Current Phase (from GeneralConfig): {phase_label} ({phase_choice})")
+        
+        # We still need the stream limit as an input unless that's in the config too
+        try:
+            stream_limit = int(input("Enter number of records to stream: "))
+        except ValueError:
+            print("Invalid number, defaulting to 10.")
+            stream_limit = 10
 
         # Prepare Data
         # Prepare Data — same logic for both phases, always load all dev_files
@@ -254,6 +276,7 @@ if __name__ == "__main__":
         random.shuffle(record_list)
 
         # Start background stream
+        phase_choice = get_phase_from_config()
         threading.Thread(target=stream_worker, args=(phase_choice, stream_limit, record_list), daemon=True).start()
         
         # Wait for worker to finish

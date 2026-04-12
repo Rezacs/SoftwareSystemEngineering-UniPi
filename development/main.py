@@ -3,7 +3,7 @@ Entry point for the Development System.
 """
 
 import json
-import threading
+from queue import Queue
 from pathlib import Path
 
 from Data.preparedSession import PreparedSession
@@ -96,22 +96,18 @@ if __name__ == "__main__":
     received_data_path = Path(cfg["paths"]["received_data"])
     listen_port = int(cfg["network"]["listen_port"])
 
-    # ── Setup Persistence Events ───────────────────────────────────────────
-    received_event = threading.Event()
-    received_payload: dict = {}
+    # ── Setup inbound FIFO queue ──────────────────────────────────────────
+    incoming_payloads: Queue[dict] = Queue()
+    current_payload: dict | None = None
 
     def handle_message(payload: dict) -> None:
         try:
             parse_learning_set(payload)  # only this remains for validation
-
-            learning_sets_path.parent.mkdir(parents=True, exist_ok=True)
-            with learning_sets_path.open("w", encoding="UTF-8") as f:
-                json.dump(payload, f, indent="\t")
-
-            received_payload.clear()
-            received_payload.update(payload)
-            received_event.set()
-            print("\n[Main] Valid payload received. Unblocking pipeline...")
+            incoming_payloads.put(payload)
+            print(
+                "\n[Main] Valid payload received. "
+                f"Queued payloads: {incoming_payloads.qsize()}"
+            )
         except Exception as e:
             print(f"[Main] Logic Validation Error: {e}")
 
@@ -143,14 +139,18 @@ if __name__ == "__main__":
                 current_payload = json.load(f)
         else:
             print(f"\n[Main] IDLE: Waiting for new payload on port {listen_port}...")
-            received_event.wait() # Pause main thread until handle_message sets event
-            current_payload = received_payload.copy()
-            received_event.clear() # Reset for the next message arrival
+            current_payload = incoming_payloads.get()  # FIFO dequeue (blocks until data arrives)
+
+        # Persist the exact payload currently being processed for resume safety
+        learning_sets_path.parent.mkdir(parents=True, exist_ok=True)
+        with learning_sets_path.open("w", encoding="UTF-8") as f:
+            json.dump(current_payload, f, indent="\t")
 
         # Execute Pipeline
         try:
             launch_pipeline(current_payload, testing_mode)
             print("\n[Main] Pipeline cycle finished. Returning to listening state.")
+            current_payload = None
         except Exception as e:
             print(f"[Main] Error during execution: {e}")
             # If a crash happens, we reset the status file to avoid an infinite crash-loop

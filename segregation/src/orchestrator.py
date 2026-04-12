@@ -28,6 +28,16 @@ from .view_coverage import ViewCoverage
 
 
 class SegregationSystemOrchestrator:
+    # S1: from input reception to sufficient-sessions check
+    SUBPROCESS_1 = "S1"
+    # S2: from passed sufficient-sessions check to class-balancing decision
+    SUBPROCESS_2 = "S2"
+    # S3: from passed class-balancing check to coverage decision
+    SUBPROCESS_3 = "S3"
+    # S4: from passed coverage check to output (calibration set) sent
+    SUBPROCESS_4 = "S4"
+    PROCESS_ORDER = [SUBPROCESS_1, SUBPROCESS_2, SUBPROCESS_3, SUBPROCESS_4]
+
     def __init__(self, testing_mode: bool = False):
         self.session_repository = SessionRepository()
         self.data_extractor = DataExtractor()
@@ -45,12 +55,6 @@ class SegregationSystemOrchestrator:
             return {"phase": "idle"}
 
     def save_state(self, phase: str, path: str, **extra_fields) -> dict:
-        phases_with_log_buffer = {
-            "waiting_balancing_decision",
-            "waiting_coverage_decision",
-        }
-        if phase not in phases_with_log_buffer:
-            extra_fields.pop("log_events", None)
         state = {"phase": phase, **extra_fields}
         JsonIO.save(path, state)
         return state
@@ -59,48 +63,71 @@ class SegregationSystemOrchestrator:
     def _utc_now_iso() -> str:
         return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
-    def _append_workflow_event(
-        self,
-        state: dict,
-        process: str,
-        decision: Optional[str] = None,
-    ) -> dict:
-        events = state.get("log_events", [])
-        event = {
-            "timestamp": self._utc_now_iso(),
-            "process": process,
-        }
-        if decision is not None:
-            event["decision"] = decision
-        events.append(event)
-        state["log_events"] = events
-        return state
-
-    def _set_latest_event_decision(self, state: dict, process: str, decision: str) -> dict:
-        events = state.get("log_events", [])
-        for event in reversed(events):
-            if event.get("process") == process and "decision" not in event:
-                event["decision"] = decision
-                state["log_events"] = events
-                return state
-
-        return self._append_workflow_event(state, process=process, decision=decision)
-
-    def _persist_cycle_log(self, state: dict) -> None:
-        events = state.get("log_events", [])
-        if not events:
-            return
-
+    def _load_segregation_log(self) -> dict:
         try:
             current_log = JsonIO.load(self._paths["segregation_log"])
-            if not isinstance(current_log, dict):
-                current_log = {}
+            return current_log if isinstance(current_log, dict) else {}
         except (FileNotFoundError, ValueError, TypeError):
-            current_log = {}
+            return {}
 
-        cycle_key = events[-1]["timestamp"]
-        current_log[cycle_key] = events
-        JsonIO.save(self._paths["segregation_log"], current_log)
+    def _save_segregation_log(self, segregation_log: dict) -> None:
+        JsonIO.save(self._paths["segregation_log"], segregation_log)
+
+    def _get_latest_session_key(self, segregation_log: dict) -> Optional[str]:
+        keys = sorted(segregation_log.keys(), reverse=True)
+        return keys[0] if keys else None
+
+    def _get_or_create_session_processes(
+        self,
+        segregation_log: dict,
+        session_key: Optional[str],
+        create_if_missing: bool,
+    ) -> tuple[Optional[str], Optional[list], bool]:
+        if session_key and session_key in segregation_log and isinstance(segregation_log[session_key], list):
+            return session_key, segregation_log[session_key], False
+
+        if session_key and create_if_missing:
+            segregation_log[session_key] = []
+            return session_key, segregation_log[session_key], True
+
+        if not create_if_missing:
+            return None, None, False
+
+        new_session_key = self._utc_now_iso()
+        segregation_log[new_session_key] = []
+        return new_session_key, segregation_log[new_session_key], True
+
+    def _ensure_subprocess(self, session_processes: list, subprocess_name: str) -> dict:
+        for process_entry in session_processes:
+            if process_entry.get("process") == subprocess_name:
+                return process_entry
+
+        process_entry = {
+            "process": subprocess_name,
+            "timestamp inizio": self._utc_now_iso(),
+            "timestamp fine": None,
+            "outcome": None,
+        }
+        session_processes.append(process_entry)
+        return process_entry
+
+    def _set_subprocess_outcome(self, process_entry: dict, outcome: str) -> None:
+        process_entry["outcome"] = outcome
+
+    def _complete_subprocess(self, process_entry: dict, outcome: str) -> None:
+        process_entry["outcome"] = outcome
+        if process_entry.get("timestamp fine") is None:
+            process_entry["timestamp fine"] = self._utc_now_iso()
+
+    def _trim_following_processes(self, session_processes: list, process_name: str) -> None:
+        if process_name not in self.PROCESS_ORDER:
+            return
+        keep_set = set(self.PROCESS_ORDER[: self.PROCESS_ORDER.index(process_name) + 1])
+        session_processes[:] = [
+            process_entry
+            for process_entry in session_processes
+            if process_entry.get("process") in keep_set
+        ]
 
     def reset_state(self, path: str = SEGREGATION_WORKFLOW_STATE_PATH) -> None:
         """Reset workflow state to idle for a new cycle."""
@@ -222,19 +249,41 @@ class SegregationSystemOrchestrator:
         active_sessions_count = self.session_repository.sessions_count(
             self._paths["segregation_db"]
         )
+        segregation_log = self._load_segregation_log()
+        state_session_key = state.get("session_log_key")
+
+        can_create_session = active_sessions_count > 0
+        session_key, session_processes, is_new_session = self._get_or_create_session_processes(
+            segregation_log,
+            session_key=state_session_key,
+            create_if_missing=can_create_session,
+        )
+
+        if session_processes is not None:
+            self._ensure_subprocess(session_processes, self.SUBPROCESS_1)
         
         if active_sessions_count < self._config["sufficientSessionNumber"]:
-            self.save_state(
-                "sessions_not_sufficient",
-                self._paths["workflow_state"],
-                stored_sessions=active_sessions_count,
-                required_sessions=self._config["sufficientSessionNumber"],
-            )
+            if session_processes is not None:
+                subprocess_1 = self._ensure_subprocess(session_processes, self.SUBPROCESS_1)
+                self._set_subprocess_outcome(subprocess_1, "sessions not sufficient")
+                if subprocess_1.get("timestamp fine") is None:
+                    subprocess_1["timestamp fine"] = self._utc_now_iso()
+                self._trim_following_processes(session_processes, self.SUBPROCESS_1)
+                self._save_segregation_log(segregation_log)
+
+            # Negative S1 outcome closes the current session; next loop starts a new one.
+            self.reset_state(self._paths["workflow_state"])
             return {
                 "status": "sessions_not_sufficient",
                 "stored_sessions": active_sessions_count,
                 "required_sessions": self._config["sufficientSessionNumber"]
             }
+
+        if session_processes is not None:
+            subprocess_1 = self._ensure_subprocess(session_processes, self.SUBPROCESS_1)
+            self._complete_subprocess(subprocess_1, "sessions sufficient")
+
+            self._ensure_subprocess(session_processes, self.SUBPROCESS_2)
         
         # Generate balancing report
         print("[Orchestrator] Generating balancing report...")
@@ -248,10 +297,9 @@ class SegregationSystemOrchestrator:
         )
         JsonIO.save(self._paths["balancing_report_output"], balancing_report)
         self.view_balancing.showPlot(balancing_report, self._paths["balancing_plot_output"])
-        state = self._append_workflow_event(
-            state,
-            process="check class balancing",
-        )
+        if session_processes is not None:
+            self._save_segregation_log(segregation_log)
+
         self.save_state(
             "waiting_balancing_decision",
             self._paths["workflow_state"],
@@ -260,7 +308,7 @@ class SegregationSystemOrchestrator:
                 if active_sessions
                 else None
             ),
-            log_events=state.get("log_events", []),
+            session_log_key=session_key,
         )
         
         self._stop_and_ask(
@@ -285,6 +333,10 @@ class SegregationSystemOrchestrator:
     def _handle_balancing_decision(self):
         """Process balancing decision and proceed accordingly."""
         state = self.load_state(self._paths["workflow_state"])
+        segregation_log = self._load_segregation_log()
+        session_key = state.get("session_log_key")
+        session_processes = segregation_log.get(session_key) if session_key else None
+
         # In testing mode, always simulate decision (don't read file)
         if self.testing_mode:
             balancing_decision = self._simulate_decision("balancing")
@@ -303,16 +355,12 @@ class SegregationSystemOrchestrator:
         
         if not balancing_decision.get("approved", False):
             print("[Orchestrator] Balancing REJECTED — Resetting to idle")
-            state = self._set_latest_event_decision(
-                state,
-                process="check class balancing",
-                decision="classes not balanced",
-            )
-            state = self._append_workflow_event(
-                state,
-                process="configuration sent to messaging system",
-            )
-            self._persist_cycle_log(state)
+            if isinstance(session_processes, list):
+                subprocess_2 = self._ensure_subprocess(session_processes, self.SUBPROCESS_2)
+                self._complete_subprocess(subprocess_2, "classes not balanced")
+                self._trim_following_processes(session_processes, self.SUBPROCESS_2)
+                self._save_segregation_log(segregation_log)
+
             self.session_repository.mark_all_to_process(self._paths["segregation_db"])
             self.reset_state(self._paths["workflow_state"])
             
@@ -328,11 +376,12 @@ class SegregationSystemOrchestrator:
         
         # Balancing approved - generate coverage report
         print("[Orchestrator] Balancing APPROVED — Generating coverage report...")
-        state = self._set_latest_event_decision(
-            state,
-            process="check class balancing",
-            decision="classes balanced",
-        )
+        if isinstance(session_processes, list):
+            subprocess_2 = self._ensure_subprocess(session_processes, self.SUBPROCESS_2)
+            self._complete_subprocess(subprocess_2, "classes balanced")
+
+            self._ensure_subprocess(session_processes, self.SUBPROCESS_3)
+
         feature_map = self.data_extractor.extract_features(self._paths["segregation_db"])
         statistics = self.coverage_checker.retrieveStatistics(feature_map)
         coverage_report = self.coverage_checker.generatePlotData(
@@ -341,14 +390,14 @@ class SegregationSystemOrchestrator:
         )
         JsonIO.save(self._paths["coverage_report_output"], coverage_report)
         self.view_coverage.showPlot(coverage_report, self._paths["coverage_plot_output"])
-        state = self._append_workflow_event(
-            state,
-            process="check data coverage",
-        )
+
+        if isinstance(session_processes, list):
+            self._save_segregation_log(segregation_log)
+
         self.save_state(
             "waiting_coverage_decision",
             self._paths["workflow_state"],
-            log_events=state.get("log_events", []),
+            session_log_key=session_key,
         )
         
         self._stop_and_ask(
@@ -373,6 +422,10 @@ class SegregationSystemOrchestrator:
     def _handle_coverage_decision(self):
         """Process coverage decision and finalize or reject."""
         state = self.load_state(self._paths["workflow_state"])
+        segregation_log = self._load_segregation_log()
+        session_key = state.get("session_log_key")
+        session_processes = segregation_log.get(session_key) if session_key else None
+
         # In testing mode, always simulate decision (don't read file)
         if self.testing_mode:
             coverage_decision = self._simulate_decision("coverage")
@@ -391,16 +444,12 @@ class SegregationSystemOrchestrator:
         
         if not coverage_decision.get("approved", False):
             print("[Orchestrator] Coverage REJECTED — Resetting to idle")
-            state = self._set_latest_event_decision(
-                state,
-                process="check data coverage",
-                decision="data distribution not covered",
-            )
-            state = self._append_workflow_event(
-                state,
-                process="configuration sent to messaging system",
-            )
-            self._persist_cycle_log(state)
+            if isinstance(session_processes, list):
+                subprocess_3 = self._ensure_subprocess(session_processes, self.SUBPROCESS_3)
+                self._complete_subprocess(subprocess_3, "coverage not satisfied")
+                self._trim_following_processes(session_processes, self.SUBPROCESS_3)
+                self._save_segregation_log(segregation_log)
+
             self.session_repository.mark_all_to_process(self._paths["segregation_db"])
             self.reset_state(self._paths["workflow_state"])
             
@@ -416,11 +465,12 @@ class SegregationSystemOrchestrator:
         
         # Coverage approved - generate calibration set
         print("[Orchestrator] Coverage APPROVED — Generating calibration set...")
-        state = self._set_latest_event_decision(
-            state,
-            process="check data coverage",
-            decision="data distribution covered",
-        )
+        if isinstance(session_processes, list):
+            subprocess_3 = self._ensure_subprocess(session_processes, self.SUBPROCESS_3)
+            self._complete_subprocess(subprocess_3, "coverage satisfied")
+
+            self._ensure_subprocess(session_processes, self.SUBPROCESS_4)
+
         active_sessions = self.data_extractor.extract_all(self._paths["segregation_db"])
         calibration_set = self.calibration_set_provider.generateCalibrationSets(
             active_sessions
@@ -431,11 +481,12 @@ class SegregationSystemOrchestrator:
         )
         self.session_repository.delete_processed_sessions(self._paths["segregation_db"])
         self.session_repository.promote_pending_sessions(self._paths["segregation_db"])
-        state = self._append_workflow_event(
-            state,
-            process="calibration sets sent to development system",
-        )
-        self._persist_cycle_log(state)
+
+        if isinstance(session_processes, list):
+            subprocess_4 = self._ensure_subprocess(session_processes, self.SUBPROCESS_4)
+            self._complete_subprocess(subprocess_4, "output sent")
+            self._save_segregation_log(segregation_log)
+
         self.save_state("completed", self._paths["workflow_state"])
         
         print("[Orchestrator] Calibration set sent successfully!")

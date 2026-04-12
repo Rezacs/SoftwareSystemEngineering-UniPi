@@ -4,8 +4,7 @@
         "listen_port": 5008,
         "ingestion_system": {
             "ip": "127.0.0.1",
-            "port": 5001,
-            "endpoint": "/run"
+            "port": 5001
         },
         "classification_system": {
             "ip": "127.0.0.1",
@@ -18,8 +17,8 @@
         "dev_files": [
             "Data/inputs/raws_football_db.csv",
             "Data/inputs/raws_medical_db.csv",
-            "Data/inputs/raws_social_db.csv"
-        ],
-        "prod_file": "Data/unified_players_db_missing.csv"
+            "Data/inputs/raws_social_db.csv",
+            "Data/inputs/unified_players_db_missing.csv"
+        ]
     }
 }

@@ -1,12 +1,13 @@
+import json
+import threading
+from pathlib import Path
+
 from sklearn import metrics
 
 from src.reporting.report_metrics import ReportMetrics
 from src.reporting.visual_report import VisualReport
 from src.utils.logger import logger
 from src.core.logging_manager import LoggingManager
-
-import json
-from pathlib import Path
 
 
 class Orchestrator:
@@ -15,36 +16,54 @@ class Orchestrator:
     """
 
     def __init__(self, repo, batch_mgr, config, state):
-        self.repo = repo
+        self.repo      = repo
         self.batch_mgr = batch_mgr
-        self.config = config
-        self.state = state
+        self.config    = config
+        self.state     = state
 
         # ================= CONFIG =================
-        self.eval_cfg = config["evaluation"]
-        self.paths_cfg = config["paths"]
+        self.eval_cfg     = config["evaluation"]
+        self.paths_cfg    = config["paths"]
         self.external_cfg = config["external_systems"]
 
         # ================= COMPONENTS =================
         self.metrics_engine = ReportMetrics()
-        self.visual = VisualReport()
-        self.log_mgr = LoggingManager()
+        self.visual         = VisualReport()
+        self.log_mgr        = LoggingManager()
 
         # ================= INTERNAL STATE =================
         self.last_metrics = None
-        self.last_batch = None
+        self.last_batch   = None
+        self._finalize_lock = threading.Lock()
 
     # =========================================================
-    # ================= MAIN ENTRY =============================
+    # ================= MAIN ENTRY ============================
     # =========================================================
 
     def process(self, data):
 
         # ================= WAITING DECISION CHECK =================
         if self.state.is_waiting_decision():
-            logger.info("⏸ Waiting for human decision → buffering incoming data")
-            self.repo.save_label(data)
-            return {"status": "buffering_until_decision"}
+
+            if self.config["server"]["mode"] == "auto":
+
+                if self._finalize_lock.locked():
+                    # Another thread is already finalizing — buffer this record
+                    self.repo.save_label(data)
+                    return {"status": "buffering_until_decision"}
+
+                with self._finalize_lock:
+                    # Re-check inside lock — may have been cleared already
+                    if not self.state.is_waiting_decision():
+                        pass  # fall through to normal processing below
+                    else:
+                        decision = self._suggest_decision(self.last_metrics)
+                        return self.finalize_decision(decision, mode="AUTO")
+
+            else:
+                logger.info("⏸ Waiting for human decision → buffering incoming data")
+                self.repo.save_label(data)
+                return {"status": "buffering_until_decision"}
 
         # ================= RECEIVE =================
         logger.info(
@@ -68,7 +87,6 @@ class Orchestrator:
 
         # ================= BUILD BATCH =================
         batch = self.batch_mgr.get_batch(pairs)
-
         logger.info("Batch ready → Evaluating...")
 
         # ================= METRICS =================
@@ -79,12 +97,11 @@ class Orchestrator:
 
         # ================= REPORT =================
         visual = self.visual.generate(batch, self.config)
-
         logger.info(f"Report generated → {visual.get('file')}")
 
         # ================= SAVE =================
         self.last_metrics = metrics
-        self.last_batch = batch
+        self.last_batch   = batch
 
         self._save_json("matched_pairs.json", batch)
         self._save_json("metrics.json", metrics)
@@ -102,29 +119,30 @@ class Orchestrator:
 
         # ================= AUTO MODE =================
         if self.config["server"]["mode"] == "auto":
-            return self.finalize_decision(decision, mode="AUTO")
+            with self._finalize_lock:
+                return self.finalize_decision(decision, mode="AUTO")
 
         # ================= HUMAN MODE =================
         logger.info("⏸ Waiting for HUMAN decision")
-
         return {
-            "status": "waiting_for_human",
-            "metrics": metrics,
-            "report": visual,
+            "status":             "waiting_for_human",
+            "metrics":            metrics,
+            "report":             visual,
             "suggested_decision": decision
         }
 
     # =========================================================
-    # ================= FINAL DECISION =========================
+    # ================= FINAL DECISION ========================
     # =========================================================
 
     def finalize_decision(self, decision, mode="HUMAN"):
+        # NOTE: always called from within _finalize_lock — do NOT re-lock here
 
         logger.info(f"{mode} DECISION → {decision}")
 
         output = {
             "decision": decision,
-            "metrics": self.last_metrics
+            "metrics":  self.last_metrics
         }
 
         # ================= START LOGGING SESSION =================
@@ -135,15 +153,10 @@ class Orchestrator:
 
         # ================= HANDLE REJECT =================
         if decision == "REJECT":
-
             output["action"] = "SEND_TO_MESSAGING"
-
             self._simulate_messaging(output)
-
             self.log_mgr.finalize_log("Configuration Sent")
-
         else:
-
             self.log_mgr.finalize_log("Classifier Evaluated As Good")
 
         # ================= SAVE DECISION OUTPUT =================
@@ -152,14 +165,12 @@ class Orchestrator:
         # ================= RESET STATE =================
         self.state.clear_batch()
 
-        logger.info(
-            "🔄 System ready for next batch\n==============================================================\n"
-        )
+        logger.info("🔄 System ready for next batch\n" + "=" * 62 + "\n")
 
         return output
 
     # =========================================================
-    # ================= DECISION LOGIC =========================
+    # ================= DECISION LOGIC ========================
     # =========================================================
 
     def _suggest_decision(self, metrics):
@@ -173,7 +184,7 @@ class Orchestrator:
         return "ACCEPT"
 
     # =========================================================
-    # ================= MESSAGING ==============================
+    # ================= MESSAGING =============================
     # =========================================================
 
     def _simulate_messaging(self, payload):

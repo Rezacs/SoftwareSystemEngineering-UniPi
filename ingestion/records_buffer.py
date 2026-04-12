@@ -243,7 +243,7 @@ class RecordsBuffer:
         if df.empty:
             return df
 
-        print(df)
+        #print(df)
 
         fetched_ids = df['ID'].tolist()
     

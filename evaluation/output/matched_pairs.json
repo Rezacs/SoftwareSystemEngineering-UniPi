@@ -1,0 +1,152 @@
+[
+  {
+    "player_id": "1",
+    "expert": 4.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "11",
+    "expert": 3.0,
+    "classifier": 1.0
+  },
+  {
+    "player_id": "16",
+    "expert": 2.0,
+    "classifier": 5.0
+  },
+  {
+    "player_id": "28",
+    "expert": 4.0,
+    "classifier": 5.0
+  },
+  {
+    "player_id": "29",
+    "expert": 2.0,
+    "classifier": 3.0
+  },
+  {
+    "player_id": "3",
+    "expert": 5.0,
+    "classifier": 5.0
+  },
+  {
+    "player_id": "36",
+    "expert": 5.0,
+    "classifier": 3.0
+  },
+  {
+    "player_id": "41",
+    "expert": 5.0,
+    "classifier": 3.0
+  },
+  {
+    "player_id": "42",
+    "expert": 4.0,
+    "classifier": 5.0
+  },
+  {
+    "player_id": "44",
+    "expert": 4.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "54",
+    "expert": 2.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "6",
+    "expert": 3.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "62",
+    "expert": 4.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "63",
+    "expert": 3.0,
+    "classifier": 3.0
+  },
+  {
+    "player_id": "66",
+    "expert": 3.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "68",
+    "expert": 4.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "69",
+    "expert": 3.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "70",
+    "expert": 2.0,
+    "classifier": 3.0
+  },
+  {
+    "player_id": "71",
+    "expert": 2.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "76",
+    "expert": 1.0,
+    "classifier": 3.0
+  },
+  {
+    "player_id": "77",
+    "expert": 5.0,
+    "classifier": 3.0
+  },
+  {
+    "player_id": "78",
+    "expert": 2.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "8",
+    "expert": 2.0,
+    "classifier": 3.0
+  },
+  {
+    "player_id": "82",
+    "expert": 2.0,
+    "classifier": 3.0
+  },
+  {
+    "player_id": "84",
+    "expert": 1.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "85",
+    "expert": 1.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "89",
+    "expert": 2.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "91",
+    "expert": 2.0,
+    "classifier": 2.0
+  },
+  {
+    "player_id": "92",
+    "expert": 2.0,
+    "classifier": 3.0
+  },
+  {
+    "player_id": "96",
+    "expert": 3.0,
+    "classifier": 3.0
+  }
+]

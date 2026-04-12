@@ -103,7 +103,6 @@ def generate_testing_csv(current_phase):
                 # Capture the data exactly as formatted in your new logs
                 rows.append({
                     "system": system_name,
-                    "session_id": session_ts, # Using the timestamp key as the ID
                     "process": entry.get("process"),
                     "latency_s": entry.get("latency", 0),
                     "outcome": entry.get("outcome", "")

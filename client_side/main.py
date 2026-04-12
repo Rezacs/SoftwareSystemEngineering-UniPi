@@ -64,43 +64,20 @@ def generate_testing_csv(current_phase):
 
     shared_logs = ["ingestionLog.json", "preparationLog.json"]
     if current_phase == "0":
-        phase_logs    = ["segregationLog.json", "developmentLog.json"]
-        last_log_file = "developmentLog.json"
+        phase_logs = ["segregationLog.json", "developmentLog.json"]
     else:
-        phase_logs    = ["productionLog.json", "evaluationLog.json"]
-        last_log_file = "evaluationLog.json"
+        phase_logs = ["productionLog.json", "evaluationLog.json"]
 
-    all_logs = shared_logs + phase_logs  # ordered pipeline sequence
+    all_logs = shared_logs + phase_logs
 
-    # ── 1. Read initial_experiment_ts ───────────────────────────────────────
-    initial_ts_str = None
-    clientside_path = LOG_DIR / "clientsideLogs.json"
-    if clientside_path.exists():
-        with clientside_path.open('r', encoding='utf-8') as f:
-            try:
-                entries = json.load(f)
-                for entry in reversed(entries):
-                    if "initial_experiment_timestamp" in entry:
-                        initial_ts_str = entry["initial_experiment_timestamp"]
-                        break
-            except Exception as e:
-                print(f"Error reading clientsideLogs.json: {e}")
-
-    if not initial_ts_str:
-        print("FAILED: No initial_experiment_timestamp found in clientsideLogs.json.")
-        return
-
-    # ── 2. For each system log, extract ALL intermediate + final timestamps ─
-    row = {"initial_experiment_ts": initial_ts_str}
-    last_system_ts_str = None
+    rows = []
 
     for log_file in all_logs:
         path = LOG_DIR / log_file
-        base_name = log_file.replace(".json", "")
+        system_name = log_file.replace(".json", "")
 
         if not path.exists():
             print(f"Warning: {log_file} not found, skipping.")
-            row[f"{base_name}_final_ts"] = None
             continue
 
         with path.open('r', encoding='utf-8') as f:
@@ -108,49 +85,35 @@ def generate_testing_csv(current_phase):
                 data = json.load(f)
             except Exception as e:
                 print(f"Error reading {log_file}: {e}")
-                row[f"{base_name}_final_ts"] = None
                 continue
 
         if not isinstance(data, dict) or not data:
             print(f"Warning: {log_file} is empty or not a dict.")
-            row[f"{base_name}_final_ts"] = None
             continue
 
-        # Last outer key = final output timestamp for this system
-        last_outer_key = list(data.keys())[-1]
-        entries        = data[last_outer_key]
+        # Each outer key is a session
+        for session_key, entries in data.items():
+            for entry in entries:
+                process = entry.get("process")
+                initial_ts = parse_ts(entry.get("initial_ts"))
+                final_ts = parse_ts(entry.get("final_ts"))
 
-        # Walk the inner process entries — each with a timestamp + process name
-        process_idx = 0
-        # Walk the inner process entries — each with a timestamp + process name
-        for entry in entries:
-            if "timestamp" in entry and "process" in entry:
-                process_name = entry["process"].strip().replace(" ", "_").lower()
-                row[f"{base_name}_{process_name}_ts"] = entry["timestamp"]
+                if process and initial_ts and final_ts:
+                    latency = round((final_ts - initial_ts).total_seconds(), 3)
+                    rows.append({
+                        "system":    system_name,
+                        "process":   process,
+                        "latency_s": latency,
+                    })
 
-        # Final output timestamp (outer key)
-        row[f"{base_name}_final_ts"] = last_outer_key
+    if not rows:
+        print("FAILED: No process entries found.")
+        return
 
-        if log_file == last_log_file:
-            last_system_ts_str = last_outer_key
-
-    # ── 3. Compute total experiment duration ────────────────────────────────
-    initial_dt     = parse_ts(initial_ts_str)
-    last_system_dt = parse_ts(last_system_ts_str)
-
-    if initial_dt and last_system_dt:
-        row["experiment_duration_s"] = round(
-            (last_system_dt - initial_dt).total_seconds(), 3
-        )
-    else:
-        row["experiment_duration_s"] = None
-        print("Warning: Could not compute experiment duration.")
-
-    # ── 4. Append row to CSV ────────────────────────────────────────────────
     phase_name  = "development" if current_phase == "0" else "production"
     output_path = LOG_DIR / f"testing_log_{phase_name}.csv"
 
-    new_df = pd.DataFrame([row])
+    new_df = pd.DataFrame(rows)
 
     if output_path.exists():
         existing_df = pd.read_csv(output_path)
@@ -159,8 +122,7 @@ def generate_testing_csv(current_phase):
         combined_df = new_df
 
     combined_df.to_csv(output_path, index=False)
-    print(f"SUCCESS: Row appended → {output_path}")
-    print(f"         Experiment duration: {row.get('experiment_duration_s')}s")
+    print(f"SUCCESS: Rows appended → {output_path}")
 
 ##########################################
 # STREAMING WORKER

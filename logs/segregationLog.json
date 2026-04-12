@@ -1,1 +1,168 @@
-{}
+{
+    "2026-04-12T14:41:06.268100Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:41:06.268143Z",
+            "timestamp fine": "2026-04-12T14:41:06.268165Z",
+            "outcome": "sessions not sufficient"
+        }
+    ],
+    "2026-04-12T14:41:11.276588Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:41:11.276651Z",
+            "timestamp fine": "2026-04-12T14:41:11.276668Z",
+            "outcome": "sessions not sufficient"
+        }
+    ],
+    "2026-04-12T14:41:16.285489Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:41:16.285553Z",
+            "timestamp fine": "2026-04-12T14:41:16.285571Z",
+            "outcome": "sessions not sufficient"
+        }
+    ],
+    "2026-04-12T14:41:21.295777Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:41:21.295815Z",
+            "timestamp fine": "2026-04-12T14:41:21.295870Z",
+            "outcome": "sessions not sufficient"
+        }
+    ],
+    "2026-04-12T14:41:26.302629Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:41:26.302668Z",
+            "timestamp fine": "2026-04-12T14:41:26.302685Z",
+            "outcome": "sessions not sufficient"
+        }
+    ],
+    "2026-04-12T14:41:31.311006Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:41:31.311034Z",
+            "timestamp fine": "2026-04-12T14:41:31.311066Z",
+            "outcome": "sessions sufficient"
+        },
+        {
+            "process": "S2",
+            "timestamp inizio": "2026-04-12T14:41:31.311074Z",
+            "timestamp fine": "2026-04-12T14:41:31.523942Z",
+            "outcome": "classes balanced"
+        },
+        {
+            "process": "S3",
+            "timestamp inizio": "2026-04-12T14:41:31.523962Z",
+            "timestamp fine": "2026-04-12T14:41:31.707840Z",
+            "outcome": "coverage not satisfied"
+        }
+    ],
+    "2026-04-12T14:41:33.716650Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:41:33.716680Z",
+            "timestamp fine": "2026-04-12T14:41:33.716693Z",
+            "outcome": "sessions sufficient"
+        },
+        {
+            "process": "S2",
+            "timestamp inizio": "2026-04-12T14:41:33.716700Z",
+            "timestamp fine": "2026-04-12T14:41:33.921281Z",
+            "outcome": "classes balanced"
+        },
+        {
+            "process": "S3",
+            "timestamp inizio": "2026-04-12T14:41:33.921300Z",
+            "timestamp fine": "2026-04-12T14:41:34.106780Z",
+            "outcome": "coverage satisfied"
+        },
+        {
+            "process": "S4",
+            "timestamp inizio": "2026-04-12T14:41:34.106800Z",
+            "timestamp fine": "2026-04-12T14:41:34.112519Z",
+            "outcome": "output sent"
+        }
+    ],
+    "2026-04-12T14:41:44.211257Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:41:44.211299Z",
+            "timestamp fine": "2026-04-12T14:41:44.211315Z",
+            "outcome": "sessions sufficient"
+        },
+        {
+            "process": "S2",
+            "timestamp inizio": "2026-04-12T14:41:44.211324Z",
+            "timestamp fine": "2026-04-12T14:41:44.384578Z",
+            "outcome": "classes not balanced"
+        }
+    ],
+    "2026-04-12T14:41:46.389903Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:41:46.389930Z",
+            "timestamp fine": "2026-04-12T14:41:46.389942Z",
+            "outcome": "sessions sufficient"
+        },
+        {
+            "process": "S2",
+            "timestamp inizio": "2026-04-12T14:41:46.389950Z",
+            "timestamp fine": "2026-04-12T14:41:46.610872Z",
+            "outcome": "classes balanced"
+        },
+        {
+            "process": "S3",
+            "timestamp inizio": "2026-04-12T14:41:46.610891Z",
+            "timestamp fine": "2026-04-12T14:41:46.824440Z",
+            "outcome": "coverage satisfied"
+        },
+        {
+            "process": "S4",
+            "timestamp inizio": "2026-04-12T14:41:46.824460Z",
+            "timestamp fine": "2026-04-12T14:41:46.828298Z",
+            "outcome": "output sent"
+        }
+    ],
+    "2026-04-12T14:42:06.861311Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:42:06.861359Z",
+            "timestamp fine": "2026-04-12T14:42:06.861372Z",
+            "outcome": "sessions sufficient"
+        },
+        {
+            "process": "S2",
+            "timestamp inizio": "2026-04-12T14:42:06.861379Z",
+            "timestamp fine": "2026-04-12T14:42:07.057325Z",
+            "outcome": "classes not balanced"
+        }
+    ],
+    "2026-04-12T14:42:09.068113Z": [
+        {
+            "process": "S1",
+            "timestamp inizio": "2026-04-12T14:42:09.068178Z",
+            "timestamp fine": "2026-04-12T14:42:09.068195Z",
+            "outcome": "sessions sufficient"
+        },
+        {
+            "process": "S2",
+            "timestamp inizio": "2026-04-12T14:42:09.068204Z",
+            "timestamp fine": "2026-04-12T14:42:09.233951Z",
+            "outcome": "classes balanced"
+        },
+        {
+            "process": "S3",
+            "timestamp inizio": "2026-04-12T14:42:09.233971Z",
+            "timestamp fine": "2026-04-12T14:42:09.442549Z",
+            "outcome": "coverage satisfied"
+        },
+        {
+            "process": "S4",
+            "timestamp inizio": "2026-04-12T14:42:09.442585Z",
+            "timestamp fine": "2026-04-12T14:42:09.446389Z",
+            "outcome": "output sent"
+        }
+    ]
+}

@@ -11,6 +11,7 @@ class LoggingManager:
         self._project_root = Path(__file__).resolve().parent
         self._log_path     = self._project_root.parents[2] / "logs" / "evaluationLog.json"
         self._session_key  = None
+        self._current_process = None
         self._init_log()
 
     def _utc_now(self):
@@ -37,35 +38,65 @@ class LoggingManager:
             with self._log_path.open("r", encoding="utf-8") as f:
                 return json.load(f)
         except (json.JSONDecodeError, ValueError):
-            # File corrupted by concurrent write — recover silently
             return {}
 
     def _write(self, data):
         with self._log_path.open("w", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
 
+    # =========================================================
+    # ================= SESSION ===============================
+    # =========================================================
+
     def start_session(self):
         self._session_key = f"TEMP_{self._utc_now()}"
         with _log_lock:
             data = self._read()
-            data[self._session_key] = []
+            data[self._session_key] = [
+                {
+                    "beginning_ts": self._utc_now()
+                }
+            ]
             self._write(data)
 
-    def log_decision(self, decision):
+    # =========================================================
+    # ================= PROCESS LOGGING =======================
+    # =========================================================
+
+    def start_process(self, process_name):
+        self._current_process = {
+            "process": process_name,
+            "initial_ts": self._utc_now()
+        }
+
+    def end_process(self, outcome):
+        if not self._current_process:
+            return  # safety guard
+
+        self._current_process["final_ts"] = self._utc_now()
+        self._current_process["outcome"] = outcome
+
         with _log_lock:
             data = self._read()
-            event = {
-                "timestamp": self._utc_now(),
-                "process":   "Classifier Evaluation",
-                "decision":  decision
-            }
-            data[self._session_key].append(event)
+
+            if self._session_key not in data:
+                data[self._session_key] = []
+
+            data[self._session_key].append(self._current_process)
             self._write(data)
 
-    def finalize_log(self, output_type):
+        self._current_process = None  # reset
+
+    # =========================================================
+    # ================= FINALIZE ==============================
+    # =========================================================
+
+    def finalize_log(self):
         with _log_lock:
             data = self._read()
             session_data = data.pop(self._session_key, [])
-            session_data.append({"output": output_type})
+
+            # move to final timestamp key
             data[self._utc_now()] = session_data
+
             self._write(data)

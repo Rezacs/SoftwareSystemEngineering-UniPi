@@ -71,7 +71,7 @@ class PreparedSessionCreator:
         features_df= pd.DataFrame()
 
         features_df["player_id"]=records_df["player_id"]
-        features_df["skillOverall"]=records_df["skill_overall"]
+        features_df["skill_overall"]=records_df["skill_overall"]
         features_df["social_influence_score"] = (0.7 * records_df["number_of_followers"]) + (0.3 * records_df["number_of_likes"])
         features_df["injuries_impact_score"] = (0.7 * records_df["games_missed"]) + (0.3 * records_df["days_missed"])
         features_df["label"] = records_df["label"]

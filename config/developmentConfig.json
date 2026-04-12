@@ -39,7 +39,7 @@
     }
 	],
 	"model": {
-		"feature_cols": ["skillOverall", "socialInfluence", "injuriesImpact"],
+		"feature_cols": ["skill_overall", "social_influence", "injuries_impact"],
 		"score_min": 1,
 		"score_max": 5,
 		"num_classes": 5

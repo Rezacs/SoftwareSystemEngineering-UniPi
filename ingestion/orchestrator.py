@@ -16,6 +16,10 @@ import sys
 class IngestionSystemOrchestrator:
 
     def __init__(self,config_file_path = None,testing_mode=False):
+        self.tmp_log=[]
+        self.log = {}
+        self.log_file_path = Path(__file__).resolve().parents[1] / "logs" / "ingestionLog.json"
+        self.log_file_path.parent.mkdir(parents=True, exist_ok=True)
 
         if config_file_path is None:
             config_file_path = Path(__file__).resolve().parents[1] / "config" / "ingestionConfig.json"
@@ -42,7 +46,7 @@ class IngestionSystemOrchestrator:
                 print("Falling back to an empty log to prevent a crash.")
                 self.log = {}
 
-            self.tmp_log=[]
+            
 
         print(f"[INFO] Ingestion system orchestrator initialization...")
 
@@ -146,7 +150,7 @@ class IngestionSystemOrchestrator:
         #Check if it is possible to create a raw session
 
         n_rows=self.records_buffer.getNumberOfAvailableRecords()
-
+        print(f"[DEBUG] Available records in buffer: {n_rows}")
         if not self.raw_session_creator.isNumberOfRecordsSufficient(n_rows):
             end_time=time.perf_counter()
             event={
@@ -266,7 +270,9 @@ class IngestionSystemOrchestrator:
             print(f"\nERROR: An unexpected network error occurred: {e}")
 
         finally:
-            return self.http_200_response()
+            pass
+
+        return self.http_200_response()
 
 
     def check_ip_port(self):

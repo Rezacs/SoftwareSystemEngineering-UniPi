@@ -1,27 +1,17 @@
 from src.api.json_api import app
 from src.config.config_loader import Config
+import json
+from pathlib import Path
 
 config = Config()
 
 def choose_mode():
-    print("\n=== Select Evaluation Mode ===")
-    print("1) Human Mode")
-    print("2) Testing / Automated Mode")
-    while True:
-        choice = input("Enter choice: ").strip()
+    GENERAL_CONFIG = Path(__file__).resolve().parents[2] / "config" / "GeneralConfig.json"
 
-        if choice == "1":
-            config["server"]["mode"] = "human"
-            break
+    with open(GENERAL_CONFIG, "r", encoding="utf-8") as f:
+        cfg = json.load(f)
 
-        elif choice == "2":
-            config["server"]["mode"] = "auto"
-            break
-
-        else:
-            print("Invalid input. Choose 1 or 2.")
-
-    print(f"\nSelected Mode: {config['server']['mode'].upper()}")
+    choice = str(cfg["evaluation"]["mode"])
 
 if __name__ == "__main__":
     choose_mode()

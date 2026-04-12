@@ -51,10 +51,10 @@ def parse_learning_set(payload: dict) -> LearningSet:
         return [
             PreparedSession(
                 UUID=s.get("session_id", ""),
-                idPlayer=str(s.get("player_id", "")),
-                skillOverall=float(s.get("skill_overall", 0.0)),
-                socialInfluence=float(s.get("social_influence_score", 0.0)),
-                injuriesImpact=float(s.get("injuries_impact_score", 0.0)),
+                player_id=str(s.get("player_id", "")),
+                skill_overall=float(s.get("skill_overall", 0.0)),
+                social_influence=float(s.get("social_influence_score", 0.0)),
+                injuries_impact=float(s.get("injuries_impact_score", 0.0)),
                 label=int(s.get("label", 0)),
             )
             for s in sessions

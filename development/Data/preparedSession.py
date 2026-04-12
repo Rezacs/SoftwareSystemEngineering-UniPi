@@ -4,8 +4,8 @@ from dataclasses import dataclass
 class PreparedSession:
     """A single sample: a feature vector and its label."""
     UUID: str = ""
-    idPlayer: str = ""
-    skillOverall: float = 0.0
-    socialInfluence: float = 0.0
-    injuriesImpact: float = 0.0
+    player_id: str = ""
+    skill_overall: float = 0.0
+    social_influence: float = 0.0
+    injuries_impact: float = 0.0
     label: int = 0

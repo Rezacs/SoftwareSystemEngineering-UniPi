@@ -43,6 +43,41 @@ def _sessions_to_frames(sessions, feature_cols: List[str]):
     return X, y
 
 
+# ── BPMN node label constants ─────────────────────────────────────────────────
+#
+#  Tasks (timed — latency = compute time):
+#    D1  Calibration set received   set_average_hyperparams
+#    D2  Set hyperparameters        set_iterations / calibrate  (can repeat)
+#    D3  Ongoing validation         generate_validation_report
+#
+#  Gateways (instant — latency ≈ 0, outcome encodes the branch taken):
+#    D4  #Iterations fine?          inside set_iterations
+#    D5  Is there a valid classifier? inside is_there_a_valid_classifier
+#    D6  Test passed?               inside test_passed
+#
+#  Final log structure (one flat list per session, keyed by initial_timestamp):
+#
+#  {
+#    "2025-01-01T12:00:00Z": [
+#      {"process": "D1 - Calibration set received",     "latency": 1.23, "outcome": "layers: 3, neurons: 64"},
+#      {"process": "D2 - Set hyperparameters",          "latency": 4.56, "outcome": "calibrated: max_iter=200"},
+#      {"process": "D4 - #Iterations fine?",            "latency": 0.00, "outcome": "no"},
+#      {"process": "D2 - Set hyperparameters",          "latency": 2.11, "outcome": "calibrated: max_iter=400"},
+#      {"process": "D4 - #Iterations fine?",            "latency": 0.00, "outcome": "yes: approved iterations=400"},
+#      {"process": "D3 - Ongoing validation",           "latency": 9.87, "outcome": "classifiers evaluated: 5"},
+#      {"process": "D5 - Is there a valid classifier?", "latency": 0.00, "outcome": "yes: index 2 selected"},
+#      {"process": "D6 - Test passed?",                 "latency": 3.45, "outcome": "yes: classifier sent"}
+#    ]
+#  }
+
+_D1 = "D1 - Calibration set received"
+_D2 = "D2 - Set hyperparameters"
+_D3 = "D3 - Ongoing validation"
+_D4 = "D4 - #Iterations fine?"
+_D5 = "D5 - Is there a valid classifier?"
+_D6 = "D6 - Test passed?"
+
+
 class DevelopmentSystemOrchestrator:
 
     def __init__(
@@ -108,6 +143,9 @@ class DevelopmentSystemOrchestrator:
         self._log_path    = LOG_PATH
         self._session_key = "current_session"
 
+        # per-node stopwatch: node-label → monotonic start time
+        self._node_start: Dict[str, float] = {}
+
     # ── status persistence ─────────────────────────────────────────────
 
     def _default_status(self) -> Dict[str, Any]:
@@ -117,7 +155,7 @@ class DevelopmentSystemOrchestrator:
             "avg_params":           {},
             "best_classifier_data": None,
             "iteration":            0,
-            "calibration_done":     False,  # ← add this
+            "calibration_done":     False,
         }
 
     def _load_status(self) -> Dict[str, Any]:
@@ -262,83 +300,109 @@ class DevelopmentSystemOrchestrator:
         ]
 
     # ── logging ────────────────────────────────────────────────────────
+    #
+    # One entry is appended per BPMN node (task or gateway) as it completes.
+    # The list lives under "current_session" while in progress and is
+    # re-keyed to the initial_timestamp string when the session closes.
+    #
+    # Entry schema:
+    #   process  – node label constant (_D1 … _D6)
+    #   latency  – seconds (float, 4 dp); ≈ 0 for instant gateway nodes
+    #   outcome  – human-readable string describing the result / branch taken
 
     def _now(self) -> str:
         return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    def _init_log(self) -> None:
-        """Initialize the log file and stamp the session beginning."""
+    def _node_begin(self, node: str) -> None:
+        """Start the stopwatch for a BPMN node."""
+        self._node_start[node] = time.monotonic()
+
+    def _node_end(self, node: str, outcome: str) -> None:
+        """Stop the stopwatch and append the completed entry to the session list."""
+        start   = self._node_start.pop(node, None)
+        latency = round(time.monotonic() - start, 4) if start is not None else 0.0
+
+        entry = {"process": node, "latency": latency, "outcome": outcome}
+
         self._log_path.parent.mkdir(parents=True, exist_ok=True)
-        data = {}
+        data: dict = {}
         if self._log_path.is_file():
             with self._log_path.open("r", encoding="UTF-8") as f:
                 try:
                     data = json.load(f)
                 except json.JSONDecodeError:
                     data = {}
+
         if self._session_key not in data:
-            data[self._session_key] = [{"beginning_ts": self._now()}]
+            data[self._session_key] = []
+        data[self._session_key].append(entry)
+
         with self._log_path.open("w", encoding="UTF-8") as f:
             json.dump(data, f, indent="\t")
 
-    def _log_start_event(self, process: str, label: str) -> None:
-        """Opens a new event entry with initial_ts; decision and final_ts are filled later."""
-        if not self._log_path.is_file():
-            self._init_log()
-        with self._log_path.open("r+", encoding="UTF-8") as f:
-            data = json.load(f)
-            event = {
-                "process":    process,
-                "label":      label,
-                "initial_ts": self._now(),
-                "final_ts":   None,
-                "decision":   None,
-            }
-            data[self._session_key].append(event)
-            f.seek(0)
-            json.dump(data, f, indent="\t")
-            f.truncate()
+    def _init_log(self) -> None:
+        """
+        Open a new session list.  The initial_timestamp is stored as the
+        first element so _finalize_log / _emergency_finalize can recover
+        it after a crash without needing a separate file.
+        """
+        self._log_path.parent.mkdir(parents=True, exist_ok=True)
+        data: dict = {}
+        if self._log_path.is_file():
+            with self._log_path.open("r", encoding="UTF-8") as f:
+                try:
+                    data = json.load(f)
+                except json.JSONDecodeError:
+                    data = {}
 
-    def _log_close_event(self, process: str, decision: str) -> None:
-        """Closes the most recent open event for the given process."""
-        with self._log_path.open("r+", encoding="UTF-8") as f:
-            data = json.load(f)
-            for event in reversed(data[self._session_key]):
-                if event.get("process") == process and event.get("final_ts") is None:
-                    event["final_ts"] = self._now()
-                    event["decision"] = decision
-                    break
-            f.seek(0)
-            json.dump(data, f, indent="\t")
-            f.truncate()
+        if self._session_key not in data:
+            data[self._session_key] = [{"_initial_timestamp": self._now()}]
+            with self._log_path.open("w", encoding="UTF-8") as f:
+                json.dump(data, f, indent="\t")
 
     def _finalize_log(self, output_type: str) -> None:
-        """Finalizes the session: appends output entry and renames key to timestamp."""
+        """
+        Close the session: pop the timestamp sentinel from position 0,
+        use it as the outer key, and write the completed entry list.
+        """
         if not self._log_path.is_file():
             return
         with self._log_path.open("r+", encoding="UTF-8") as f:
             data = json.load(f)
-            if self._session_key in data:
-                session_data = data.pop(self._session_key)
-                session_data.append({"output": output_type})
-                data[self._now()] = session_data
-                f.seek(0)
-                json.dump(data, f, indent="\t")
-                f.truncate()
+            if self._session_key not in data:
+                return
+            session_list = data.pop(self._session_key)
+            ts = self._now()
+            if session_list and "_initial_timestamp" in session_list[0]:
+                ts = session_list[0].pop("_initial_timestamp")
+                if not session_list[0]:       # remove now-empty sentinel dict
+                    session_list.pop(0)
+            data[ts] = session_list
+            f.seek(0)
+            json.dump(data, f, indent="\t")
+            f.truncate()
 
     def _emergency_finalize(self) -> None:
-        """Fallback finalizer in case the process exits without completing normally."""
+        """Fallback finalizer: closes any open session as 'interrupted'."""
         if not self._log_path.is_file():
             return
         with self._log_path.open("r+", encoding="UTF-8") as f:
             data = json.load(f)
-            if self._session_key in data:
-                session_data = data.pop(self._session_key)
-                session_data.append({"output": "interrupted"})
-                data[self._now()] = session_data
-                f.seek(0)
-                json.dump(data, f, indent="\t")
-                f.truncate()
+            if self._session_key not in data:
+                return
+            session_list = data.pop(self._session_key)
+            ts = self._now()
+            if session_list and "_initial_timestamp" in session_list[0]:
+                ts = session_list[0].pop("_initial_timestamp")
+                if not session_list[0]:
+                    session_list.pop(0)
+            session_list.append(
+                {"process": "interrupted", "latency": 0.0, "outcome": "process exited unexpectedly"}
+            )
+            data[ts] = session_list
+            f.seek(0)
+            json.dump(data, f, indent="\t")
+            f.truncate()
 
     # ── state machine entry point ──────────────────────────────────────
 
@@ -349,7 +413,7 @@ class DevelopmentSystemOrchestrator:
 
         # always close any leftover session from a previous interrupted run
         self._emergency_finalize()
-    
+
         atexit.register(self._emergency_finalize)
 
         print("=" * 60)
@@ -388,9 +452,10 @@ class DevelopmentSystemOrchestrator:
     # ── BPMN tasks ─────────────────────────────────────────────────────
 
     def set_average_hyperparams(self) -> None:
-        """BPMN Task: SET AVERAGE HYPERPARAMS — D1"""
-        self._log_start_event("D1", "set average hyperparams")
-
+        
+        self._node_begin(_D1) #Classifier sent
+        self._node_begin(_D2) #Testing Report sent
+        self._node_begin(_D3) #Max outer iterations reached
         val_orch = ValidationOrchestrator(
             hp_configs=self._hyper_param_configs,
             classifier_folder=self._classifier_folder,
@@ -402,7 +467,6 @@ class DevelopmentSystemOrchestrator:
         print(f"[Orchestrator] SET AVERAGE HYPERPARAMS: {avg_params}")
 
         params_str = ", ".join(f"{k}: {v}" for k, v in avg_params.items())
-        self._log_close_event("D1", params_str)
 
         self._update_status({"avg_params": avg_params, "phase": "LearningCurve"})
 
@@ -416,26 +480,22 @@ class DevelopmentSystemOrchestrator:
 
     def set_iterations(self) -> None:
         """
-        BPMN Tasks:
-          • DATA SCIENTIST: SET #ITERATIONS
-          • CALIBRATE — D2
-          • GENERATE CALIBRATION REPORT
-          • DATA SCIENTIST: CHECK CALIBRATION PLOT — D4
+        BPMN Tasks / Gateways:
+          • D2  Set hyperparameters  (calibrate)
+          • D4  #Iterations fine?    (gateway — logged immediately after user decision)
 
-        BPMN Gateway: #ITERATIONS FINE?
-          NO  → regenerate calibration report with updated max_iter
-          YES → advance to generate_validation_report()
+        D2 + D4 repeat together until D4 outcome is "yes".
         """
         user_input = self._get_user_input()
         good_iter  = user_input.get("good_max_iter", False)
 
         if not good_iter:
+            # ── D2: calibrate ──────────────────────────────────────────
             max_iter = user_input.get("max_iter", self._status["max_iter"])
             self._update_status({"max_iter": max_iter})
             print(f"[Orchestrator] CALIBRATE — {max_iter} epochs …")
 
-            self._log_start_event("D2", "calibrate")
-
+            
             X_train, y_train = self._get_frames("training_set")
             to = self._make_training_orchestrator()
             params = dict(self._status.get("avg_params", {}))
@@ -445,8 +505,10 @@ class DevelopmentSystemOrchestrator:
             plot = to.generate_calibration_report(X_train, y_train, self._learning_curve_path)
             self._learning_plot_view.display_learning_plot(plot)
 
-            self._log_close_event("D2", f"max_iter: {max_iter}")
-            self._log_start_event("D4", "check calibration plot")
+            
+
+            # ── D4: gateway — scientist has NOT approved yet ───────────
+           
 
             if not self._testing_mode:
                 self._stop(
@@ -457,20 +519,17 @@ class DevelopmentSystemOrchestrator:
             else:
                 self._execute_development()
         else:
-            self._log_close_event("D4", f"approved iterations: {self._status['max_iter']}")
-            print(f"[Orchestrator] #ITERATIONS FINE — {self._status['max_iter']} approved.")
+            # ── D4: gateway — scientist approves ──────────────────────
+            approved_iter = self._status["max_iter"]
+           
+
+            print(f"[Orchestrator] #ITERATIONS FINE — {approved_iter} approved.")
             self._update_status({"phase": "Validation"})
             self._execute_development()
 
     def generate_validation_report(self) -> None:
-        """
-        BPMN Tasks:
-          • SET HYPERPARAMS + GENERATE VALIDATION REPORT — D3
-          • DATA SCIENTIST: CHECK VALIDATION RESULTS — D5
-        """
+        """BPMN Task: D3 — Ongoing validation."""
         print("[Orchestrator] SET HYPERPARAMS & GENERATE VALIDATION REPORT …")
-
-        self._log_start_event("D3", "generate validation report")
 
         X_train, y_train = self._get_frames("training_set")
         X_val,   y_val   = self._get_frames("validation_set")
@@ -488,9 +547,8 @@ class DevelopmentSystemOrchestrator:
         report = val_orch.generate_validation_report(X_train, y_train, X_val, y_val)
         self._validation_report_view.display_validation_report(report)
 
-        self._log_close_event("D3", f"classifiers evaluated: {len(self._hyper_param_configs)}")
+        
         self._update_status({"phase": "ValidationReport"})
-        self._log_start_event("D5", "check validation results")
 
         if not self._testing_mode:
             self._stop(
@@ -503,19 +561,18 @@ class DevelopmentSystemOrchestrator:
 
     def is_there_a_valid_classifier(self) -> None:
         """
-        BPMN Gateway: IS THERE A VALID CLASSIFIER?
-          NO  → loop back to set_average_hyperparams() (up to max_outer_iterations)
-          YES → advance to generate_test_report()
+        BPMN Gateway: D5 — Is there a valid classifier?
+          no  → loop back to set_average_hyperparams() (up to max_outer_iterations)
+          yes → advance to generate_test_report()
         """
         best_model_index = self._get_user_input().get("best_model", 0)
-        decision_text    = f"selected model index {best_model_index}" if best_model_index != 0 else "rejected all models"
-
-        self._log_close_event("D5", decision_text)
         print(f"[Orchestrator] IS THERE A VALID CLASSIFIER? → index={best_model_index}")
 
         if best_model_index == 0:
+
             iteration = self._status.get("iteration", 0) + 1
             if iteration >= self._max_outer_iterations:
+                self._node_end(_D3, f"no: max iterations reached ({iteration})")
                 self._finalize_log("rejected report")
                 print(
                     f"[Orchestrator] Max outer iterations "
@@ -539,15 +596,16 @@ class DevelopmentSystemOrchestrator:
                 self._stop(f"Choose a valid index from {self._validation_report_path}.")
             else:
                 sys.exit(1)
+            return
 
+        
         print(f"[Orchestrator] Valid classifier found: {classifier_data}")
         self._update_status({"phase": "Testing", "best_classifier_data": classifier_data})
         self._execute_development()
 
     def generate_test_report(self) -> None:
+        """BPMN Task: runs the test suite (not a named BPMN gateway node)."""
         print("[Orchestrator] GENERATE TEST REPORT …")
-
-        self._log_start_event("D6", "generate test report")
 
         try:
             best_data  = self._status["best_classifier_data"]
@@ -557,22 +615,17 @@ class DevelopmentSystemOrchestrator:
             X_test, y_test = self._get_frames("test_set")
 
             test_orch = TestingOrchestrator(
-            report_path=self._testing_report_path,
-            generalization_threshold=self._generalization_threshold,
+                report_path=self._testing_report_path,
+                generalization_threshold=self._generalization_threshold,
             )
             report = test_orch.test_classifier(model_path, best_data, X_test, y_test)
             self._testing_report_view.display_training_report(report)
 
-            passed = report.result
-            score  = report.testing_error
-            self._log_close_event("D6", f"passed: {passed}, generalization: {score}")
-
         except Exception as e:
-            self._log_close_event("D6", f"error: {e}")
+            print(f"[Orchestrator] ERROR during testing: {e}")
             raise
 
         self._update_status({"phase": "Results"})
-        self._log_start_event("D7", "check test results")
 
         if not self._testing_mode:
             self._stop(...)
@@ -581,27 +634,29 @@ class DevelopmentSystemOrchestrator:
 
     def test_passed(self) -> None:
         """
-        BPMN Gateway: TEST PASSED?
-            NO  → save rejected report, reset to IDLE
-            YES → send classifier to production, reset to IDLE
+        BPMN Gateway: D6 — Test passed?
+            no  → save rejected report, reset to IDLE
+            yes → send classifier to production, reset to IDLE
         """
         approved = self._get_user_input().get("approved", False)
-
-        self._log_close_event("D7", f"Final approval: {approved}")
 
         best_data  = self._status["best_classifier_data"]
         cl_id      = best_data["index"]
         model_path = self._classifier_folder / f"model_{cl_id}.sav"
 
         if approved:
+            self._node_end(_D1, "yes: classifier sent")
+
             print("\n" + "!" * 60)
             print("[Orchestrator] SUCCESS: CLASSIFIER SENT TO PRODUCTION.")
             print("!" * 60 + "\n")
             self._comm.send_classifier(model_path)
-            self._finalize_log("classifier")
+            self._finalize_log("classifier sent")
             self._reset_status()
         else:
+            self._node_end(_D2, "no: test rejected")
+
             print("\n[Orchestrator] TEST REJECTED: Saving report and resetting to IDLE.")
             self._comm.save_rejected_report(self._testing_report_path)
-            self._finalize_log("testing report")
+            self._finalize_log("rejected report")
             self._reset_status()

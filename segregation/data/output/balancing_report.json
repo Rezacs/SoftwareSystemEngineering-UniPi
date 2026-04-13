@@ -1,47 +1,47 @@
 {
     "approved": false,
     "balanced": false,
-    "totalSamples": 235,
+    "totalSamples": 18,
     "tolerance": 0.05,
     "toleranceUsed": 0.05,
     "distribution": {
-        "1": 35,
-        "2": 62,
-        "3": 66,
-        "4": 49,
-        "5": 23
+        "1": 4,
+        "2": 4,
+        "3": 5,
+        "4": 5,
+        "5": 0
     },
-    "average": 47.0,
-    "averageSamplesPerClass": 47.0,
+    "average": 3.6,
+    "averageSamplesPerClass": 3.6,
     "classStatistics": [
         {
             "classLabel": 1,
-            "numSamples": 35,
-            "missingSamples": 12,
+            "numSamples": 4,
+            "missingSamples": 0,
             "excessiveSamples": 0
         },
         {
             "classLabel": 2,
-            "numSamples": 62,
+            "numSamples": 4,
             "missingSamples": 0,
-            "excessiveSamples": 15
+            "excessiveSamples": 0
         },
         {
             "classLabel": 3,
-            "numSamples": 66,
+            "numSamples": 5,
             "missingSamples": 0,
-            "excessiveSamples": 19
+            "excessiveSamples": 1
         },
         {
             "classLabel": 4,
-            "numSamples": 49,
+            "numSamples": 5,
             "missingSamples": 0,
-            "excessiveSamples": 2
+            "excessiveSamples": 1
         },
         {
             "classLabel": 5,
-            "numSamples": 23,
-            "missingSamples": 24,
+            "numSamples": 0,
+            "missingSamples": 4,
             "excessiveSamples": 0
         }
     ]

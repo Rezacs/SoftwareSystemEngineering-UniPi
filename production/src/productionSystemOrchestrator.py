@@ -79,7 +79,7 @@ class ProductionSystemOrchestrator:
             initial_timestamp=initial_timestamp,
             process_code="P2",
             latency=latency,
-            outcome=f"Predicted rating: {classification_result['rating']} for {classification_result['player_id']}"
+            outcome=f"Predicted rating: {classification_result['label']} for {classification_result['player_id']}"
         )
 
         print(f"[ProductionSystemOrchestrator] Session classified: {classification_result}")

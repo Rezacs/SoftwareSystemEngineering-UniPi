@@ -41,6 +41,12 @@ class PreparationSystemConfiguration:
                     print("ERROR> json schema path field is missing in config file")
                     sys.exit(2)
 
+                self.number_of_threads=config.get("number_of_threads",3)
+
+                if not isinstance(self.number_of_threads,int) and self.number_of_threads not in range(1,5):
+                    print("ERROR> MAX num of threads in configuration file not valid , accepatable [1 to 5]")
+                    sys.exit(3)
+
                 self.segregation_system_port = config.get("segregation_system_port")
                 self.segregation_system_ip =  config.get("segregation_system_ip")
                 self.segregation_system_endpoint = config.get("segregation_system_endpoint")

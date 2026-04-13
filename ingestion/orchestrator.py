@@ -69,7 +69,7 @@ class IngestionSystemOrchestrator:
 
         print(f"[INFO] Initializing Thread pool")
 
-        self.executor=concurrent.futures.ThreadPoolExecutor(max_workers=5)
+        self.executor=concurrent.futures.ThreadPoolExecutor(max_workers=self.ingestion_system_config.number_of_threads)
         self.lock = threading.Lock()
         
 

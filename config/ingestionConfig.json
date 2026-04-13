@@ -1,6 +1,7 @@
 {
   "hosting_ip": "127.0.0.1",
   "hosting_port": 5001,
+  "number_of_threads" : 5,
   "phase": 1,
   "missing_samples_treshold": 1,  
   "sufficient_records_treshold": 10,

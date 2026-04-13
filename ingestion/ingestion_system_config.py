@@ -40,6 +40,12 @@ class IngestionSystemConfiguration:
                     print("ERROR> Phase value in configuration file not valid")
                     sys.exit(2)
 
+                self.number_of_threads=config.get("number_of_threads",3)
+
+                if not isinstance(self.number_of_threads,int) and self.number_of_threads not in range(1,20):
+                    print("ERROR> MAX num of threads in configuration file not valid , accepatable [1 to 20]")
+                    sys.exit(3)
+
                 self.missing_samples_treshold = config.get("missing_samples_treshold",20)
                 self.sufficient_record_treshold = config.get("sufficient_records_treshold",10)
 

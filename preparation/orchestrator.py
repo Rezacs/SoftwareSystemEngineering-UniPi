@@ -13,6 +13,9 @@ import json
 import datetime
 import time
 
+import concurrent.futures
+import threading
+
 
 class PreparationSystemOrchestrator:
     """
@@ -49,8 +52,6 @@ class PreparationSystemOrchestrator:
             print(f"\n[WARNING] Log file is corrupted or empty: {e}")
             print("Falling back to an empty log to prevent a crash.")
             self.log = {}
-
-        self.tmp_log=[]
         
         print(f"[INFO] Preparation system orchestrator initialization...")
 
@@ -75,6 +76,11 @@ class PreparationSystemOrchestrator:
         self.segregation_url=f"http://{self.preparation_system_config.segregation_system_ip}:{self.preparation_system_config.segregation_system_port}/{self.preparation_system_config.segregation_system_endpoint}"
         self.classification_url=f"http://{self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}/{self.preparation_system_config.classification_system_endpoint}"
 
+        print(f"[INFO] Initializing Thread pool")
+
+        self.executor=concurrent.futures.ThreadPoolExecutor(max_workers=self.preparation_system_config.number_of_threads)
+        self.lock = threading.Lock()
+
         print(f"[INFO] Prepared session creator initialized")
 
         self.app = Flask(__name__)
@@ -83,18 +89,15 @@ class PreparationSystemOrchestrator:
 
         print(f"[INFO] Flask service started initialized")
 
-    def log_event(self,event : dict):
+    def write_log_file(self,log : list,timestamp : datetime.datetime):
 
-        #event["timestamp"]=datetime.datetime.now().isoformat()
+        #Thread safe using lock
 
-        self.tmp_log.append(event)
+        with self.lock:
+            self.log[f"{timestamp}"]=log
 
-    def write_log_file(self,timestamp : datetime.datetime):
-
-        self.log[f"{timestamp}"]=self.tmp_log
-
-        with open(self.log_file_path, 'w') as file:
-            json.dump(self.log, file, indent=4)
+            with open(self.log_file_path, 'w') as file:
+                json.dump(self.log, file, indent=4)
 
     def http_200_response(self):
         #If the record received are valid this is what the client side system will receive in every case
@@ -104,21 +107,9 @@ class PreparationSystemOrchestrator:
         #If the record received isn't valid this is what the client side system will receive
         return jsonify({"Error": "Raw session received has an invalid schema"}), 400
 
+    def _process(self,start_time,timestamp,raw_session):
 
-    def run(self):
-
-        start_time=time.perf_counter()
-
-        timestamp=datetime.datetime.now().isoformat()
-
-        self.tmp_log=[]
-
-        #Receive raw session
-        raw_session = self.raw_session_receiver.receive_raw_session()
-
-        if raw_session == None:
-            print(f"[INFO] : Raw session received has invalid schema, discarded")
-            return self.http_400_response()
+        tmp_log=[]
 
         #Create prepared session
         raw_session = self.prepared_session_creator.parse_raw_session(raw_session)
@@ -165,7 +156,7 @@ class PreparationSystemOrchestrator:
                         "outcome" : "prepared session sent to segregation system",
                         "latency" : end_time-start_time
                     }
-                    self.log_event(event)
+                    tmp_log.append(event)
 
                 except requests.exceptions.Timeout:
                     print(f"\nERROR: Connection to {self.segregation_url} timed out after 3 seconds.")
@@ -184,7 +175,7 @@ class PreparationSystemOrchestrator:
             
             
 
-            self.write_log_file(timestamp)
+            self.write_log_file(tmp_log,timestamp)
 
             return self.http_200_response()
 
@@ -205,7 +196,7 @@ class PreparationSystemOrchestrator:
                     "latency" : end_time-start_time
                 }
             
-                self.log_event(event)
+                tmp_log.append(event)
 
             except requests.exceptions.Timeout:
                 print(f"\nERROR: Connection to {self.classification_url} timed out after 3 seconds.")
@@ -223,7 +214,24 @@ class PreparationSystemOrchestrator:
 
         
 
-        self.write_log_file(timestamp)
+        self.write_log_file(tmp_log,timestamp)
+
+    def run(self):
+
+        start_time=time.perf_counter()
+
+        timestamp=datetime.datetime.now().isoformat()
+
+        #Receive raw session
+        raw_session = self.raw_session_receiver.receive_raw_session()
+
+        if raw_session == None:
+            print(f"[INFO] : Raw session received has invalid schema, discarded")
+            return self.http_400_response()
+        
+        #awake a Thread from the pool
+
+        self.executor.submit(self._process,start_time,timestamp,raw_session)
 
         return self.http_200_response()
 

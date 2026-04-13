@@ -24,7 +24,6 @@ streaming_active = False
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = REPO_ROOT / "config" / "clientsideConfig.json"
 LOG_DIR = REPO_ROOT / "logs"
-GENERAL_CONFIG_PATH = REPO_ROOT / "config" / "GeneralConfig.json"
 
 def load_config():
     with CONFIG_PATH.open('r', encoding='utf-8') as f:
@@ -245,19 +244,8 @@ if __name__ == "__main__":
         print("CLIENT SYSTEM CONTROL PANEL")
         print("="*40)
         
-        # --- CHANGED: Reading from file instead of input ---
-        phase_choice = get_phase_from_config()
-        phase_label = "Development" if phase_choice == "0" else "Production"
-        print(f"Current Phase (from GeneralConfig): {phase_label} ({phase_choice})")
-        
-        # We still need the stream limit as an input unless that's in the config too
-        try:
-            stream_limit = int(input("Enter number of records to stream: "))
-        except ValueError:
-            print("Invalid number, defaulting to 10.")
-            stream_limit = 10
-
-        # Prepare Data
+        phase_choice = input("Select Phase: [0] Development, [1] Production: ")
+        stream_limit = int(input("Enter number of records to stream: "))
         # Prepare Data — same logic for both phases, always load all dev_files
         pool_list = []
         for file_path in config['paths']['dev_files']:

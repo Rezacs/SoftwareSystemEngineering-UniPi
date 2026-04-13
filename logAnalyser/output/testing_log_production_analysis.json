@@ -1,0 +1,90 @@
+{
+    "source_file": "C:\\Users\\ralma\\OneDrive\\Desktop\\Pisa\\Software System Engineering\\FLASKMAIN\\SoftwareSystemEngineering-UniPi\\logs\\testing_log_production.csv",
+    "systems_found": [
+        "evaluation",
+        "ingestion",
+        "preparation"
+    ],
+    "total_rows": 5801,
+    "unique_processes_count": 6,
+    "processes": [
+        {
+            "process": "E1",
+            "occurrences": 24,
+            "average_latency_s": 0.002867,
+            "outcomes": [
+                {
+                    "outcome": "Label Sufficient: NO",
+                    "occurrences": 24
+                }
+            ]
+        },
+        {
+            "process": "I0",
+            "occurrences": 1984,
+            "average_latency_s": 0.008202,
+            "outcomes": [
+                {
+                    "outcome": "Record stored",
+                    "occurrences": 1984
+                }
+            ]
+        },
+        {
+            "process": "I1",
+            "occurrences": 1984,
+            "average_latency_s": 0.008348,
+            "outcomes": [
+                {
+                    "outcome": "0-Not enough record to create a raw session",
+                    "occurrences": 668
+                },
+                {
+                    "outcome": "1-Enough record to create a raw session",
+                    "occurrences": 1316
+                }
+            ]
+        },
+        {
+            "process": "I2",
+            "occurrences": 1798,
+            "average_latency_s": 0.026688,
+            "outcomes": [
+                {
+                    "outcome": "0-Invalid raw session, discarded",
+                    "occurrences": 1315
+                },
+                {
+                    "outcome": "1-Raw session is valid",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "prepared session sent to classification system",
+                    "occurrences": 482
+                }
+            ]
+        },
+        {
+            "process": "I3",
+            "occurrences": 10,
+            "average_latency_s": 0.050133,
+            "outcomes": [
+                {
+                    "outcome": "label sent to evaluation system",
+                    "occurrences": 10
+                }
+            ]
+        },
+        {
+            "process": "I4",
+            "occurrences": 1,
+            "average_latency_s": 0.138632,
+            "outcomes": [
+                {
+                    "outcome": "raw session sent to preparation system",
+                    "occurrences": 1
+                }
+            ]
+        }
+    ]
+}

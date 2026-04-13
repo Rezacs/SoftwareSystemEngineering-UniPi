@@ -9,8 +9,25 @@ REM Go 2 folders back from BAT location, then venv\Scripts\activate.bat
 for %%I in ("%ROOT%\..\..\venv\Scripts\activate.bat") do set "VENV_ACTIVATE=%%~fI"
 
 echo.
-set /p USE_VENV=Do you want to activate the virtual environment-TYPE N? (Y/N): 
+set /p USE_VENV=Do you want to activate the virtual environment? (Y/N): 
 echo.
+
+set /p DEV_MODE=Development mode? (1=Stop and Go, 2=Testing): 
+set /p SEG_MODE=Segregation mode? (1=Stop and Go, 2=Testing): 
+set /p EVAL_MODE=Evaluation mode? (1=Stop and Go, 2=Testing): 
+
+set "GENERAL_CONFIG=%ROOT%\config\GeneralConfig.json"
+
+powershell -NoProfile -Command ^
+  "$p = '%GENERAL_CONFIG%';" ^
+  "$j = Get-Content $p -Raw | ConvertFrom-Json;" ^
+  "if (-not $j.development) { $j | Add-Member -MemberType NoteProperty -Name development -Value (@{}) }" ^
+  "if (-not $j.segregation) { $j | Add-Member -MemberType NoteProperty -Name segregation -Value (@{}) }" ^
+  "if (-not $j.evaluation) { $j | Add-Member -MemberType NoteProperty -Name evaluation -Value (@{}) }" ^
+  "$j.development | Add-Member -Force -MemberType NoteProperty -Name mode -Value '%DEV_MODE%';" ^
+  "$j.segregation | Add-Member -Force -MemberType NoteProperty -Name mode -Value '%SEG_MODE%';" ^
+  "$j.evaluation | Add-Member -Force -MemberType NoteProperty -Name mode -Value '%EVAL_MODE%';" ^
+  "$j | ConvertTo-Json -Depth 10 | Set-Content $p"
 
 if /I "%USE_VENV%"=="Y" goto WITH_VENV
 goto WITHOUT_VENV

@@ -141,7 +141,7 @@ class IngestionSystemOrchestrator:
         #Check if it is possible to create a raw session
 
         n_rows=self.records_buffer.getNumberOfAvailableRecords()
-
+        print(f"[DEBUG] Available records in buffer: {n_rows}")
         if not self.raw_session_creator.isNumberOfRecordsSufficient(n_rows):
             end_time=time.perf_counter()
             event={
@@ -273,7 +273,9 @@ class IngestionSystemOrchestrator:
             print(f"\nERROR: An unexpected network error occurred: {e}")
 
         finally:
-            return self.http_200_response()
+            pass
+
+        return self.http_200_response()
 
 
     def check_ip_and_port(self):

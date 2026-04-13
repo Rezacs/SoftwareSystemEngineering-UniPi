@@ -174,9 +174,9 @@ class SegregationSystemOrchestrator:
             if process_entry.get("process") in keep_set
         ]
 
-    def reset_state(self, path: str = SEGREGATION_WORKFLOW_STATE_PATH, **extra_fields) -> None:
+    def reset_state(self, path: str = SEGREGATION_WORKFLOW_STATE_PATH) -> None:
         """Reset workflow state to idle for a new cycle."""
-        self.save_state("idle", path, **extra_fields)
+        self.save_state("idle", path)
 
     def load_decision(self, path: str) -> Optional[dict]:
         try:
@@ -294,17 +294,7 @@ class SegregationSystemOrchestrator:
         active_sessions_count = self.session_repository.sessions_count(
             self._paths["segregation_db"]
         )
-        latest_input_record_id = self.session_repository.latest_record_id(
-            self._paths["segregation_db"]
-        )
-        last_handled_input_id = int(state.get("last_handled_input_id", 0) or 0)
-        has_new_input = latest_input_record_id > last_handled_input_id
-
-        if not has_new_input:
-            return {
-                "status": "waiting_for_input",
-                "stored_sessions": active_sessions_count,
-            }
+        
 
         segregation_log = self._load_segregation_log()
         state_session_key = state.get("session_log_key")
@@ -327,10 +317,7 @@ class SegregationSystemOrchestrator:
                 self._save_segregation_log(segregation_log)
 
             # Negative S1 outcome closes the current session; next loop starts a new one.
-            self.reset_state(
-                self._paths["workflow_state"],
-                last_handled_input_id=latest_input_record_id,
-            )
+            self.reset_state(self._paths["workflow_state"])
             return {
                 "status": "sessions_not_sufficient",
                 "stored_sessions": active_sessions_count,
@@ -367,7 +354,7 @@ class SegregationSystemOrchestrator:
                 else None
             ),
             session_log_key=session_key,
-            last_handled_input_id=latest_input_record_id,
+            
         )
         
         self._stop_and_ask(

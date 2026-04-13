@@ -266,4 +266,4 @@ class PreparationSystemOrchestrator:
 
         self.check_ip_and_port()
 
-        self.app.run(host=self.preparation_system_config.hosting_ip, port=self.preparation_system_config.hosting_port)
+        self.app.run(host=self.preparation_system_config.hosting_ip, port=self.preparation_system_config.hosting_port, threaded=True)

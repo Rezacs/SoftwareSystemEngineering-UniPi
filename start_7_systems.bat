@@ -51,8 +51,8 @@ goto END
 
 :WITHOUT_VENV
 wt -w 0 nt --title "Client Side" cmd /k "cd /d "%ROOT%\client_side" && python main.py"
-wt -w 0 nt --title "Ingestion Launcher" cmd /k "cd /d "%ROOT%" && python ingestion_launcher.py"
-wt -w 0 nt --title "Preparation Launcher" cmd /k "cd /d "%ROOT%" && python preparation_launcher.py"
+wt -w 0 nt --title "Ingestion Launcher" cmd /k "cd /d "%ROOT%" && python -m ingestion.main"
+wt -w 0 nt --title "Preparation Launcher" cmd /k "cd /d "%ROOT%" && python -m preparation.main"
 wt -w 0 nt --title "Ingestion System" cmd /k "cd /d "%ROOT%\ingestion" && python ingestion_launcher.py"
 wt -w 0 nt --title "Development System" cmd /k "cd /d "%ROOT%\development" && python main.py"
 wt -w 0 nt --title "Production System" cmd /k "cd /d "%ROOT%\production" && python main.py"

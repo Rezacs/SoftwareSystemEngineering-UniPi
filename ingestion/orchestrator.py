@@ -198,6 +198,7 @@ class IngestionSystemOrchestrator:
                 json_label={"player_id" : record["player_id"],"label" : record["label"]}
 
                 try:
+                    print(f"Sending : {json_label}")
                     risp = requests.post(self.evaluation_url, json=json_label,timeout=10)
 
                     #risp.raise_for_status()
@@ -231,6 +232,7 @@ class IngestionSystemOrchestrator:
         
         #send data preparation system
         try:
+            print(f"Sending : {raw_session}")
             risp = requests.post(self.preparation_url, json=raw_session,timeout=10)
 
             #risp.raise_for_status()

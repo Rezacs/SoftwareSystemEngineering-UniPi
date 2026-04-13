@@ -153,7 +153,8 @@ class PreparationSystemOrchestrator:
                 #Send to segregation system
 
                 try:
-                
+                    
+                    print(f"sending : {p}")
                     risp = requests.post(self.segregation_url, json=p)
                     print(risp)
                 
@@ -191,7 +192,8 @@ class PreparationSystemOrchestrator:
             #Evaluation phase send to classification system
 
             try:
-
+                
+                print(f"sending : {p}")
                 risp = requests.post(self.classification_url, json=p)
                 print(risp)
             

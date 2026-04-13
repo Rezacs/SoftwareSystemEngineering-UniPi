@@ -430,10 +430,7 @@ class SegregationSystemOrchestrator:
 
         feature_map = self.data_extractor.extract_features(self._paths["segregation_db"])
         statistics = self.coverage_checker.retrieveStatistics(feature_map)
-        coverage_report = self.coverage_checker.generatePlotData(
-            statistics,
-            self._config["coverageThreshold"]
-        )
+        coverage_report = self.coverage_checker.generatePlotData(statistics)
         JsonIO.save(self._paths["coverage_report_output"], coverage_report)
         self.view_coverage.showPlot(coverage_report, self._paths["coverage_plot_output"])
 
@@ -487,6 +484,31 @@ class SegregationSystemOrchestrator:
                 "decision_path": self._paths["coverage_decision"],
                 "report_path": self._paths["coverage_report_output"]
             }
+
+        # Optional reviewer notes are accepted and persisted into the coverage report.
+        raw_feature_comments = coverage_decision.get("featureComments", {})
+        feature_comments = {}
+        if isinstance(raw_feature_comments, dict):
+            for feature_name, comment in raw_feature_comments.items():
+                if not isinstance(feature_name, str) or not isinstance(comment, str):
+                    continue
+                cleaned_comment = comment.strip()
+                if cleaned_comment:
+                    feature_comments[feature_name] = cleaned_comment
+
+        if feature_comments:
+            try:
+                coverage_report = JsonIO.load(self._paths["coverage_report_output"])
+            except FileNotFoundError:
+                coverage_report = {}
+
+            if not isinstance(coverage_report, dict):
+                coverage_report = {}
+
+            coverage_report["review"] = {
+                "featureComments": feature_comments,
+            }
+            JsonIO.save(self._paths["coverage_report_output"], coverage_report)
         
         if not coverage_decision.get("approved", False):
             print("[Orchestrator] Coverage REJECTED — Resetting to idle")

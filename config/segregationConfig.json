@@ -1,7 +1,6 @@
 {
-    "sufficientSessionNumber": 8,
-    "balancingTolerance": 0.05,
-    "coverageThreshold": 0.8,
+    "sufficientSessionNumber": 250,
+    "balancingTolerance": 0.25,
     "segregationSystemIpAddress": "127.0.0.1",
     "segregationSystemPort": 5003,
     "developmentSystemEndpoint": "http://127.0.0.1:5005/data"

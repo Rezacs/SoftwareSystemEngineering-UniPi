@@ -63,14 +63,59 @@ class SegregationSystemOrchestrator:
     def _utc_now_iso() -> str:
         return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
+    @staticmethod
+    def _iso_to_datetime(timestamp: Optional[str]) -> Optional[datetime]:
+        if not timestamp or not isinstance(timestamp, str):
+            return None
+        try:
+            return datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+
+    def _compute_latency_seconds(self, start_timestamp: Optional[str], end_timestamp: Optional[str]) -> Optional[float]:
+        start_dt = self._iso_to_datetime(start_timestamp)
+        end_dt = self._iso_to_datetime(end_timestamp)
+        if start_dt is None or end_dt is None:
+            return None
+        latency = (end_dt - start_dt).total_seconds()
+        if latency < 0:
+            return None
+        return round(latency, 6)
+
+    def _migrate_legacy_timestamps_to_latency(self, process_entry: dict) -> None:
+        # Backward compatibility for old log schema.
+        if "latency" in process_entry:
+            return
+
+        start_timestamp = process_entry.get("timestamp inizio")
+        end_timestamp = process_entry.get("timestamp fine")
+        process_entry["latency"] = self._compute_latency_seconds(start_timestamp, end_timestamp)
+        process_entry.pop("timestamp inizio", None)
+        process_entry.pop("timestamp fine", None)
+
     def _load_segregation_log(self) -> dict:
+        if not self.testing_mode:
+            return {}
+
         try:
             current_log = JsonIO.load(self._paths["segregation_log"])
-            return current_log if isinstance(current_log, dict) else {}
+            if not isinstance(current_log, dict):
+                return {}
+
+            for session_processes in current_log.values():
+                if not isinstance(session_processes, list):
+                    continue
+                for process_entry in session_processes:
+                    if isinstance(process_entry, dict):
+                        self._migrate_legacy_timestamps_to_latency(process_entry)
+
+            return current_log
         except (FileNotFoundError, ValueError, TypeError):
             return {}
 
     def _save_segregation_log(self, segregation_log: dict) -> None:
+        if not self.testing_mode:
+            return
         JsonIO.save(self._paths["segregation_log"], segregation_log)
 
     def _get_latest_session_key(self, segregation_log: dict) -> Optional[str]:
@@ -100,12 +145,13 @@ class SegregationSystemOrchestrator:
     def _ensure_subprocess(self, session_processes: list, subprocess_name: str) -> dict:
         for process_entry in session_processes:
             if process_entry.get("process") == subprocess_name:
+                self._migrate_legacy_timestamps_to_latency(process_entry)
                 return process_entry
 
         process_entry = {
             "process": subprocess_name,
-            "timestamp inizio": self._utc_now_iso(),
-            "timestamp fine": None,
+            "_start_timestamp": self._utc_now_iso(),
+            "latency": None,
             "outcome": None,
         }
         session_processes.append(process_entry)
@@ -116,8 +162,12 @@ class SegregationSystemOrchestrator:
 
     def _complete_subprocess(self, process_entry: dict, outcome: str) -> None:
         process_entry["outcome"] = outcome
-        if process_entry.get("timestamp fine") is None:
-            process_entry["timestamp fine"] = self._utc_now_iso()
+        if process_entry.get("latency") is None:
+            end_timestamp = self._utc_now_iso()
+            process_entry["latency"] = self._compute_latency_seconds(
+                process_entry.get("_start_timestamp"),
+                end_timestamp,
+            )
 
     def _trim_following_processes(self, session_processes: list, process_name: str) -> None:
         if process_name not in self.PROCESS_ORDER:
@@ -265,9 +315,7 @@ class SegregationSystemOrchestrator:
         if active_sessions_count < self._config["sufficientSessionNumber"]:
             if session_processes is not None:
                 subprocess_1 = self._ensure_subprocess(session_processes, self.SUBPROCESS_1)
-                self._set_subprocess_outcome(subprocess_1, "sessions not sufficient")
-                if subprocess_1.get("timestamp fine") is None:
-                    subprocess_1["timestamp fine"] = self._utc_now_iso()
+                self._complete_subprocess(subprocess_1, "sessions not sufficient")
                 self._trim_following_processes(session_processes, self.SUBPROCESS_1)
                 self._save_segregation_log(segregation_log)
 

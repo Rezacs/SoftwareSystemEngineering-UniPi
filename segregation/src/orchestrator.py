@@ -94,9 +94,6 @@ class SegregationSystemOrchestrator:
         process_entry.pop("timestamp fine", None)
 
     def _load_segregation_log(self) -> dict:
-        if not self.testing_mode:
-            return {}
-
         try:
             current_log = JsonIO.load(self._paths["segregation_log"])
             if not isinstance(current_log, dict):
@@ -114,8 +111,6 @@ class SegregationSystemOrchestrator:
             return {}
 
     def _save_segregation_log(self, segregation_log: dict) -> None:
-        if not self.testing_mode:
-            return
         JsonIO.save(self._paths["segregation_log"], segregation_log)
 
     def _get_latest_session_key(self, segregation_log: dict) -> Optional[str]:

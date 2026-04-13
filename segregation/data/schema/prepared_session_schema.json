@@ -5,7 +5,8 @@
         "player_id",
         "skill_overall",
         "social_influence_score",
-        "injuries_impact_score"
+        "injuries_impact_score",
+        "label"
     ],
     "properties": {
         "session_id": {

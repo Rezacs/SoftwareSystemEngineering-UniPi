@@ -7,32 +7,36 @@ from typing import Any
 import pandas as pd
 
 
-def find_testing_log(logs_dir: Path) -> Path:
+def find_testing_logs(logs_dir: Path) -> list[Path]:
     """
     Search the logs directory for:
     - testing_log_development.csv
     - testing_log_production.csv
 
-    Returns the first match found.
+    Returns all matches found.
     """
     preferred_names = [
         "testing_log_development.csv",
         "testing_log_production.csv",
     ]
 
+    found_files: list[Path] = []
+
     for name in preferred_names:
         candidate = logs_dir / name
         if candidate.exists():
-            return candidate
+            found_files.append(candidate)
 
-    matches = sorted(logs_dir.glob("testing_log_*.csv"))
-    if matches:
-        return matches[0]
+    if not found_files:
+        found_files = sorted(logs_dir.glob("testing_log_*.csv"))
 
-    raise FileNotFoundError(
-        f"No testing log file found in: {logs_dir}\n"
-        f"Expected one of: {preferred_names} or any file matching testing_log_*.csv"
-    )
+    if not found_files:
+        raise FileNotFoundError(
+            f"No testing log file found in: {logs_dir}\n"
+            f"Expected one of: {preferred_names} or any file matching testing_log_*.csv"
+        )
+
+    return found_files
 
 
 def validate_columns(df: pd.DataFrame) -> None:
@@ -104,20 +108,21 @@ def main() -> None:
     output_dir = script_dir / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    log_file = find_testing_log(logs_dir)
-    df = pd.read_csv(log_file)
-    validate_columns(df)
+    log_files = find_testing_logs(logs_dir)
 
-    summary = build_summary(df, log_file)
+    for log_file in log_files:
+        df = pd.read_csv(log_file)
+        validate_columns(df)
 
-    output_path = output_dir / f"{log_file.stem}_analysis.json"
-    with output_path.open("w", encoding="utf-8") as f:
-        json.dump(summary, f, indent=4)
+        summary = build_summary(df, log_file)
 
-    print(f"Input file:  {log_file}")
-    print(f"Output file: {output_path}")
-    print("Analysis completed successfully.")
+        output_path = output_dir / f"{log_file.stem}_analysis.json"
+        with output_path.open("w", encoding="utf-8") as f:
+            json.dump(summary, f, indent=4)
 
+        print(f"Input file:  {log_file}")
+        print(f"Output file: {output_path}")
+        print("Analysis completed successfully.\n")
 
 if __name__ == "__main__":
     main()

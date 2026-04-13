@@ -4,6 +4,7 @@ Runs the orchestrator with mode selection (Stop&Go or Testing).
 """
 
 import json
+import sqlite3
 import threading
 import time
 from pathlib import Path
@@ -11,6 +12,8 @@ from typing import Optional
 
 from src.orchestrator import SegregationSystemOrchestrator
 from src.communication_controller import CommunicationController
+from src.utils.json_io import JsonIO
+from src import SEGREGATION_DB_PATH, SEGREGATION_LOG_PATH, SEGREGATION_WORKFLOW_STATE_PATH
 
 
 # ── Config path ────────────────────────────────────────────────────────────
@@ -82,12 +85,55 @@ def wait_for_decision_confirmation(decision_path: Optional[str]):
         print("[Main] Invalid input. Press Enter to continue or 'q' to quit.")
 
 
+def reset_runtime_state_on_startup():
+    """Ensure each start begins from a clean segregation runtime state."""
+    db_path = Path(SEGREGATION_DB_PATH)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        with sqlite3.connect(db_path) as connection:
+            table_exists = connection.execute(
+                """
+                SELECT 1
+                FROM sqlite_master
+                WHERE type = 'table' AND name = 'prepared_sessions'
+                """
+            ).fetchone() is not None
+
+            if table_exists:
+                connection.execute("DELETE FROM prepared_sessions")
+                connection.commit()
+                connection.execute("VACUUM")
+                connection.commit()
+                print(f"[Main] Startup reset: emptied DB table prepared_sessions at {db_path}")
+            else:
+                print(f"[Main] Startup reset: DB present without prepared_sessions table at {db_path}")
+    except sqlite3.DatabaseError as exc:
+        # Fallback for corrupted/locked DB scenarios.
+        if db_path.exists():
+            db_path.unlink()
+            print(f"[Main] Startup reset: DB deleted after sqlite error ({exc}) at {db_path}")
+
+    for sidecar_suffix in ("-wal", "-shm"):
+        sidecar_path = Path(f"{db_path}{sidecar_suffix}")
+        if sidecar_path.exists():
+            sidecar_path.unlink()
+            print(f"[Main] Startup reset: removed SQLite sidecar {sidecar_path}")
+
+    log_path = Path(SEGREGATION_LOG_PATH)
+    JsonIO.save(str(log_path), {})
+    print(f"[Main] Startup reset: cleared log at {log_path}")
+
+    JsonIO.save(SEGREGATION_WORKFLOW_STATE_PATH, {"phase": "idle"})
+    print("[Main] Startup reset: workflow state set to idle")
+
+
 if __name__ == "__main__":
     # Ask mode only once at startup
     testing_mode = ask_testing_mode()
     cfg = _read_config()
-    
-    workflow_state_path = REPO_ROOT / "data" / "output" / "segregation_workflow_state.json"
+
+    reset_runtime_state_on_startup()
     
     # ── Start persistent background server ─────────────────────────────────
     print("[Main] Starting REST API server in background...")

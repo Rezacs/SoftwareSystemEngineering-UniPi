@@ -32,8 +32,13 @@ class CheckClassBalancing:
         }
 
         for label in labels:
-            if label in distribution:
-                distribution[label] += 1
+            try:
+                parsed_label = int(label)
+            except (TypeError, ValueError):
+                continue
+
+            if parsed_label in distribution:
+                distribution[parsed_label] += 1
         counts = list(distribution.values())
         total = sum(counts)
 
@@ -77,5 +82,14 @@ class CheckClassBalancing:
     def check_balance(self, distribution: dict, tolerance: float = 0.05) -> dict:
         labels = []
         for label, count in distribution.items():
-            labels.extend([label] * count)
+            try:
+                parsed_label = int(label)
+                parsed_count = int(count)
+            except (TypeError, ValueError):
+                continue
+
+            if parsed_count <= 0:
+                continue
+
+            labels.extend([parsed_label] * parsed_count)
         return self.generatePlotData(labels, tolerance)

@@ -11,6 +11,8 @@ from flask import Flask, jsonify
 from pathlib import Path
 import socket
 import sys
+import concurrent.futures
+import threading
 
 
 class IngestionSystemOrchestrator:
@@ -27,7 +29,8 @@ class IngestionSystemOrchestrator:
 
             with open(self.log_file_path, 'r') as f:
                 self.log = json.load(f)
-
+            
+            
                 
         except FileNotFoundError:
             print(f"[INFO] Log file not found at {self.log_file_path}. Starting with an empty log.")
@@ -38,8 +41,6 @@ class IngestionSystemOrchestrator:
             print(f"\n[WARNING] Log file is corrupted or empty: {e}")
             print("Falling back to an empty log to prevent a crash.")
             self.log = {}
-
-        self.tmp_log=[]
 
         print(f"[INFO] Ingestion system orchestrator initialization...")
 
@@ -65,11 +66,18 @@ class IngestionSystemOrchestrator:
         self.evaluation_url=f"http://{self.ingestion_system_config.evaluation_system_ip}:{self.ingestion_system_config.evaluation_system_port}/{self.ingestion_system_config.evaluation_system_endpoint}"
         self.preparation_url=f"http://{self.ingestion_system_config.preparation_system_ip}:{self.ingestion_system_config.preparation_system_port}/{self.ingestion_system_config.preparation_system_endpoint}"
 
+
+        print(f"[INFO] Initializing Thread pool")
+
+        self.executor=concurrent.futures.ThreadPoolExecutor(max_workers=5)
+        self.lock = threading.Lock()
+        
+
         self.app = Flask(__name__)
 
         self.app.add_url_rule('/run', methods=['POST'], view_func=self.run)
 
-        print(f"[INFO] Flask service started initialized")
+        print(f"[INFO] Flask service initialized")
 
         print(f"""
                --- Ingestion System Configuration ---
@@ -82,18 +90,15 @@ class IngestionSystemOrchestrator:
                --------------------------------------
         """)
 
-    def log_event(self,event : dict):
+    def write_log_file(self,log : list,timestamp : datetime.datetime):
 
-        #event["timestamp"]=datetime.datetime.now().isoformat()
+        #Thread safe using lock
 
-        self.tmp_log.append(event)
+        with self.lock:
+            self.log[f"{timestamp}"]=log
 
-    def write_log_file(self,timestamp : datetime.datetime):
-
-        self.log[f"{timestamp}"]=self.tmp_log
-
-        with open(self.log_file_path, 'w') as file:
-            json.dump(self.log, file, indent=4)
+            with open(self.log_file_path, 'w') as file:
+                json.dump(self.log, file, indent=4)
 
     def http_200_response(self):
         #If the record received are valid this is what the client side system will receive in every case
@@ -102,26 +107,10 @@ class IngestionSystemOrchestrator:
     def http_400_response(self):
         #If the record received isn't valid this is what the client side system will receive
         return jsonify({"Error": "Bad data"}), 400
+    
+    def _process(self,start_time,timestamp,record):
 
-    def run(self,input_path=None,output_path=None):
-
-
-        if input_path is None:
-            input_path = Path(__file__).resolve().parents[1] / "data" / "outputs" / "client_message.json"
-        if output_path is None:
-            output_path = Path(__file__).resolve().parents[1] / "data" / "outputs" / "raw_session.json"
-
-        start_time=time.perf_counter()
-
-        timestamp=datetime.datetime.now().isoformat()
-
-        self.tmp_log=[]
-
-        record = self.receiver.receive_record()
-
-        if record is None:
-            print(f"[INFO] : record received has invalid schema, discarded")
-            return self.http_400_response()
+        tmp_log=[]
 
         record = pd.DataFrame(record, index=[0]).reset_index(drop=True)
 
@@ -132,7 +121,7 @@ class IngestionSystemOrchestrator:
                 "outcome" : "Record stored",
                 "latency" : end_time-start_time
             }
-            self.log_event(event)
+            tmp_log.append(event)
             print(f"[INFO] Record inserted in the Buffer")
         else:
             print(f"[ERROR] Error occurred inserting the record in the buffer")
@@ -149,8 +138,8 @@ class IngestionSystemOrchestrator:
                 "outcome" : "0-Not enough record to create a raw session",
                 "latency" : end_time-start_time
             }
-            self.log_event(event)
-            self.write_log_file(timestamp)
+            tmp_log.append(event)
+            self.write_log_file(tmp_log,timestamp)
             print(f"[INFO] Record stored, not enough record to create a raw session")
             return self.http_200_response()
 
@@ -160,7 +149,7 @@ class IngestionSystemOrchestrator:
                 "outcome" : "1-Enough record to create a raw session",
                 "latency" : end_time-start_time
         }
-        self.log_event(event)
+        tmp_log.append(event)
         #create raw session
 
         records,ids=self.records_buffer.retrieve_last_records()
@@ -176,8 +165,8 @@ class IngestionSystemOrchestrator:
                 "outcome" : "0-Invalid raw session, discarded",
                 "latency" : end_time-start_time
             }
-            self.log_event(event)
-            self.write_log_file(timestamp)
+            tmp_log.append(event)
+            self.write_log_file(tmp_log,timestamp)
             print(f"[INFO] Raw session discarded")
             return self.http_200_response()
         
@@ -187,7 +176,7 @@ class IngestionSystemOrchestrator:
                 "outcome" : "1-Raw session is valid",
                 "latency" : end_time-start_time
         }
-        self.log_event(event)
+        tmp_log.append(event)
 
         #check if is evaluation phase
         if self.ingestion_system_config.phase==1:
@@ -211,7 +200,7 @@ class IngestionSystemOrchestrator:
                             "outcome" : "label sent to evaluation system",
                             "latency" : end_time-start_time
                     }
-                    self.log_event(event)
+                    tmp_log.append(event)
 
                 except requests.exceptions.Timeout:
                     error_msg = f"Connection to {self.evaluation_url} timed out after 10 seconds."
@@ -246,10 +235,10 @@ class IngestionSystemOrchestrator:
                     "outcome" : "raw session sent to preparation system",
                      "latency" : end_time-start_time
             }
-            timestamp=self.log_event(event)
+            tmp_log.append(event)
 
             #write json log file
-            self.write_log_file(timestamp)
+            self.write_log_file(tmp_log,timestamp)
 
             if not self.records_buffer.delete_records(ids):
                 print(f"ERROR: an error occured extracting records from buffer")
@@ -272,10 +261,31 @@ class IngestionSystemOrchestrator:
             # This is the base class for all requests exceptions. It acts as a safety net.
             print(f"\nERROR: An unexpected network error occurred: {e}")
 
-        finally:
-            pass
+    def run(self,input_path=None,output_path=None):
+
+
+        if input_path is None:
+            input_path = Path(__file__).resolve().parents[1] / "data" / "outputs" / "client_message.json"
+        if output_path is None:
+            output_path = Path(__file__).resolve().parents[1] / "data" / "outputs" / "raw_session.json"
+
+        start_time=time.perf_counter()
+
+        timestamp=datetime.datetime.now().isoformat()
+
+        record = self.receiver.receive_record()
+
+        if record is None:
+            print(f"[INFO] : record received has invalid schema, discarded")
+            return self.http_400_response()
+        
+        #awake a Thread from the pool
+
+        self.executor.submit(self._process,start_time,timestamp,record)
 
         return self.http_200_response()
+
+        
 
 
     def check_ip_and_port(self):

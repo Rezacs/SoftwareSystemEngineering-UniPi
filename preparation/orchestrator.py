@@ -139,7 +139,7 @@ class PreparationSystemOrchestrator:
             prepared_session={
                 "session_id" : batch_prepared_session.get("UUID"),
                 "player_id" : d.get("player_id"),
-                "skill_overall" : d.get("skillOverall"),
+                "skill_overall" : d.get("skill_overall"),
                 "social_influence_score" : d.get("social_influence_score"),
                 "injuries_impact_score" : d.get("injuries_impact_score"),
                 "label" : d.get("label")

@@ -76,7 +76,7 @@ def stream_synchronized_player_data(csv_files, server_url):
         # --- STEP A: Send row from CSV 1 ---
         record1 = {
             "player_id" : row['player_id'],
-            "skill_overall" :row['overall'],
+            "skill_overall" :row['skill_overall'],
             "label" : 3
         }
         

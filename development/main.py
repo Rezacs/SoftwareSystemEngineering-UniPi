@@ -25,15 +25,20 @@ def _read_config() -> dict:
 
 def ask_testing_mode() -> bool:
     """Prompt the user to choose a run mode. Returns True for testing mode."""
-    print("\n" + "=" * 60)
-    print("  Development System — Startup")
+    print("  [1]  Stop & Go  (interactive — human edits user_input.json)")
+    print("  [2]  Testing    (automated  — decisions simulated from reports)")
+    print("  Both modes wait for a real HTTP POST /data payload.")
     print("=" * 60)
-    GENERAL_CONFIG = Path(__file__).resolve().parents[1] / "config" / "GeneralConfig.json"
-
-    with open(GENERAL_CONFIG, "r", encoding="utf-8") as f:
-        cfg = json.load(f)
-
-    choice = str(cfg["development"]["mode"])
+    while True:
+        choice = input("  Select mode [1/2]: ").strip()
+        if choice == "1":
+            print("\n[Main] Mode selected: Stop & Go\n")
+            return False
+        elif choice == "2":
+            print("\n[Main] Mode selected: Testing\n")
+            return True
+        else:
+            print("  Invalid choice — please enter 1 or 2.")
 
 
 # ── Payload parsers ────────────────────────────────────────────────────────

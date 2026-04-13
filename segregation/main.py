@@ -30,15 +30,20 @@ def _read_config() -> dict:
 
 def ask_testing_mode() -> bool:
     """Prompt the user to choose a run mode. Returns True for testing mode."""
-    print("\n" + "=" * 60)
-    print("  Segregation System — Startup")
+    print("  [1]  Stop & Go  (interactive — manual decision files)")
+    print("  [2]  Testing    (automated  — decisions simulated 70/30)")
+    print("  Both modes process incoming sessions automatically.")
     print("=" * 60)
-    GENERAL_CONFIG = Path(__file__).resolve().parents[1] / "config" / "GeneralConfig.json"
-
-    with open(GENERAL_CONFIG, "r", encoding="utf-8") as f:
-        cfg = json.load(f)
-
-    choice = str(cfg["segregation"]["mode"])
+    while True:
+        choice = input("  Select mode [1/2]: ").strip()
+        if choice == "1":
+            print("\n[Main] Mode selected: Stop & Go\n")
+            return False
+        elif choice == "2":
+            print("\n[Main] Mode selected: Testing\n")
+            return True
+        else:
+            print("  Invalid choice — please enter 1 or 2.")
 
 
 # ── Main execution ─────────────────────────────────────────────────────────

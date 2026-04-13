@@ -6,12 +6,24 @@ from pathlib import Path
 config = Config()
 
 def choose_mode():
-    GENERAL_CONFIG = Path(__file__).resolve().parents[2] / "config" / "GeneralConfig.json"
+    print("\n=== Select Evaluation Mode ===")
+    print("1) Human Mode")
+    print("2) Testing / Automated Mode")
+    while True:
+        choice = input("Enter choice: ").strip()
 
-    with open(GENERAL_CONFIG, "r", encoding="utf-8") as f:
-        cfg = json.load(f)
+        if choice == "1":
+            config["server"]["mode"] = "human"
+            break
 
-    choice = str(cfg["evaluation"]["mode"])
+        elif choice == "2":
+            config["server"]["mode"] = "auto"
+            break
+
+        else:
+            print("Invalid input. Choose 1 or 2.")
+
+    print(f"\nSelected Mode: {config['server']['mode'].upper()}")
 
 if __name__ == "__main__":
     choose_mode()

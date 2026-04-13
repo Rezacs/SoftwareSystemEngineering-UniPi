@@ -1,9 +1,0 @@
-{
-  "decision": "REJECT",
-  "metrics": {
-    "total_samples": 10,
-    "errors": 5,
-    "max_consecutive": 3
-  },
-  "action": "SEND_TO_MESSAGING"
-}

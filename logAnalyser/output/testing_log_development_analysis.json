@@ -1,168 +1,126 @@
 {
-    "source_file": "C:\\Users\\ralma\\OneDrive\\Desktop\\Pisa\\Software System Engineering\\FLASKMAIN\\SoftwareSystemEngineering-UniPi\\logs\\testing_log_development.csv",
+    "source_file": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\logs\\testing_log_development.csv",
     "systems_found": [
         "development",
-        "ingestion",
         "preparation",
         "production",
         "segregation"
     ],
-    "total_rows": 20482,
-    "unique_processes_count": 12,
+    "total_rows": 6704,
+    "unique_processes_count": 9,
     "processes": [
         {
             "process": "D1 - Calibration set received",
-            "occurrences": 2,
-            "average_latency_s": 0.28395,
+            "occurrences": 15,
+            "average_latency_s": 0.39236,
             "outcomes": [
                 {
                     "outcome": "yes: classifier sent",
-                    "occurrences": 2
+                    "occurrences": 15
                 }
             ]
         },
         {
             "process": "D2 - Set hyperparameters",
-            "occurrences": 6,
-            "average_latency_s": 0.349883,
+            "occurrences": 21,
+            "average_latency_s": 0.434719,
             "outcomes": [
                 {
                     "outcome": "no: test rejected",
-                    "occurrences": 6
-                }
-            ]
-        },
-        {
-            "process": "I0",
-            "occurrences": 6948,
-            "average_latency_s": 0.016156,
-            "outcomes": [
-                {
-                    "outcome": "Record stored",
-                    "occurrences": 6948
+                    "occurrences": 21
                 }
             ]
         },
         {
             "process": "I1",
-            "occurrences": 8572,
-            "average_latency_s": 0.105098,
+            "occurrences": 6392,
+            "average_latency_s": 2.040543,
             "outcomes": [
-                {
-                    "outcome": "0-Not enough record to create a raw session",
-                    "occurrences": 2144
-                },
-                {
-                    "outcome": "1-Enough record to create a raw session",
-                    "occurrences": 4804
-                },
                 {
                     "outcome": "prepared session sent to segregation system",
-                    "occurrences": 1624
-                }
-            ]
-        },
-        {
-            "process": "I2",
-            "occurrences": 4804,
-            "average_latency_s": 0.02068,
-            "outcomes": [
-                {
-                    "outcome": "0-Invalid raw session, discarded",
-                    "occurrences": 4803
-                },
-                {
-                    "outcome": "1-Raw session is valid",
-                    "occurrences": 1
-                }
-            ]
-        },
-        {
-            "process": "I4",
-            "occurrences": 1,
-            "average_latency_s": 0.259102,
-            "outcomes": [
-                {
-                    "outcome": "raw session sent to preparation system",
-                    "occurrences": 1
+                    "occurrences": 6392
                 }
             ]
         },
         {
             "process": "P1",
-            "occurrences": 2,
-            "average_latency_s": 0.6848,
+            "occurrences": 15,
+            "average_latency_s": 0.022493,
             "outcomes": [
                 {
                     "outcome": "Classifier deployed: model_1",
+                    "occurrences": 13
+                },
+                {
+                    "outcome": "Classifier deployed: model_2",
                     "occurrences": 2
                 }
             ]
         },
         {
             "process": "S1",
-            "occurrences": 44,
-            "average_latency_s": 1.2e-05,
+            "occurrences": 89,
+            "average_latency_s": 9e-06,
             "outcomes": [
                 {
                     "outcome": "sessions not sufficient",
-                    "occurrences": 1
+                    "occurrences": 10
                 },
                 {
                     "outcome": "sessions sufficient",
-                    "occurrences": 43
+                    "occurrences": 79
                 }
             ]
         },
         {
             "process": "S2",
-            "occurrences": 43,
-            "average_latency_s": 0.188792,
+            "occurrences": 79,
+            "average_latency_s": 0.153458,
             "outcomes": [
                 {
                     "outcome": "classes balanced",
-                    "occurrences": 29
+                    "occurrences": 53
                 },
                 {
                     "outcome": "classes not balanced",
-                    "occurrences": 14
+                    "occurrences": 26
                 }
             ]
         },
         {
             "process": "S3",
-            "occurrences": 29,
-            "average_latency_s": 0.189061,
+            "occurrences": 53,
+            "average_latency_s": 0.151456,
             "outcomes": [
                 {
                     "outcome": "coverage not satisfied",
-                    "occurrences": 9
+                    "occurrences": 15
                 },
                 {
                     "outcome": "coverage satisfied",
-                    "occurrences": 20
+                    "occurrences": 38
                 }
             ]
         },
         {
             "process": "S4",
-            "occurrences": 20,
-            "average_latency_s": 0.011354,
+            "occurrences": 38,
+            "average_latency_s": 0.026754,
             "outcomes": [
                 {
                     "outcome": "output sent",
-                    "occurrences": 20
+                    "occurrences": 38
                 }
             ]
         },
         {
             "process": "interrupted",
-            "occurrences": 10,
+            "occurrences": 2,
             "average_latency_s": 0.0,
             "outcomes": [
                 {
                     "outcome": "process exited unexpectedly",
-                    "occurrences": 10
+                    "occurrences": 2
                 }
             ]
         }

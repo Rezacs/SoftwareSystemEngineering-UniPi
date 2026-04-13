@@ -6,7 +6,7 @@
   },
 
   "evaluation": {
-    "batch_size": 90,
+    "batch_size": 50,
     "error_threshold": 1,
     "max_errors": 10,
     "max_consecutive_errors": 5,

@@ -99,32 +99,130 @@ def _read_csv_safe(path):
         return pd.DataFrame()
 
 
+_csv_buffer: list = []
+_csv_buffer_lock = threading.Lock()
+CSV_FLUSH_INTERVAL = 50  # flush every N rows
+
 def _append_to_csv(path, new_df):
-    """Thread-safe append of new_df rows to a CSV file."""
-    with csv_lock:
-        LOG_DIR.mkdir(parents=True, exist_ok=True)
-        if path.exists() and path.stat().st_size > 0:
-            existing = _read_csv_safe(path)
-            combined = pd.concat([existing, new_df], ignore_index=True) \
-                       if not existing.empty else new_df
-        else:
-            combined = new_df
-        combined.to_csv(path, index=False)
+    """Buffer rows and flush to CSV in batches to avoid O(n²) rewrites."""
+    global _csv_buffer
+    with _csv_buffer_lock:
+        _csv_buffer.extend(new_df.to_dict(orient="records"))
+        if len(_csv_buffer) >= CSV_FLUSH_INTERVAL:
+            _flush_csv_buffer(path)
+
+def _flush_csv_buffer(path):
+    """Write all buffered rows to disk. Call with _csv_buffer_lock held."""
+    global _csv_buffer
+    if not _csv_buffer:
+        return
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    new_df = pd.DataFrame(_csv_buffer)
+    if path.exists() and path.stat().st_size > 0:
+        existing = _read_csv_safe(path)
+        combined = pd.concat([existing, new_df], ignore_index=True) \
+                   if not existing.empty else new_df
+    else:
+        combined = new_df
+    combined.to_csv(path, index=False)
+    _csv_buffer = []
+
+def flush_remaining_csv(path):
+    """Call this after streaming ends to write any leftover buffered rows."""
+    with _csv_buffer_lock:
+        _flush_csv_buffer(path)
+
+
+# In-memory log buffer — flush to JSON periodically instead of per-event
+_log_buffer: dict = {}   # filename -> list of events
+_log_buffer_lock = threading.Lock()
+
+def log_event(filename, event_data):
+    """Buffer log events; flush to disk every LOG_FLUSH_INTERVAL events."""
+    LOG_FLUSH_INTERVAL = 20
+    with _log_buffer_lock:
+        _log_buffer.setdefault(filename, []).append(event_data)
+        if len(_log_buffer[filename]) >= LOG_FLUSH_INTERVAL:
+            _flush_log_buffer(filename)
+
+def _flush_log_buffer(filename):
+    """Write buffered events for filename to disk. Call with _log_buffer_lock held."""
+    events = _log_buffer.get(filename, [])
+    if not events:
+        return
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    path = LOG_DIR / filename
+    logs = []
+    if path.exists():
+        with path.open('r', encoding='utf-8') as f:
+            try:
+                logs = json.load(f)
+            except Exception:
+                logs = []
+    logs.extend(events)
+    with path.open('w', encoding='utf-8') as f:
+        json.dump(logs, indent=4, fp=f)
+    _log_buffer[filename] = []
+
+def flush_all_logs():
+    """Flush every buffered log file to disk — call before reading logs."""
+    with _log_buffer_lock:
+        for filename in list(_log_buffer.keys()):
+            _flush_log_buffer(filename)
+
 
 ##########################################
-# TEST LOG GENERATOR
+# STREAM WORKER — add rate limiting
 ##########################################
 
-def parse_ts(ts_str):
-    """Normalize timestamps to naive UTC datetimes for safe arithmetic."""
-    if ts_str is None:
-        return None
-    ts_str = ts_str.strip().replace("Z", "+00:00")
-    try:
-        dt = datetime.fromisoformat(ts_str)
-        return dt.replace(tzinfo=None)
-    except ValueError:
-        return None
+def stream_worker(current_phase, limit, record_list,
+                  max_rps: float = 50.0):      # ← tune this knob
+    """
+    max_rps: maximum records per second to send.
+    Lower it if your PC is still struggling; raise it for faster throughput.
+    """
+    streaming_done.clear()
+    min_interval = 1.0 / max_rps
+
+    ingestion_cfg   = config['network']['ingestion_system']
+    url             = f"http://{ingestion_cfg['ip']}:{ingestion_cfg['port']}/run"
+    total_available = len(record_list)
+
+    consecutive_failures = 0
+    MAX_BACKOFF_S        = 10.0
+
+    for i in range(limit):
+        t_start = time.monotonic()
+
+        if i > 0 and i % total_available == 0:
+            random.shuffle(record_list)
+
+        record = record_list[i % total_available]
+        p_id   = record.get('player_id')
+        if p_id is not None:
+            p_id = int(p_id)
+
+        try:
+            response = requests.post(url, json=record, timeout=5)
+            print(f"  Sent [{i+1}/{limit}] player {p_id} → {response.status_code}")
+            consecutive_failures = 0
+
+        except Exception:
+            consecutive_failures += 1
+            backoff = min(0.5 * (2 ** (consecutive_failures - 1)), MAX_BACKOFF_S)
+            print(f"  Target {url} unreachable. "
+                  f"(failure #{consecutive_failures}, retrying in {backoff:.1f}s)")
+            time.sleep(backoff)
+            continue   # backoff already waited; skip the rate-limit sleep
+
+        # ── Rate limiting: sleep for remainder of the interval ──
+        elapsed = time.monotonic() - t_start
+        leftover = min_interval - elapsed
+        if leftover > 0:
+            time.sleep(leftover)
+
+    print("\n[SYSTEM] Streaming finished.")
+    streaming_done.set()
 
 
 def generate_testing_csv(current_phase):
@@ -180,40 +278,7 @@ def generate_testing_csv(current_phase):
 # STREAMING WORKER
 ##########################################
 
-def stream_worker(current_phase, limit, record_list):
-    streaming_done.clear()
 
-    ingestion_cfg   = config['network']['ingestion_system']
-    url             = f"http://{ingestion_cfg['ip']}:{ingestion_cfg['port']}/run"
-    total_available = len(record_list)
-
-    consecutive_failures = 0
-    MAX_BACKOFF_S        = 10.0
-
-    for i in range(limit):
-        # reshuffle each full cycle
-        if i > 0 and i % total_available == 0:
-            random.shuffle(record_list)
-
-        record = record_list[i % total_available]
-        p_id   = record.get('player_id')
-        if p_id is not None:
-            p_id = int(p_id)
-
-        try:
-            response = requests.post(url, json=record, timeout=5)
-            print(f"  Sent [{i+1}/{limit}] player {p_id} → {response.status_code}")
-            consecutive_failures = 0
-
-        except Exception:
-            consecutive_failures += 1
-            backoff = min(0.5 * (2 ** (consecutive_failures - 1)), MAX_BACKOFF_S)
-            print(f"  Target {url} unreachable. "
-                  f"(failure #{consecutive_failures}, retrying in {backoff:.1f}s)")
-            time.sleep(backoff)
-
-    print("\n[SYSTEM] Streaming finished.")
-    streaming_done.set()
 
 ##########################################
 # FLASK ROUTES
@@ -316,11 +381,10 @@ if __name__ == "__main__":
 
         print("Waiting for streaming to complete...")
         streaming_done.wait()
-
         print("Waiting for last labels to arrive...")
         time.sleep(3)
-
-        print("\n" + "=" * 40)
+        flush_remaining_csv(LABELS_CSV_PATH)   # ← flush leftover CSV rows
+        flush_all_logs()                        # ← flush leftover log events
         if input("Ready to generate testing log CSV? (y/n): ").strip().lower() == 'y':
             generate_testing_csv(phase_choice)
         else:

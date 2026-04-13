@@ -1,0 +1,170 @@
+{
+    "source_file": "C:\\Users\\simon\\OneDrive\\Desktop\\Magistrale\\Software and System Engineering\\Project\\Code\\SoftwareSystemEngineering-UniPi\\logs\\testing_log_development.csv",
+    "systems_found": [
+        "development",
+        "ingestion",
+        "preparation",
+        "production",
+        "segregation"
+    ],
+    "total_rows": 51714,
+    "unique_processes_count": 12,
+    "processes": [
+        {
+            "process": "D1 - Calibration set received",
+            "occurrences": 20,
+            "average_latency_s": 1.292035,
+            "outcomes": [
+                {
+                    "outcome": "yes: classifier sent",
+                    "occurrences": 20
+                }
+            ]
+        },
+        {
+            "process": "D2 - Set hyperparameters",
+            "occurrences": 15,
+            "average_latency_s": 1.64684,
+            "outcomes": [
+                {
+                    "outcome": "no: test rejected",
+                    "occurrences": 15
+                }
+            ]
+        },
+        {
+            "process": "D3 - Ongoing validation",
+            "occurrences": 6,
+            "average_latency_s": 1.785433,
+            "outcomes": [
+                {
+                    "outcome": "no: max iterations reached (20)",
+                    "occurrences": 6
+                }
+            ]
+        },
+        {
+            "process": "I0",
+            "occurrences": 11983,
+            "average_latency_s": 11.315217,
+            "outcomes": [
+                {
+                    "outcome": "Record stored",
+                    "occurrences": 11983
+                }
+            ]
+        },
+        {
+            "process": "I1",
+            "occurrences": 30554,
+            "average_latency_s": 6.936539,
+            "outcomes": [
+                {
+                    "outcome": "0-Not enough record to create a raw session",
+                    "occurrences": 3614
+                },
+                {
+                    "outcome": "1-Enough record to create a raw session",
+                    "occurrences": 8369
+                },
+                {
+                    "outcome": "prepared session sent to segregation system",
+                    "occurrences": 18571
+                }
+            ]
+        },
+        {
+            "process": "I2",
+            "occurrences": 8369,
+            "average_latency_s": 11.807465,
+            "outcomes": [
+                {
+                    "outcome": "0-Invalid raw session, discarded",
+                    "occurrences": 8021
+                },
+                {
+                    "outcome": "1-Raw session is valid",
+                    "occurrences": 348
+                }
+            ]
+        },
+        {
+            "process": "I4",
+            "occurrences": 348,
+            "average_latency_s": 12.359819,
+            "outcomes": [
+                {
+                    "outcome": "raw session sent to preparation system",
+                    "occurrences": 348
+                }
+            ]
+        },
+        {
+            "process": "P1",
+            "occurrences": 20,
+            "average_latency_s": 0.03001,
+            "outcomes": [
+                {
+                    "outcome": "Classifier deployed: model_1",
+                    "occurrences": 20
+                }
+            ]
+        },
+        {
+            "process": "S1",
+            "occurrences": 218,
+            "average_latency_s": 9e-06,
+            "outcomes": [
+                {
+                    "outcome": "sessions not sufficient",
+                    "occurrences": 141
+                },
+                {
+                    "outcome": "sessions sufficient",
+                    "occurrences": 77
+                }
+            ]
+        },
+        {
+            "process": "S2",
+            "occurrences": 77,
+            "average_latency_s": 0.300979,
+            "outcomes": [
+                {
+                    "outcome": "classes balanced",
+                    "occurrences": 58
+                },
+                {
+                    "outcome": "classes not balanced",
+                    "occurrences": 19
+                }
+            ]
+        },
+        {
+            "process": "S3",
+            "occurrences": 58,
+            "average_latency_s": 0.375422,
+            "outcomes": [
+                {
+                    "outcome": "coverage not satisfied",
+                    "occurrences": 12
+                },
+                {
+                    "outcome": "coverage satisfied",
+                    "occurrences": 46
+                }
+            ]
+        },
+        {
+            "process": "S4",
+            "occurrences": 46,
+            "average_latency_s": 0.044306,
+            "outcomes": [
+                {
+                    "outcome": "output sent",
+                    "occurrences": 46
+                }
+            ]
+        }
+    ]
+}

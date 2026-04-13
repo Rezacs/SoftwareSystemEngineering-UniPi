@@ -2,49 +2,69 @@
     "2026-04-12T21:12:48.958718Z": [
         {
             "process": "S1",
-            "timestamp inizio": "2026-04-12T21:12:48.958737Z",
-            "timestamp fine": "2026-04-12T21:12:48.958743Z",
-            "outcome": "sessions not sufficient"
+            "outcome": "sessions not sufficient",
+            "latency": 6e-06
         }
     ],
     "2026-04-12T21:12:53.985649Z": [
         {
             "process": "S1",
-            "timestamp inizio": "2026-04-12T21:12:53.985681Z",
-            "timestamp fine": "2026-04-12T21:12:53.985694Z",
-            "outcome": "sessions not sufficient"
+            "outcome": "sessions not sufficient",
+            "latency": 1.3e-05
         }
     ],
     "2026-04-12T21:12:59.009883Z": [
         {
             "process": "S1",
-            "timestamp inizio": "2026-04-12T21:12:59.009924Z",
-            "timestamp fine": "2026-04-12T21:12:59.009936Z",
-            "outcome": "sessions not sufficient"
+            "outcome": "sessions not sufficient",
+            "latency": 1.2e-05
         }
     ],
     "2026-04-12T21:13:04.021500Z": [
         {
             "process": "S1",
-            "timestamp inizio": "2026-04-12T21:13:04.021528Z",
-            "timestamp fine": "2026-04-12T21:13:04.021537Z",
-            "outcome": "sessions not sufficient"
+            "outcome": "sessions not sufficient",
+            "latency": 9e-06
         }
     ],
     "2026-04-12T21:13:09.032621Z": [
         {
             "process": "S1",
-            "timestamp inizio": "2026-04-12T21:13:09.032644Z",
-            "timestamp fine": "2026-04-12T21:13:09.032652Z",
-            "outcome": "sessions not sufficient"
+            "outcome": "sessions not sufficient",
+            "latency": 8e-06
         }
     ],
     "2026-04-12T21:13:14.057258Z": [
         {
             "process": "S1",
-            "timestamp inizio": "2026-04-12T21:13:14.057297Z",
-            "timestamp fine": "2026-04-12T21:13:14.057312Z",
-            "outcome": "sessions not sufficient"
+            "outcome": "sessions not sufficient",
+            "latency": 1.5e-05
+        }
+    ],
+    "2026-04-13T08:41:07.050067Z": [
+        {
+            "process": "S1",
+            "_start_timestamp": "2026-04-13T08:41:07.050111Z",
+            "latency": 1.9e-05,
+            "outcome": "sessions sufficient"
+        },
+        {
+            "process": "S2",
+            "_start_timestamp": "2026-04-13T08:41:07.050147Z",
+            "latency": 0.167762,
+            "outcome": "classes balanced"
+        },
+        {
+            "process": "S3",
+            "_start_timestamp": "2026-04-13T08:41:07.217947Z",
+            "latency": 0.157679,
+            "outcome": "coverage satisfied"
+        },
+        {
+            "process": "S4",
+            "_start_timestamp": "2026-04-13T08:41:07.375685Z",
+            "latency": 0.014013,
+            "outcome": "output sent"
         }
     ]
 }

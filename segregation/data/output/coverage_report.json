@@ -1,32 +1,27 @@
 {
-    "approved": false,
-    "all_features_covered": false,
-    "coverage_ratio": 0.6666666666666666,
+    "approved": true,
+    "all_features_covered": true,
+    "coverage_ratio": 1.0,
     "coverage_threshold": 0.8,
-    "uncoveredFeatures": [
-        {
-            "featureName": "skill_overall",
-            "comment": "Feature has insufficient variability across samples"
-        }
-    ],
+    "uncoveredFeatures": [],
     "features": {
         "skill_overall": {
-            "covered": false,
+            "covered": true,
             "min": 60.0,
-            "max": 60.0,
-            "unique_values": 1
+            "max": 91.0,
+            "unique_values": 17
         },
         "social_influence_score": {
             "covered": true,
-            "min": 93.79999999999998,
-            "max": 928.1999999999999,
-            "unique_values": 70
+            "min": 0.0,
+            "max": 945.0999999999999,
+            "unique_values": 99
         },
         "injuries_impact_score": {
             "covered": true,
-            "min": 2.5,
-            "max": 199.1,
-            "unique_values": 65
+            "min": 0.0,
+            "max": 206.1,
+            "unique_values": 91
         }
     }
 }

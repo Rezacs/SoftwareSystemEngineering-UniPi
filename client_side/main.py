@@ -198,17 +198,6 @@ def run_flask():
             port=config['network']['listen_port'], 
             use_reloader=False)
     
-def get_phase_from_config():
-    """Reads the phase from GeneralConfig.json."""
-    try:
-        with GENERAL_CONFIG_PATH.open('r', encoding='utf-8') as f:
-            gen_cfg = json.load(f)
-            # Assuming the key in your JSON is "phase" and values are 0 or 1
-            # Adjust the key name ["phase"] if it is named differently in your file
-            return str(gen_cfg.get("phase", "0")) 
-    except Exception as e:
-        print(f"[ERROR] Could not read GeneralConfig.json: {e}")
-        return "0" # Default to Development if file fails
 
 ##########################################
 # MAIN CONTROL LOOP
@@ -270,7 +259,6 @@ if __name__ == "__main__":
         random.shuffle(record_list)
 
         # Start background stream
-        phase_choice = get_phase_from_config()
         threading.Thread(target=stream_worker, args=(phase_choice, stream_limit, record_list), daemon=True).start()
         
         # Wait for worker to finish

@@ -317,5 +317,5 @@ class IngestionSystemOrchestrator:
 
         self.check_ip_and_port()
             
-        self.app.run(host=self.ingestion_system_config.hosting_ip, port=self.ingestion_system_config.hosting_port)
+        self.app.run(host=self.ingestion_system_config.hosting_ip, port=self.ingestion_system_config.hosting_port , threaded=True)
     

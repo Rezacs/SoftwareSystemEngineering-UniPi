@@ -12,22 +12,22 @@ echo.
 set /p USE_VENV=Do you want to activate the virtual environment? (Y/N): 
 echo.
 
-set /p DEV_MODE=Development mode? (1=Stop and Go, 2=Testing): 
-set /p SEG_MODE=Segregation mode? (1=Stop and Go, 2=Testing): 
-set /p EVAL_MODE=Evaluation mode? (1=Stop and Go, 2=Testing): 
+@REM set /p DEV_MODE=Development mode? (1=Stop and Go, 2=Testing): 
+@REM set /p SEG_MODE=Segregation mode? (1=Stop and Go, 2=Testing): 
+@REM set /p EVAL_MODE=Evaluation mode? (1=Stop and Go, 2=Testing): 
 
-set "GENERAL_CONFIG=%ROOT%\config\GeneralConfig.json"
+@REM set "GENERAL_CONFIG=%ROOT%\config\GeneralConfig.json"
 
-powershell -NoProfile -Command ^
-  "$p = '%GENERAL_CONFIG%';" ^
-  "$j = Get-Content $p -Raw | ConvertFrom-Json;" ^
-  "if (-not $j.development) { $j | Add-Member -MemberType NoteProperty -Name development -Value (@{}) }" ^
-  "if (-not $j.segregation) { $j | Add-Member -MemberType NoteProperty -Name segregation -Value (@{}) }" ^
-  "if (-not $j.evaluation) { $j | Add-Member -MemberType NoteProperty -Name evaluation -Value (@{}) }" ^
-  "$j.development | Add-Member -Force -MemberType NoteProperty -Name mode -Value '%DEV_MODE%';" ^
-  "$j.segregation | Add-Member -Force -MemberType NoteProperty -Name mode -Value '%SEG_MODE%';" ^
-  "$j.evaluation | Add-Member -Force -MemberType NoteProperty -Name mode -Value '%EVAL_MODE%';" ^
-  "$j | ConvertTo-Json -Depth 10 | Set-Content $p"
+@REM powershell -NoProfile -Command ^
+@REM   "$p = '%GENERAL_CONFIG%';" ^
+@REM   "$j = Get-Content $p -Raw | ConvertFrom-Json;" ^
+@REM   "if (-not $j.development) { $j | Add-Member -MemberType NoteProperty -Name development -Value (@{}) }" ^
+@REM   "if (-not $j.segregation) { $j | Add-Member -MemberType NoteProperty -Name segregation -Value (@{}) }" ^
+@REM   "if (-not $j.evaluation) { $j | Add-Member -MemberType NoteProperty -Name evaluation -Value (@{}) }" ^
+@REM   "$j.development | Add-Member -Force -MemberType NoteProperty -Name mode -Value '%DEV_MODE%';" ^
+@REM   "$j.segregation | Add-Member -Force -MemberType NoteProperty -Name mode -Value '%SEG_MODE%';" ^
+@REM   "$j.evaluation | Add-Member -Force -MemberType NoteProperty -Name mode -Value '%EVAL_MODE%';" ^
+@REM   "$j | ConvertTo-Json -Depth 10 | Set-Content $p"
 
 if /I "%USE_VENV%"=="Y" goto WITH_VENV
 goto WITHOUT_VENV

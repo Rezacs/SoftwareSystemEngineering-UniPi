@@ -7,6 +7,7 @@ from src.storage.repository import Repository
 from src.core.batch_manager import BatchManager
 from src.core.state_manager import StateManager
 from src.core.orchestrator import Orchestrator
+from src.utils.system_cleaner import SystemCleaner
 
 from src.utils.logger import logger
 
@@ -15,6 +16,10 @@ app = Flask(__name__)
 
 # ================= LOAD CONFIG =================
 config = Config()
+
+# ================= CLEAN SYSTEM =================
+cleaner = SystemCleaner(config)
+cleaner.clean_all()
 
 # ================= INIT COMPONENTS =================
 validator = SchemaValidator()

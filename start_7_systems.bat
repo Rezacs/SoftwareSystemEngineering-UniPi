@@ -16,6 +16,15 @@ echo Cleaning previous log files...
 if exist "%ROOT%\logs\*.json" del /q "%ROOT%\logs\*.json"
 echo Logs cleaned.
 
+echo Cleaning previous data files...
+if exist "%ROOT%\development\Data\reports\*.*"    del /q "%ROOT%\development\Data\reports\*.*"
+if exist "%ROOT%\development\Data\classifiers\*.*" del /q "%ROOT%\development\Data\classifiers\*.*"
+if exist "%ROOT%\evaluation\output\*.*"            del /q "%ROOT%\evaluation\output\*.*"
+if exist "%ROOT%\evaluation\data\*.db"             del /q "%ROOT%\evaluation\data\*.db"
+if exist "%ROOT%\segregation\data\output\*.*"      del /q "%ROOT%\segregation\data\output\*.*"
+if exist "%ROOT%\segregation\data\input\*.db"      del /q "%ROOT%\segregation\data\input\*.db"
+echo Data cleaned.
+
 @REM set /p DEV_MODE=Development mode? (1=Stop and Go, 2=Testing): 
 @REM set /p SEG_MODE=Segregation mode? (1=Stop and Go, 2=Testing): 
 @REM set /p EVAL_MODE=Evaluation mode? (1=Stop and Go, 2=Testing): 
@@ -37,26 +46,33 @@ if /I "%USE_VENV%"=="Y" goto WITH_VENV
 goto WITHOUT_VENV
 
 :WITH_VENV
-:: Start the first tab (this creates the window)
-wt -w 0 nt --title "Client Side" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\client_side" && python main.py"
+wt -w 0 nt --title "Client Side"  cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\client_side" && python main.py" ^
+   ; nt --title "Ingestion"        cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%" && python -m ingestion.main" ^
+   ; nt --title "Preparation"      cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%" && python -m preparation.main" ^
+   ; nt --title "Segregation"      cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\segregation" && python main.py" ^
+   ; nt --title "Development"      cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\development" && python main.py" ^
+   ; nt --title "Production"       cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\production" && python main.py" ^
+   ; nt --title "Evaluation"       cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\evaluation" && python -m src.main"
 
-:: Add subsequent tabs to the same window (-w 0)
-wt -w 0 nt --title "Ingestion" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%" && python -m ingestion.main"
-wt -w 0 nt --title "Preparation" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%" && python -m preparation.main"
-wt -w 0 nt --title "Segregation" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\segregation" && python main.py"
-wt -w 0 nt --title "Development" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\development" && python main.py"
-wt -w 0 nt --title "Production" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\production" && python main.py"
-wt -w 0 nt --title "Evaluation" cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\evaluation" && python -m src.main"
+
+wt -w 1 nt --title "Ingestion"    cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\ingestion"" ^
+   ; nt --title "Preparation"      cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\preparation"" ^
+   ; nt --title "Production"       cmd /k "call "%VENV_ACTIVATE%" && cd /d "%ROOT%\production"" ^
 goto END
 
 :WITHOUT_VENV
-wt -w 0 nt --title "Client Side" cmd /k "cd /d "%ROOT%\client_side" && python main.py"
-wt -w 0 nt --title "Ingestion Launcher" cmd /k "cd /d "%ROOT%" && python -m ingestion.main"
-wt -w 0 nt --title "Preparation Launcher" cmd /k "cd /d "%ROOT%" && python -m preparation.main"
-wt -w 0 nt --title "Ingestion System" cmd /k "cd /d "%ROOT%\ingestion" && python ingestion_launcher.py"
-wt -w 0 nt --title "Development System" cmd /k "cd /d "%ROOT%\development" && python main.py"
-wt -w 0 nt --title "Production System" cmd /k "cd /d "%ROOT%\production" && python main.py"
-wt -w 0 nt --title "Evaluation System" cmd /k "cd /d "%ROOT%\evaluation\src" && python main.py"
+wt -w 0 nt --title "Client Side"  cmd /k "cd /d "%ROOT%\client_side" && python main.py" ^
+   ; nt --title "Ingestion"        cmd /k "cd /d "%ROOT%" && python -m ingestion.main" ^
+   ; nt --title "Preparation"      cmd /k "cd /d "%ROOT%" && python -m preparation.main" ^
+   ; nt --title "Segregation"      cmd /k "cd /d "%ROOT%\segregation" && python main.py" ^
+   ; nt --title "Development"      cmd /k "cd /d "%ROOT%\development" && python main.py" ^
+   ; nt --title "Production"       cmd /k "cd /d "%ROOT%\production" && python main.py" ^
+   ; nt --title "Evaluation"       cmd /k "cd /d "%ROOT%\evaluation" && python -m src.main"
+
+wt -w 1 nt --title "Ingestion"    cmd /k "cd /d "%ROOT%\ingestion"" ^
+   ; nt --title "Preparation"      cmd /k "cd /d "%ROOT%\preparation"" ^
+   ; nt --title "Production"       cmd /k "cd /d "%ROOT%\production"" ^
+
 goto END
 
 :END

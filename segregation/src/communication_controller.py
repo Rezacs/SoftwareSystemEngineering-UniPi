@@ -91,17 +91,6 @@ class CommunicationController:
                 return jsonify({"status": "invalid_payload", "details": message}), 400
 
             self.session_repository.initialize(SEGREGATION_DB_PATH)
-            session_id = payload.get("session_id")
-            if self.session_repository.session_id_exists(session_id, SEGREGATION_DB_PATH):
-                print(f"[API] Duplicate prepared session discarded: session_id={session_id}")
-                return jsonify(
-                    {
-                        "status": "prepared_session_discarded",
-                        "stored_in_db": False,
-                        "discard_reason": "duplicate_session_id",
-                        "session_id": session_id,
-                    }
-                )
 
             workflow_state = self.load_workflow_state()
             batch_is_open = workflow_state["phase"] not in {

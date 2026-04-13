@@ -50,18 +50,6 @@ class SessionRepository:
             )
             connection.commit()
 
-    def session_id_exists(self, session_id: str, db_path: str) -> bool:
-        if session_id is None:
-            return False
-
-        with sqlite3.connect(db_path) as connection:
-            row = connection.execute(
-                "SELECT 1 FROM prepared_sessions WHERE session_id = ? LIMIT 1",
-                (session_id,),
-            ).fetchone()
-
-        return row is not None
-
     def receive(self, db_path: str, to_process_only: bool = True):
         query = """
             SELECT session_id, player_id, label,

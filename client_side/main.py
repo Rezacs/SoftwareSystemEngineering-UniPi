@@ -2,50 +2,119 @@ import json
 import time
 import random
 import threading
+import math
+import logging
 from datetime import datetime
 from pathlib import Path
-from flask import Flask, request, jsonify
+
 import pandas as pd
 import requests
-import math
-app = Flask(__name__)
-# Add at the top with other imports
-import logging
+from flask import Flask, request, jsonify
+
+# ── Suppress Flask request logs ───────────────────────────────
 logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
-# Volatile storage
-results_storage = {}
-streaming_active = False
+app = Flask(__name__)
 
 ##########################################
-# CONFIG & INITIAL LOGGING
+# PATHS & CONFIG
 ##########################################
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT   = Path(__file__).resolve().parents[1]
 CONFIG_PATH = REPO_ROOT / "config" / "clientsideConfig.json"
-LOG_DIR = REPO_ROOT / "logs"
+LOG_DIR     = REPO_ROOT / "logs"
 
 def load_config():
     with CONFIG_PATH.open('r', encoding='utf-8') as f:
         return json.load(f)
 
+config = load_config()
+
+LABELS_CSV_PATH = LOG_DIR / "labels.csv"
+
+##########################################
+# THREAD PRIMITIVES
+##########################################
+
+results_lock   = threading.Lock()
+results_storage = {}
+
+log_lock       = threading.Lock()
+csv_lock       = threading.Lock()
+
+streaming_done = threading.Event()
+streaming_done.set()   # idle at startup
+
+##########################################
+# LOGGING HELPERS
+##########################################
+
 def log_event(filename, event_data):
+    """Append an event dict to a JSON-array log file."""
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     path = LOG_DIR / filename
-    logs = []
-    if path.exists():
-        with path.open('r', encoding='utf-8') as f:
-            try: logs = json.load(f)
-            except: logs = []
-    logs.append(event_data)
-    with path.open('w', encoding='utf-8') as f:
-        json.dump(logs, indent=4, fp=f)
+    with log_lock:
+        logs = []
+        if path.exists():
+            with path.open('r', encoding='utf-8') as f:
+                try:
+                    logs = json.load(f)
+                except Exception:
+                    logs = []
+        logs.append(event_data)
+        with path.open('w', encoding='utf-8') as f:
+            json.dump(logs, indent=4, fp=f)
 
-config = load_config()
+
+def clear_logs():
+    """Wipe all system log files at the start of each experiment."""
+    log_files = [
+        "clientsideLogs.json",
+        "ingestionLog.json",
+        "preparationLog.json",
+        "segregationLog.json",
+        "developmentLog.json",
+        "productionLog.json",
+        "evaluationLog.json",
+    ]
+    with log_lock:
+        for name in log_files:
+            path = LOG_DIR / name
+            if path.exists():
+                empty = "[]" if name == "clientsideLogs.json" else "{}"
+                path.write_text(empty, encoding="utf-8")
+
+##########################################
+# CSV HELPERS
+##########################################
+
+def _read_csv_safe(path):
+    """Read a CSV, returning an empty DataFrame on any parse failure."""
+    try:
+        df = pd.read_csv(path)
+        if df.empty or len(df.columns) == 0:
+            return pd.DataFrame()
+        return df
+    except Exception:
+        return pd.DataFrame()
+
+
+def _append_to_csv(path, new_df):
+    """Thread-safe append of new_df rows to a CSV file."""
+    with csv_lock:
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+        if path.exists() and path.stat().st_size > 0:
+            existing = _read_csv_safe(path)
+            combined = pd.concat([existing, new_df], ignore_index=True) \
+                       if not existing.empty else new_df
+        else:
+            combined = new_df
+        combined.to_csv(path, index=False)
 
 ##########################################
 # TEST LOG GENERATOR
 ##########################################
+
 def parse_ts(ts_str):
     """Normalize timestamps to naive UTC datetimes for safe arithmetic."""
     if ts_str is None:
@@ -53,115 +122,102 @@ def parse_ts(ts_str):
     ts_str = ts_str.strip().replace("Z", "+00:00")
     try:
         dt = datetime.fromisoformat(ts_str)
-        # Strip timezone info to make all datetimes offset-naive
         return dt.replace(tzinfo=None)
     except ValueError:
         return None
 
 
 def generate_testing_csv(current_phase):
-    print(f"\n[SYSTEM] Aggregating logs for {('Development' if current_phase == '0' else 'Production')} phase...")
+    phase_label = "Development" if current_phase == "0" else "Production"
+    print(f"\n[SYSTEM] Aggregating logs for {phase_label} phase...")
 
-    # Shared logs across all phases
     all_logs = ["ingestionLog.json", "preparationLog.json"]
-    
-    # --- UPDATED: Phase 0 now includes Production System ---
     if current_phase == "0":
-        # We include production here to see "hand-off" or "deployment" latencies 
-        # that happen at the end of the development cycle
         all_logs += ["segregationLog.json", "developmentLog.json", "productionLog.json"]
     else:
-        # Standard Production phase logs
         all_logs += ["productionLog.json", "evaluationLog.json"]
-
-    # Deduplicate in case productionLog was added twice
-    all_logs = list(dict.fromkeys(all_logs))
+    all_logs = list(dict.fromkeys(all_logs))   # deduplicate, preserve order
 
     rows = []
 
     for log_file in all_logs:
-        path = LOG_DIR / log_file
+        path        = LOG_DIR / log_file
         system_name = log_file.replace("Log.json", "")
 
         if not path.exists():
             continue
 
-        with path.open('r', encoding='utf-8') as f:
-            try:
-                data = json.load(f)
-            except Exception as e:
-                print(f"Error reading {log_file}: {e}")
-                continue
+        with log_lock:
+            with path.open('r', encoding='utf-8') as f:
+                try:
+                    data = json.load(f)
+                except Exception as e:
+                    print(f"  Error reading {log_file}: {e}")
+                    continue
 
-            if not isinstance(data, dict):
-                continue
+        if not isinstance(data, dict):
+            continue
 
-        # Process the new dictionary structure
-        for session_ts, entries in data.items():
+        for _session_ts, entries in data.items():
             for entry in entries:
-                # Capture the data exactly as formatted in your new logs
                 rows.append({
-                    "system": system_name,
-                    "process": entry.get("process"),
+                    "system":    system_name,
+                    "process":   entry.get("process"),
                     "latency_s": entry.get("latency", 0),
-                    "outcome": entry.get("outcome", "")
+                    "outcome":   entry.get("outcome", ""),
                 })
 
     if not rows:
-        print("FAILED: No process entries found in logs.")
+        print("  FAILED: No process entries found in logs.")
         return
 
-    phase_name = "development" if current_phase == "0" else "production"
+    phase_name  = "development" if current_phase == "0" else "production"
     output_path = LOG_DIR / f"testing_log_{phase_name}.csv"
-
-    new_df = pd.DataFrame(rows)
-
-    if output_path.exists():
-        try:
-            existing_df = pd.read_csv(output_path)
-            combined_df = pd.concat([existing_df, new_df], ignore_index=True)
-        except:
-            combined_df = new_df
-    else:
-        combined_df = new_df
-
-    combined_df.to_csv(output_path, index=False)
-    print(f"SUCCESS: Logs for {all_logs} combined into → {output_path}")
+    _append_to_csv(output_path, pd.DataFrame(rows))
+    print(f"  SUCCESS: {len(rows)} rows written → {output_path}")
 
 ##########################################
 # STREAMING WORKER
 ##########################################
 
 def stream_worker(current_phase, limit, record_list):
-    global streaming_active
-    streaming_active = True
+    streaming_done.clear()
 
-    ingestion_cfg = config['network']['ingestion_system']
-    url = f"http://{ingestion_cfg['ip']}:{ingestion_cfg['port']}/run"
+    ingestion_cfg   = config['network']['ingestion_system']
+    url             = f"http://{ingestion_cfg['ip']}:{ingestion_cfg['port']}/run"
     total_available = len(record_list)
 
+    consecutive_failures = 0
+    MAX_BACKOFF_S        = 10.0
+
     for i in range(limit):
-        if i > 0 and i % total_available == 0:  # every time a full cycle completes
+        # reshuffle each full cycle
+        if i > 0 and i % total_available == 0:
             random.shuffle(record_list)
+
         record = record_list[i % total_available]
-        p_id = record.get('player_id')
+        p_id   = record.get('player_id')
         if p_id is not None:
             p_id = int(p_id)
 
         try:
             response = requests.post(url, json=record, timeout=5)
             print(f"  Sent [{i+1}/{limit}] player {p_id} → {response.status_code}")
-        except:
-            print(f"  Target {url} unreachable.")
+            consecutive_failures = 0
+
+        except Exception:
+            consecutive_failures += 1
+            backoff = min(0.5 * (2 ** (consecutive_failures - 1)), MAX_BACKOFF_S)
+            print(f"  Target {url} unreachable. "
+                  f"(failure #{consecutive_failures}, retrying in {backoff:.1f}s)")
+            time.sleep(backoff)
 
     print("\n[SYSTEM] Streaming finished.")
-    streaming_active = False
+    streaming_done.set()
 
 ##########################################
-# FLASK INTERFACE
+# FLASK ROUTES
 ##########################################
-
-LABELS_CSV_PATH = LOG_DIR / "labels.csv"
 
 @app.route("/receive-label", methods=["POST"])
 def receive_label():
@@ -170,34 +226,60 @@ def receive_label():
         p_id = data.get("player_id")
         if p_id is not None:
             p_id = int(p_id)
-        results_storage[p_id] = data
+
+        with results_lock:
+            results_storage[p_id] = data
 
         new_row = {
             "player_id": int(p_id) if p_id is not None else None,
             "timestamp": datetime.now().isoformat(),
-            **{k: v for k, v in data.items() if k != "player_id"}
+            **{k: v for k, v in data.items() if k != "player_id"},
         }
-        new_df = pd.DataFrame([new_row])
+        _append_to_csv(LABELS_CSV_PATH, pd.DataFrame([new_row]))
 
-        if LABELS_CSV_PATH.exists() and LABELS_CSV_PATH.stat().st_size > 0:
-            existing_df = pd.read_csv(LABELS_CSV_PATH)
-            combined_df = pd.concat([existing_df, new_df], ignore_index=True)
-        else:
-            LOG_DIR.mkdir(parents=True, exist_ok=True)
-            combined_df = new_df
-
-        combined_df.to_csv(LABELS_CSV_PATH, index=False)
         return jsonify({"status": "received"}), 200
 
     except Exception as e:
         print(f"[CLIENT] Error in /receive-label: {e}")
         return jsonify({"error": str(e)}), 500
 
+
 def run_flask():
-    app.run(host=config['network']['listen_host'], 
-            port=config['network']['listen_port'], 
-            use_reloader=False)
-    
+    app.run(
+        host=config['network']['listen_host'],
+        port=config['network']['listen_port'],
+        use_reloader=False,
+    )
+
+##########################################
+# DATA LOADER
+##########################################
+
+def load_record_list():
+    """Load and interleave all dev CSVs into a shuffled flat record list."""
+    pool = []
+    for file_path in config['paths']['dev_files']:
+        candidate = Path(file_path)
+        if not candidate.is_absolute():
+            candidate = (REPO_ROOT / candidate).resolve()
+
+        if candidate.exists():
+            df = pd.read_csv(candidate)
+            df = df.where(pd.notnull(df), None).sample(frac=1).reset_index(drop=True)
+            pool.append(df)
+        else:
+            print(f"  Warning: {candidate} not found, skipping.")
+
+    records = []
+    for df in pool:
+        for _, row in df.iterrows():
+            records.append({
+                k: v for k, v in row.to_dict().items()
+                if v is not None and not (isinstance(v, float) and math.isnan(v))
+            })
+
+    random.shuffle(records)
+    return records
 
 ##########################################
 # MAIN CONTROL LOOP
@@ -205,77 +287,43 @@ def run_flask():
 
 if __name__ == "__main__":
     threading.Thread(target=run_flask, daemon=True).start()
-    log_event("clientsideLogs.json", {
-        "initial_experiment_timestamp": datetime.now().isoformat()
-    })
 
     while True:
-    # ── Clear all logs at the start of each experiment ──
-        for log_file in [
-            "clientsideLogs.json",
-            "ingestionLog.json",
-            "preparationLog.json",
-            "segregationLog.json",
-            "developmentLog.json",
-            "productionLog.json",
-            "evaluationLog.json"
-        ]:
-            path = LOG_DIR / log_file
-            if path.exists():
-                path.write_text("{}" if log_file != "clientsideLogs.json" else "[]", encoding="utf-8")
-
-        # Write initial timestamp fresh
+        # ── Reset logs for this experiment ────────────────────
+        clear_logs()
         log_event("clientsideLogs.json", {
             "initial_experiment_timestamp": datetime.now().isoformat()
         })
 
-        print("\n" + "="*40)
+        print("\n" + "=" * 40)
         print("CLIENT SYSTEM CONTROL PANEL")
-        print("="*40)
-        
-        phase_choice = input("Select Phase: [0] Development, [1] Production: ")
-        stream_limit = int(input("Enter number of records to stream: "))
-        # Prepare Data — same logic for both phases, always load all dev_files
-        pool_list = []
-        for file_path in config['paths']['dev_files']:
-            candidate_path = Path(file_path)
-            if not candidate_path.is_absolute():
-                candidate_path = (REPO_ROOT / candidate_path).resolve()
-                if candidate_path.exists():
-                    df = pd.read_csv(candidate_path)
-                    df = df.where(pd.notnull(df), None).sample(frac=1).reset_index(drop=True)
-                    pool_list.append(df)
-            else:
-                print(f"Warning: {candidate_path} not found, skipping.")
+        print("=" * 40)
 
-        # Build flat interleaved list, each record with only its own columns
-        record_list = []
-        for df in pool_list:
-            for _, row in df.iterrows():
-                record_list.append({
-                k: v for k, v in row.to_dict().items()
-                if v is not None and not (isinstance(v, float) and math.isnan(v))
-            })
-        random.shuffle(record_list)
+        phase_choice = input("Select Phase: [0] Development, [1] Production: ").strip()
+        stream_limit = int(input("Enter number of records to stream: ").strip())
 
-        # Start background stream
-        threading.Thread(target=stream_worker, args=(phase_choice, stream_limit, record_list), daemon=True).start()
-        
-        # Wait for worker to finish
-        # Wait for worker to finish
+        record_list = load_record_list()
+        if not record_list:
+            print("  ERROR: No records loaded. Check config paths.")
+            continue
+
+        # ── Start background stream ────────────────────────────
+        threading.Thread(
+            target=stream_worker,
+            args=(phase_choice, stream_limit, record_list),
+            daemon=True,
+        ).start()
+
         print("Waiting for streaming to complete...")
-        while streaming_active:
-            time.sleep(0.2)
+        streaming_done.wait()
 
-        # Give in-flight labels time to arrive before prompting
         print("Waiting for last labels to arrive...")
         time.sleep(3)
 
-        print("\n" + "="*40)
-        ready = input("Ready to generate testing log CSV? (y/n): ").lower()
-        if ready == 'y':
+        print("\n" + "=" * 40)
+        if input("Ready to generate testing log CSV? (y/n): ").strip().lower() == 'y':
             generate_testing_csv(phase_choice)
         else:
-            print("Skipping CSV generation.")
+            print("  Skipping CSV generation.")
 
         print("\nRestarting system...")

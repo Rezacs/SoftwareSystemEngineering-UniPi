@@ -1,20 +1,20 @@
 {
-	"overfitting_threshold": 0.9,
+	"overfitting_threshold": 0.2,
 	"best_classifiers": [
 		{
 			"index": 1,
 			"classifier_id": "manual_alpha",
-			"training_error": 0.4167,
-			"validation_error": 0.6667,
-			"overfitting_gap": 0.25,
+			"training_error": 0.0,
+			"validation_error": 0.0,
+			"overfitting_gap": 0.0,
 			"valid": true
 		},
 		{
 			"index": 2,
 			"classifier_id": "manual_beta",
-			"training_error": 0.5833,
-			"validation_error": 0.6667,
-			"overfitting_gap": 0.0833,
+			"training_error": 0.4286,
+			"validation_error": 0.0,
+			"overfitting_gap": -0.4286,
 			"valid": true
 		}
 	],

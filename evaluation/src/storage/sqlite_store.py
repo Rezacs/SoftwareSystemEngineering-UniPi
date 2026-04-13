@@ -1,4 +1,5 @@
 import sqlite3
+import threading
 
 
 class SQLiteStore:
@@ -7,13 +8,19 @@ class SQLiteStore:
     """
 
     def __init__(self, db_path):
-        self.conn = sqlite3.connect(db_path, check_same_thread=False)
+        self.db_path = db_path
+        self._local = threading.local()
         self._init_db()
+
+    @property
+    def conn(self):
+        if not hasattr(self._local, "conn"):
+            self._local.conn = sqlite3.connect(self.db_path)
+        return self._local.conn
 
     def _init_db(self):
         cur = self.conn.cursor()
 
-        # Expert labels
         cur.execute("""
         CREATE TABLE IF NOT EXISTS expert_labels (
             player_id TEXT PRIMARY KEY,
@@ -21,7 +28,6 @@ class SQLiteStore:
         )
         """)
 
-        # Classifier labels
         cur.execute("""
         CREATE TABLE IF NOT EXISTS classifier_labels (
             player_id TEXT PRIMARY KEY,
@@ -36,7 +42,6 @@ class SQLiteStore:
     def insert(self, player_id, label, source):
         table = "expert_labels" if source == "expert" else "classifier_labels"
 
-        # REPLACE avoids duplicates (latest value wins)
         self.conn.execute(
             f"INSERT OR REPLACE INTO {table} VALUES (?, ?)",
             (player_id, label)
@@ -46,9 +51,6 @@ class SQLiteStore:
     # ================= MATCHING =================
 
     def fetch_matched(self):
-        """
-        Returns only matched pairs (INNER JOIN)
-        """
         cur = self.conn.cursor()
 
         cur.execute("""
@@ -58,12 +60,9 @@ class SQLiteStore:
         ON e.player_id = c.player_id
         """)
 
-        return cur.fetchall()
+        return cur.fetchall() or []
 
     def count_matched(self):
-        """
-        Count matched pairs (for batch logic)
-        """
         cur = self.conn.cursor()
 
         cur.execute("""
@@ -73,14 +72,12 @@ class SQLiteStore:
         ON e.player_id = c.player_id
         """)
 
-        return cur.fetchone()[0]
+        row = cur.fetchone()
+        return row[0] if row else 0
 
     # ================= FOR DEBUG (OPTIONAL) =================
 
     def fetch_all_raw(self):
-        """
-        Debug only — not used in evaluation
-        """
         expert = list(self.conn.execute("SELECT * FROM expert_labels"))
         classifier = list(self.conn.execute("SELECT * FROM classifier_labels"))
         return expert, classifier

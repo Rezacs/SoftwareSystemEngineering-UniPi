@@ -2,12 +2,16 @@ import json
 import threading
 from pathlib import Path
 
-from sklearn import metrics
+import matplotlib
+matplotlib.use("Agg")
 
 from src.reporting.report_metrics import ReportMetrics
 from src.reporting.visual_report import VisualReport
 from src.utils.logger import logger
 from src.core.logging_manager import LoggingManager
+
+# ── Global matplotlib lock (shared across all instances) ──────
+_matplotlib_lock = threading.Lock()
 
 
 class Orchestrator:
@@ -32,9 +36,29 @@ class Orchestrator:
         self.log_mgr        = LoggingManager()
 
         # ================= INTERNAL STATE =================
-        self.last_metrics = None
-        self.last_batch   = None
+        self.last_metrics   = None
+        self.last_batch     = None
         self._finalize_lock = threading.Lock()
+        self._finalized     = False  # guard against double-finalize
+
+    # =========================================================
+    # ================= VISUAL (fire-and-forget) ==============
+    # =========================================================
+
+    def _generate_visual_async(self, batch):
+        """
+        Spawn a background thread to generate the plot.
+        The HTTP response is never blocked waiting for this.
+        """
+        def _run():
+            try:
+                with _matplotlib_lock:
+                    result = self.visual.generate(batch, self.config)
+                logger.info(f"Report generated → {result.get('file')}")
+            except Exception as e:
+                logger.error(f"Visual generation failed: {e}")
+
+        threading.Thread(target=_run, daemon=True).start()
 
     # =========================================================
     # ================= MAIN ENTRY ============================
@@ -51,20 +75,26 @@ class Orchestrator:
 
             if self.config["server"]["mode"] == "auto":
 
-                if self._finalize_lock.locked():
-                    self.repo.save_label(data)
-                    return {"status": "buffering_until_decision"}
-
                 with self._finalize_lock:
+                    # re-check inside the lock (double-checked locking)
                     if not self.state.is_waiting_decision():
                         pass
+                    elif self._finalized:
+                        # another thread already claimed finalization → buffer
+                        self.repo.save_label(data)
+                        return {"status": "buffering_until_decision"}
                     else:
+                        self._finalized = True  # claim finalization
                         decision = self._suggest_decision(self.last_metrics)
 
                         # END E1 (waiting path)
                         self.log_mgr.end_process("Label Sufficient: NO")
 
                         return self.finalize_decision(decision, mode="AUTO")
+
+                # fell through — state was already cleared by winning thread
+                self.repo.save_label(data)
+                return {"status": "buffering_until_decision"}
 
             else:
                 logger.info("⏸ Waiting for human decision → buffering incoming data")
@@ -78,7 +108,8 @@ class Orchestrator:
 
         # ================= RECEIVE =================
         logger.info(
-            f"Received {data['source']} label → player_id: {data['player_id']} has label: {data['label']}"
+            f"Received {data['source']} label → "
+            f"player_id: {data['player_id']} has label: {data['label']}"
         )
 
         # ================= STORE =================
@@ -111,21 +142,21 @@ class Orchestrator:
         batch = self.batch_mgr.get_batch(pairs)
 
         # ================= METRICS =================
-        metrics = self.metrics_engine.compute(
+        batch_metrics = self.metrics_engine.compute(
             batch,
             self.eval_cfg["error_threshold"]
         )
 
-        # ================= REPORT =================
-        visual = self.visual.generate(batch, self.config)
-        logger.info(f"Report generated → {visual.get('file')}")
+        # ================= REPORT (non-blocking) =================
+        # Response is returned immediately — plot is written in the background
+        self._generate_visual_async(batch)
 
         # ================= SAVE =================
-        self.last_metrics = metrics
+        self.last_metrics = batch_metrics
         self.last_batch   = batch
 
         self._save_json("matched_pairs.json", batch)
-        self._save_json("metrics.json", metrics)
+        self._save_json("metrics.json", batch_metrics)
 
         # ================= MARK WAITING =================
         self.state.set_batch(batch)
@@ -136,19 +167,21 @@ class Orchestrator:
             logger.info("Buffer Cleared → Only consumed batch removed from DB")
 
         # ================= DECISION SUGGESTION =================
-        decision = self._suggest_decision(metrics)
+        decision = self._suggest_decision(batch_metrics)
 
         # ================= AUTO MODE =================
         if self.config["server"]["mode"] == "auto":
             with self._finalize_lock:
+                if self._finalized:
+                    return {"status": "already_finalized", "decision": decision}
+                self._finalized = True
                 return self.finalize_decision(decision, mode="AUTO")
 
         # ================= HUMAN MODE =================
         logger.info("⏸ Waiting for HUMAN decision")
         return {
             "status":             "waiting_for_human",
-            "metrics":            metrics,
-            "report":             visual,
+            "metrics":            batch_metrics,
             "suggested_decision": decision
         }
 
@@ -186,6 +219,7 @@ class Orchestrator:
 
         # ================= RESET STATE =================
         self.state.clear_batch()
+        self._finalized = False  # re-arm for next batch
 
         logger.info("🔄 System ready for next batch\n" + "=" * 62 + "\n")
 
@@ -195,12 +229,12 @@ class Orchestrator:
     # ================= DECISION LOGIC ========================
     # =========================================================
 
-    def _suggest_decision(self, metrics):
+    def _suggest_decision(self, batch_metrics):
 
-        if metrics["errors"] > self.eval_cfg["max_errors"]:
+        if batch_metrics["errors"] > self.eval_cfg["max_errors"]:
             return "REJECT"
 
-        if metrics["max_consecutive"] > self.eval_cfg["max_consecutive_errors"]:
+        if batch_metrics["max_consecutive"] > self.eval_cfg["max_consecutive_errors"]:
             return "REJECT"
 
         return "ACCEPT"

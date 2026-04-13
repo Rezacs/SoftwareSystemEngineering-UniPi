@@ -2,11 +2,12 @@ from pathlib import Path
 from typing import List, Optional
 
 import joblib
+import matplotlib
+matplotlib.use("Agg")   # safe for server/thread contexts
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import accuracy_score
 
 from Data.classifier import Classifier
 from Data.learningPlot import LearningPlot
@@ -21,6 +22,17 @@ def _sessions_to_frames(sessions: List[PreparedSession], feature_cols: List[str]
     return X, y
 
 
+def _to_numpy(X) -> np.ndarray:
+    """
+    Accepts a DataFrame or ndarray and always returns a plain ndarray.
+    This ensures the MLPClassifier is never fitted or called with
+    feature names, avoiding the sklearn UserWarning at prediction time.
+    """
+    if isinstance(X, pd.DataFrame):
+        return X.values
+    return np.asarray(X)
+
+
 class TrainingOrchestrator:
 
     def __init__(self, feature_cols: List[str], score_min: int, score_max: int) -> None:
@@ -32,7 +44,6 @@ class TrainingOrchestrator:
     # ── BPMN Task: SET HYPERPARAMS ─────────────────────────────────────
 
     def set_parameters(self, params: dict) -> None:
-        """BPMN Task: SET HYPERPARAMS"""
         print(f"[TrainingOrchestrator] SET HYPERPARAMS: {params}")
         self._params = params
 
@@ -55,17 +66,12 @@ class TrainingOrchestrator:
         output_path: str,
         num_epochs: int = 10,
     ) -> LearningPlot:
-        """
-        BPMN Tasks: CALIBRATE & GENERATE CALIBRATION REPORT.
-        Fits the MLP for num_epochs iterations, saves the loss curve
-        as a PNG, and returns a LearningPlot for the view layer.
-        """
         print(f"[TrainingOrchestrator] CALIBRATE — {num_epochs} epochs …")
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         mlp = self._build_mlp(max_iter=num_epochs)
-        mlp.fit(X_train.values, y_train)
+        mlp.fit(_to_numpy(X_train), y_train)   # ← numpy, no feature names
 
         mse    = mlp.loss_curve_
         epochs = list(range(1, len(mse) + 1))
@@ -87,7 +93,7 @@ class TrainingOrchestrator:
     def generate_learning_curve(self, X_train, y_train, output_path, num_epochs=10):
         return self.generate_calibration_report(X_train, y_train, output_path, num_epochs)
 
-    # ── Training (called per HP config inside grid search) ─────────────
+    # ── Training ────────────────────────────────────────────────────────
 
     def train_classifier(
         self,
@@ -98,20 +104,18 @@ class TrainingOrchestrator:
         classifier_id: str,
         model_path: str,
     ) -> Classifier:
-        """
-        Trains one MLPClassifier with the currently set hyper-parameters.
-        Error metric: classification error (1 - accuracy) on integer scores {1..5}.
-        Persists the model to disk with joblib.
-        """
         print(f"[TrainingOrchestrator] Training '{classifier_id}' …")
         model_path = Path(model_path)
         model_path.parent.mkdir(parents=True, exist_ok=True)
 
-        mlp = self._build_mlp()
-        mlp.fit(X_train.values, y_train)
+        X_train_np = _to_numpy(X_train)   # ← strip feature names before fit
+        X_val_np   = _to_numpy(X_val)
 
-        training_error   = 1.0 - mlp.score(X_train.values, y_train)
-        validation_error = 1.0 - mlp.score(X_val.values,   y_val)
+        mlp = self._build_mlp()
+        mlp.fit(X_train_np, y_train)       # ← numpy, no feature names
+
+        training_error   = 1.0 - mlp.score(X_train_np, y_train)
+        validation_error = 1.0 - mlp.score(X_val_np,   y_val)
 
         joblib.dump(mlp, model_path)
 

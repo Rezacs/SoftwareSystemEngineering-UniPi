@@ -214,7 +214,7 @@ class IngestionSystemOrchestrator:
                     self.log_event(event)
 
                 except requests.exceptions.Timeout:
-                    error_msg = f"Connection to {self.evaluation_url} timed out after 3 seconds."
+                    error_msg = f"Connection to {self.evaluation_url} timed out after 10 seconds."
                     print(f"\nERROR: {error_msg}")
     
                 except requests.exceptions.ConnectionError:
@@ -258,7 +258,7 @@ class IngestionSystemOrchestrator:
             print(f"[INFO] Raw session correctly sent to preparation system")
         
         except requests.exceptions.Timeout:
-            print(f"\nERROR: Connection to {self.preparation_url} timed out after 3 seconds.")
+            print(f"\nERROR: Connection to {self.preparation_url} timed out after 10 seconds.")
     
         except requests.exceptions.ConnectionError:
             print(f"\nERROR: Could not connect to {self.preparation_url}. Is the evaluation server running?")

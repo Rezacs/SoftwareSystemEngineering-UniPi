@@ -6,7 +6,7 @@
   },
 
   "evaluation": {
-    "batch_size": 30,
+    "batch_size": 10,
     "error_threshold": 1,
     "max_errors": 4,
     "max_consecutive_errors": 3,
@@ -26,7 +26,7 @@
     "ingestion": {
       "ip": "127.0.0.1",
       "port": 5001,
-      "endpoint": "/run"
+      "endpoint": "/expert-label"
     },
     "classification": {
       "ip": "127.0.0.1",

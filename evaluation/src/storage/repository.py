@@ -20,13 +20,17 @@ class Repository:
     def get_matched_pairs(self):
         rows = self.store.fetch_matched()
 
+        if not rows:
+            return []
+
         return [
             {
-                "player_id": r[0],
-                "expert": r[1],
+                "player_id":  r[0],
+                "expert":     r[1],
                 "classifier": r[2]
             }
             for r in rows
+            if r is not None and len(r) >= 3
         ]
 
     def count_matched(self):

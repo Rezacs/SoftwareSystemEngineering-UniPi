@@ -109,6 +109,7 @@ if __name__ == "__main__":
     # In both modes, it runs continuously until interrupted (Ctrl+C).
     
     insufficient_sessions_logged = False
+    waiting_for_input_logged = False
 
     while True:
         try:
@@ -116,6 +117,7 @@ if __name__ == "__main__":
             status = result.get("status", "unknown")
             
             if status == "sessions_not_sufficient":
+                waiting_for_input_logged = False
                 # Not enough sessions yet, wait a bit
                 if testing_mode:
                     if not insufficient_sessions_logged:
@@ -127,9 +129,17 @@ if __name__ == "__main__":
                         print("[Main] Not enough sessions. Waiting for more data...")
                         insufficient_sessions_logged = True
                     time.sleep(5)
+
+            elif status == "waiting_for_input":
+                insufficient_sessions_logged = False
+                if not waiting_for_input_logged:
+                    print("[Main] Waiting for a new incoming session...")
+                    waiting_for_input_logged = True
+                time.sleep(5)
             
             elif status == "balancing_report_generated":
                 insufficient_sessions_logged = False
+                waiting_for_input_logged = False
                 # Balancing report created, now waiting for decision
                 print(f"\n[Main] Status: Balancing report generated")
                 if testing_mode:
@@ -146,6 +156,7 @@ if __name__ == "__main__":
             
             elif status == "coverage_report_generated":
                 insufficient_sessions_logged = False
+                waiting_for_input_logged = False
                 # Coverage report created, now waiting for decision
                 print(f"\n[Main] Status: Coverage report generated")
                 if testing_mode:
@@ -162,6 +173,7 @@ if __name__ == "__main__":
                     
             elif status in ["waiting_balancing_decision", "waiting_coverage_decision"]:
                 insufficient_sessions_logged = False
+                waiting_for_input_logged = False
                 # Waiting for decision (should only happen in Stop&Go after restart)
                 print(f"\n[Main] Status: {status.replace('_', ' ')}")
                 if testing_mode:
@@ -175,6 +187,7 @@ if __name__ == "__main__":
                     
             elif status == "balancing_rejected" or status == "coverage_rejected":
                 insufficient_sessions_logged = False
+                waiting_for_input_logged = False
                 # Workflow rejected, reset complete
                 print(f"\n[Main] Status: {status.replace('_', ' ')}")
                 if testing_mode:
@@ -186,6 +199,7 @@ if __name__ == "__main__":
                     
             elif status == "calibration_sets_sent":
                 insufficient_sessions_logged = False
+                waiting_for_input_logged = False
                 # Workflow complete!
                 print("\n[Main] Status: Calibration set sent successfully!")
                 if testing_mode:
@@ -197,6 +211,7 @@ if __name__ == "__main__":
                     
             elif status == "reset_complete":
                 insufficient_sessions_logged = False
+                waiting_for_input_logged = False
                 # Already completed, was reset
                 print("[Main] Status: System is idle")
                 print("[Main] Checking for sessions...")
@@ -204,6 +219,7 @@ if __name__ == "__main__":
                 
             else:
                 insufficient_sessions_logged = False
+                waiting_for_input_logged = False
                 # Any other status - just log and continue/exit based on mode
                 print(f"[Main] Status: {status}")
                 time.sleep(2)

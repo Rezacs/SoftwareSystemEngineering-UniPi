@@ -83,6 +83,13 @@ class SessionRepository:
         with sqlite3.connect(db_path) as connection:
             return int(connection.execute(query).fetchone()[0])
 
+    def latest_record_id(self, db_path: str) -> int:
+        with sqlite3.connect(db_path) as connection:
+            row = connection.execute(
+                "SELECT COALESCE(MAX(id), 0) FROM prepared_sessions"
+            ).fetchone()
+        return int(row[0]) if row and row[0] is not None else 0
+
     def receiveStored(self, db_path: str):
         return self.receive(db_path, to_process_only=False)
 

@@ -5,43 +5,43 @@
     "tolerance": 0.05,
     "toleranceUsed": 0.05,
     "distribution": {
-        "1": 3,
-        "2": 4,
-        "3": 2,
-        "4": 1,
-        "5": 0
+        "1": 2,
+        "2": 3,
+        "3": 3,
+        "4": 0,
+        "5": 2
     },
     "average": 2.0,
     "averageSamplesPerClass": 2.0,
     "classStatistics": [
         {
             "classLabel": 1,
-            "numSamples": 3,
-            "missingSamples": 0,
-            "excessiveSamples": 1
-        },
-        {
-            "classLabel": 2,
-            "numSamples": 4,
-            "missingSamples": 0,
-            "excessiveSamples": 2
-        },
-        {
-            "classLabel": 3,
             "numSamples": 2,
             "missingSamples": 0,
             "excessiveSamples": 0
         },
         {
+            "classLabel": 2,
+            "numSamples": 3,
+            "missingSamples": 0,
+            "excessiveSamples": 1
+        },
+        {
+            "classLabel": 3,
+            "numSamples": 3,
+            "missingSamples": 0,
+            "excessiveSamples": 1
+        },
+        {
             "classLabel": 4,
-            "numSamples": 1,
-            "missingSamples": 1,
+            "numSamples": 0,
+            "missingSamples": 2,
             "excessiveSamples": 0
         },
         {
             "classLabel": 5,
-            "numSamples": 0,
-            "missingSamples": 2,
+            "numSamples": 2,
+            "missingSamples": 0,
             "excessiveSamples": 0
         }
     ]

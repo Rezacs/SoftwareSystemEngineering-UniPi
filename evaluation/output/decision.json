@@ -1,8 +1,9 @@
 {
-  "decision": "ACCEPT",
+  "decision": "REJECT",
   "metrics": {
-    "total_samples": 2,
-    "errors": 0,
-    "max_consecutive": 0
-  }
+    "total_samples": 10,
+    "errors": 5,
+    "max_consecutive": 3
+  },
+  "action": "SEND_TO_MESSAGING"
 }

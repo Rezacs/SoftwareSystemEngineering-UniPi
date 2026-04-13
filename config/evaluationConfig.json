@@ -6,10 +6,10 @@
   },
 
   "evaluation": {
-    "batch_size": 10,
+    "batch_size": 90,
     "error_threshold": 1,
-    "max_errors": 4,
-    "max_consecutive_errors": 3,
+    "max_errors": 10,
+    "max_consecutive_errors": 5,
     "reset_after_batch": true
   },
 

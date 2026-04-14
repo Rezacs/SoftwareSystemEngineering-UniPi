@@ -1,0 +1,235 @@
+{
+     "experiment_name": "Non-Elasticity Test - Production Phase",
+    "experiment_series": [
+        {
+            "session_count": 1000,
+            "initial_experiment_timestamp": "2026-04-14T12:18:33.041992Z",
+            "milestones": {
+                "first_instance": {
+                    "timestamp": "2026-04-14T12:19:17.998Z",
+                    "results": [{"latency": 0.0035, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "first_instance_with_output": {
+                    "timestamp": "2026-04-14T12:19:29.088Z",
+                    "results": [
+                        {"latency": 0.0096, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0002, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance_with_output": {
+                    "timestamp": "2026-04-14T12:20:28.242Z",
+                    "results": [
+                        {"latency": 0.0125, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0002, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance": {
+                    "timestamp": "2026-04-14T12:21:05.924Z",
+                    "results": [{"latency": 0.0026, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "temp_instance": {
+                    "id": "TEMP_2026-04-14T12:20:28.212Z_ab16fcce",
+                    "results": [{"latency": 0.0206, "outcome": "Label Sufficient: YES", "process": "E1"}]
+                }
+            }
+        },
+        {
+            "session_count": 2000,
+            "initial_experiment_timestamp": "2026-04-14T12:27:24.758338Z",
+            "milestones": {
+                "first_instance": {
+                    "timestamp": "2026-04-14T12:28:00.987Z",
+                    "results": [{"latency": 0.0030, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "first_instance_with_output": {
+                    "timestamp": "2026-04-14T12:28:12.141Z",
+                    "results": [
+                        {"latency": 0.0105, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0002, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance_with_output": {
+                    "timestamp": "2026-04-14T12:35:37.715Z",
+                    "results": [
+                        {"latency": 0.0535, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0008, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance": {
+                    "timestamp": "2026-04-14T12:36:47.102Z",
+                    "results": [{"latency": 0.0021, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "temp_instance": {
+                    "id": "TEMP_2026-04-14T12:33:27.888Z_9e618930",
+                    "ordinal_index": "4th",
+                    "results": [{"latency": 0.0382, "outcome": "Label Sufficient: YES", "process": "E1"}]
+                }
+            }
+        },
+        {
+            "session_count": 3000,
+            "initial_experiment_timestamp": "2026-04-14T13:00:56.239861Z",
+            "milestones": {
+                "first_instance": {
+                    "timestamp": "2026-04-14T13:01:34.309Z",
+                    "results": [{"latency": 0.0062, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "first_instance_with_output": {
+                    "timestamp": "2026-04-14T13:01:45.813Z",
+                    "results": [
+                        {"latency": 0.0094, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0138, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance_with_output": {
+                    "timestamp": "2026-04-14T13:17:30.740Z",
+                    "results": [
+                        {"latency": 0.0379, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0002, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance": {
+                    "timestamp": "2026-04-14T13:19:41.765Z",
+                    "results": [{"latency": 0.0024, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "temp_instance": {
+                    "id": "TEMP_2026-04-14T13:17:30.633Z_070f24e3",
+                    "ordinal_index": "15th",
+                    "results": [{"latency": 0.0340, "outcome": "Label Sufficient: YES", "process": "E1"}]
+                }
+            }
+        },
+        {
+            "session_count": 4000,
+            "initial_experiment_timestamp": "2026-04-14T13:44:54.164288Z",
+            "milestones": {
+                "first_instance": {
+                    "timestamp": "2026-04-14T13:45:36.112Z",
+                    "results": [{"latency": 0.0146, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "first_instance_with_output": {
+                    "timestamp": "2026-04-14T13:45:48.827Z",
+                    "results": [
+                        {"latency": 0.0131, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0015, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance_with_output": {
+                    "timestamp": "2026-04-14T14:16:59.966Z",
+                    "results": [
+                        {"latency": 0.0377, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0003, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance": {
+                    "timestamp": "2026-04-14T14:19:03.141Z",
+                    "results": [{"latency": 0.0021, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "temp_instance": {
+                    "id": "TEMP_2026-04-14T14:09:20.512Z_a57977ee",
+                    "ordinal_index": "15th",
+                    "results": [{"latency": 0.0367, "outcome": "Label Sufficient: YES", "process": "E1"}]
+                }
+            }
+        },
+        {
+            "session_count": 5000,
+            "initial_experiment_timestamp": "2026-04-14T14:34:49.457649Z",
+            "milestones": {
+                "first_instance": {
+                    "timestamp": "2026-04-14T14:35:57.856Z",
+                    "results": [{"latency": 0.0053, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "first_instance_with_output": {
+                    "timestamp": "2026-04-14T14:36:10.737Z",
+                    "results": [
+                        {"latency": 0.0027, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0005, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance_with_output": {
+                    "timestamp": "2026-04-14T15:25:09.927Z",
+                    "results": [
+                        {"latency": 0.0432, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0001, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance": {
+                    "timestamp": "2026-04-14T15:27:57.625Z",
+                    "results": [{"latency": 0.0019, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "temp_instance": {
+                    "id": "TEMP_2026-04-14T15:24:31.745Z_2490b6a2",
+                    "ordinal_index": "22nd",
+                    "results": [{"latency": 0.0585, "outcome": "Label Sufficient: YES", "process": "E1"}]
+                }
+            }
+        },
+        {
+            "session_count": 6000,
+            "initial_experiment_timestamp": "2026-04-14T15:44:57.916176Z",
+            "milestones": {
+                "first_instance": {
+                    "timestamp": "2026-04-14T15:45:40.229Z",
+                    "results": [{"latency": 0.0028, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "first_instance_with_output": {
+                    "timestamp": "2026-04-14T15:45:50.043Z",
+                    "results": [
+                        {"latency": 0.0078, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0002, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance_with_output": {
+                    "timestamp": "2026-04-14T16:43:22.347Z",
+                    "results": [
+                        {"latency": 0.0486, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0002, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance": {
+                    "timestamp": "2026-04-14T16:45:45.411Z",
+                    "results": [{"latency": 0.0053, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "temp_instance": {
+                    "id": "TEMP_2026-04-14T16:43:22.188Z_7800f192",
+                    "ordinal_index": "38th",
+                    "results": [{"latency": 0.0657, "outcome": "Label Sufficient: YES", "process": "E1"}]
+                }
+            }
+        },
+        {
+            "session_count": 7000,
+            "initial_experiment_timestamp": "2026-04-14T21:20:01.881540Z",
+            "milestones": {
+                "first_instance": {
+                    "timestamp": "2026-04-14T21:20:45.093Z",
+                    "results": [{"latency": 0.0115, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "first_instance_with_output": {
+                    "timestamp": "2026-04-14T21:20:54.412Z",
+                    "results": [
+                        {"latency": 0.0084, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0003, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance_with_output": {
+                    "timestamp": "2026-04-14T22:35:16.197Z",
+                    "results": [
+                        {"latency": 0.0226, "outcome": "Label Sufficient: YES", "process": "E1"},
+                        {"latency": 0.0001, "outcome": "Classifier Good: NO", "process": "E2"}
+                    ]
+                },
+                "last_instance": {
+                    "timestamp": "2026-04-14T22:38:00.301Z",
+                    "results": [{"latency": 0.0018, "outcome": "Label Sufficient: NO", "process": "E1"}]
+                },
+                "temp_instance": {
+                    "id": "TEMP_2026-04-14T22:28:05.438Z_8cc050c8",
+                    "ordinal_index": "39th",
+                    "results": [{"latency": 0.0210, "outcome": "Label Sufficient: YES", "process": "E1"}]
+                }
+            }
+        }
+    ]
+}

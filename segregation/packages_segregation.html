@@ -1,0 +1,38 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class src {
+          }
+          class calibration_set_provider {
+          }
+          class check_class_balancing {
+          }
+          class check_input_coverage {
+          }
+          class communication_controller {
+          }
+          class data_extractor {
+          }
+          class orchestrator {
+          }
+          class session_repository {
+          }
+          class view_balancing {
+          }
+          class view_coverage {
+          }
+          communication_controller --> session_repository
+          orchestrator --> calibration_set_provider
+          orchestrator --> check_class_balancing
+          orchestrator --> check_input_coverage
+          orchestrator --> data_extractor
+          orchestrator --> session_repository
+          orchestrator --> view_balancing
+          orchestrator --> view_coverage
+  
+       </div>
+  </body>
+</html>

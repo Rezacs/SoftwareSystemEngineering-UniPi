@@ -1,0 +1,90 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class CalibrationSetProvider {
+            generateCalibrationSets(prepared_sessions: list) dict
+            generate_learning_sets(prepared_sessions: list) dict
+            sendCalibrationSets(calibration_sets: dict, path: str)
+          }
+          class CheckClassBalancing {
+            build_distribution(prepared_sessions: list) dict
+            check_balance(distribution: dict, tolerance: float) dict
+            generatePlotData(labels: list[int], tolerance: float) dict
+            retrieveLabels(labels: list[int]) list[int]
+          }
+          class CheckInputCoverage {
+            analyze_feature(values: list[float]) dict
+            build_coverage_report(prepared_sessions: list) dict
+            generatePlotData(statistics: dict) dict
+            retrieveStatistics(feature_map: dict) dict
+          }
+          class CommunicationController {
+            config : NoneType
+            session_repository
+            validator : SchemaValidator
+            create_app() Flask
+            is_server_running() bool
+            load_workflow_state() dict
+            send_calibration_set(calibration_set: dict) tuple[bool, str]
+            send_json(url: str, json_data: dict) tuple[bool, str]
+            start_server()
+          }
+          class DataExtractor {
+            extract_all(db_path: str) list[dict]
+            extract_features(db_path: str) dict
+            extract_grouped_labels(db_path: str) dict
+            extract_labels(db_path: str) list[int]
+          }
+          class SegregationSystemOrchestrator {
+            PROCESS_ORDER : list
+            SUBPROCESS_1 : str
+            SUBPROCESS_2 : str
+            SUBPROCESS_3 : str
+            SUBPROCESS_4 : str
+            balancing_checker
+            calibration_set_provider
+            coverage_checker
+            data_extractor
+            session_repository
+            testing_mode : bool
+            view_balancing
+            view_coverage
+            load_decision(path: str) Optional[dict]
+            load_state(path: str) dict
+            reset_state(path: str) None
+            run(segregation_db_path, calibration_set_output_path, balancing_report_output_path, balancing_plot_output_path, coverage_report_output_path, coverage_plot_output_path, segregation_log_path, config_path, workflow_state_path, balancing_report_decision_path, coverage_report_decision_path)
+            save_state(phase: str, path: str) dict
+          }
+          class SessionRepository {
+            delete_processed_sessions(db_path: str)
+            initialize(db_path: str)
+            mark_all_to_process(db_path: str)
+            promote_pending_sessions(db_path: str)
+            receive(db_path: str, to_process_only: bool)
+            receiveStored(db_path: str)
+            sessions_count(db_path: str, to_process_only: bool) int
+            store(prepared_session: dict, db_path: str, to_process: bool)
+          }
+          class ViewBalancing {
+            setUnbalanced(report_path: str)
+            showPlot(balancing_report: dict, plot_path: str)
+          }
+          class ViewCoverage {
+            setUncovered(report_path: str)
+            showPlot(coverage_report: dict, plot_path: str)
+          }
+          CalibrationSetProvider --* SegregationSystemOrchestrator : calibration_set_provider
+          CheckClassBalancing --* SegregationSystemOrchestrator : balancing_checker
+          CheckInputCoverage --* SegregationSystemOrchestrator : coverage_checker
+          DataExtractor --* SegregationSystemOrchestrator : data_extractor
+          SessionRepository --* CommunicationController : session_repository
+          SessionRepository --* SegregationSystemOrchestrator : session_repository
+          ViewBalancing --* SegregationSystemOrchestrator : view_balancing
+          ViewCoverage --* SegregationSystemOrchestrator : view_coverage
+  
+       </div>
+  </body>
+</html>

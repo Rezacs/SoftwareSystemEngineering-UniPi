@@ -1,0 +1,40 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class ClassifierController {
+            active_classifier_id : NoneType, str
+            active_classifier_path : NoneType, Path
+            model : NoneType
+            classify(prepared_session: dict)
+            deploy_classifier(classifier_id: str, model_filename: str)
+            save_uploaded_classifier(uploaded_file)
+          }
+          class CommunicationController {
+            app : Flask
+            orchestrator
+            run()
+            send_label_to_client(classification_result: dict)
+          }
+          class EvaluationSender {
+            evaluation_enabled
+            build_payload(classification_result: dict)
+            is_evaluation_phase()
+            send_label_to_evaluation(classification_result: dict)
+          }
+          class ProductionSystemOrchestrator {
+            classifier_controller
+            evaluation_sender
+            tmp_log : list
+            handle_classifier_received(uploaded_file)
+            handle_session_received(session: dict)
+            process_classification_result(classification_result: dict, communication_controller)
+          }
+          ClassifierController --* ProductionSystemOrchestrator : classifier_controller
+          EvaluationSender --* ProductionSystemOrchestrator : evaluation_sender
+  
+       </div>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class CommunicationController {
+            save_rejected_report(report_path: str) bool
+            send_classifier(model_path: str) bool
+            start_server(on_data_received: Callable[[dict], None]) None
+          }
+          class DevelopmentSystemOrchestrator {
+            generate_test_report() None
+            generate_validation_report() None
+            is_there_a_valid_classifier() None
+            run(fresh: bool) None
+            set_average_hyperparams() None
+            set_iterations() None
+            test_passed() None
+          }
+          class LearningPlotView {
+            display_learning_plot(plot: LearningPlot) None
+          }
+          class TestingOrchestrator {
+            test_classifier(model_path: str, classifier_data: dict, X_test: pd.DataFrame, y_test: list) TestingReport
+          }
+          class TestingReportView {
+            display_training_report(report: TestingReport) None
+          }
+          class TrainingOrchestrator {
+            generate_calibration_report(X_train: pd.DataFrame, y_train: list, output_path: str, num_epochs: int) LearningPlot
+            generate_learning_curve(X_train, y_train, output_path, num_epochs)
+            set_parameters(params: dict) None
+            train_classifier(X_train: pd.DataFrame, y_train: list, X_val: pd.DataFrame, y_val: list, classifier_id: str, model_path: str) Classifier
+          }
+          class ValidationOrchestrator {
+            generate_validation_report(X_train: pd.DataFrame, y_train: list, X_val: pd.DataFrame, y_val: list) ValidationReport
+            grid_search(X_train, y_train, X_val, y_val) ValidationReport
+            retrieve_average_parameters() dict
+          }
+          class ValidationReportView {
+            display_validation_report(report: ValidationReport) None
+          }
+  
+       </div>
+  </body>
+</html>

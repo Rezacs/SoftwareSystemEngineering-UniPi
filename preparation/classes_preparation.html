@@ -1,0 +1,63 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class PreparationSystemConfiguration {
+            classification_system_endpoint
+            classification_system_ip
+            classification_system_port
+            hosting_ip
+            hosting_port
+            json_schema_path
+            number_of_threads
+            phase
+            segregation_system_endpoint
+            segregation_system_ip
+            segregation_system_port
+          }
+          class PreparationSystemOrchestrator {
+            app : Flask
+            classification_url
+            executor : ThreadPoolExecutor
+            lock : lock
+            log : dict
+            log_file_path
+            preparation_system_config
+            prepared_session_creator
+            raw_session_receiver
+            segregation_url
+            check_ip_and_port()
+            http_200_response()
+            http_400_response()
+            run()
+            start()
+            write_log_file(log: list, timestamp: datetime.datetime)
+          }
+          class PreparedSessionCreator {
+            correct_absolute_outliers(raw_session: dict) dict
+            correct_missing_samples(raw_session: dict) dict
+            extract_features(raw_session: dict) dict
+            parse_raw_session(raw_session: dict) dict
+          }
+          class RawSessionReceiver {
+            schema
+            receive_raw_session()
+            validate_json_schema(raw_session: dict) bool
+          }
+          class prepared_session {
+            created_at
+            records : DataFrame
+            uuid
+            get_records_dataframe()
+            get_uuid()
+            set_records_dataframe(records: pd.DataFrame)
+          }
+          PreparationSystemConfiguration --* PreparationSystemOrchestrator : preparation_system_config
+          PreparedSessionCreator --* PreparationSystemOrchestrator : prepared_session_creator
+          RawSessionReceiver --* PreparationSystemOrchestrator : raw_session_receiver
+  
+       </div>
+  </body>
+</html>

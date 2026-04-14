@@ -1,0 +1,527 @@
+{
+    "source_file": "/Users/gabrielecaioli/Downloads/Uni/SSE/SoftwareSystemEngineering-UniPi/logs/testing_log_production.csv",
+    "systems_found": [
+        "evaluation",
+        "ingestion",
+        "preparation",
+        "production"
+    ],
+    "total_rows": 74233,
+    "unique_processes_count": 10,
+    "processes": [
+        {
+            "process": "E1",
+            "occurrences": 13482,
+            "average_latency_s": 0.026823,
+            "outcomes": [
+                {
+                    "outcome": "Label Sufficient: NO",
+                    "occurrences": 13432
+                },
+                {
+                    "outcome": "Label Sufficient: YES",
+                    "occurrences": 50
+                }
+            ]
+        },
+        {
+            "process": "E2",
+            "occurrences": 31,
+            "average_latency_s": 0.001761,
+            "outcomes": [
+                {
+                    "outcome": "Classifier Good: NO",
+                    "occurrences": 28
+                },
+                {
+                    "outcome": "Classifier Good: YES",
+                    "occurrences": 3
+                }
+            ]
+        },
+        {
+            "process": "I0",
+            "occurrences": 12000,
+            "average_latency_s": 115.210166,
+            "outcomes": [
+                {
+                    "outcome": "Record stored",
+                    "occurrences": 12000
+                }
+            ]
+        },
+        {
+            "process": "I1",
+            "occurrences": 12000,
+            "average_latency_s": 115.222719,
+            "outcomes": [
+                {
+                    "outcome": "0-Not enough record to create a raw session",
+                    "occurrences": 3081
+                },
+                {
+                    "outcome": "1-Enough record to create a raw session",
+                    "occurrences": 8919
+                }
+            ]
+        },
+        {
+            "process": "I2",
+            "occurrences": 22277,
+            "average_latency_s": 79.48598,
+            "outcomes": [
+                {
+                    "outcome": "0-Invalid raw session, discarded",
+                    "occurrences": 8552
+                },
+                {
+                    "outcome": "1-Raw session is valid",
+                    "occurrences": 367
+                },
+                {
+                    "outcome": "prepared session sent to classification system",
+                    "occurrences": 13358
+                }
+            ]
+        },
+        {
+            "process": "I3",
+            "occurrences": 13358,
+            "average_latency_s": 116.629435,
+            "outcomes": [
+                {
+                    "outcome": "label sent to evaluation system",
+                    "occurrences": 13358
+                }
+            ]
+        },
+        {
+            "process": "I4",
+            "occurrences": 367,
+            "average_latency_s": 116.070983,
+            "outcomes": [
+                {
+                    "outcome": "raw session sent to preparation system",
+                    "occurrences": 367
+                }
+            ]
+        },
+        {
+            "process": "P2",
+            "occurrences": 193,
+            "average_latency_s": 0.002368,
+            "outcomes": [
+                {
+                    "outcome": "Predicted rating: 1 for 2",
+                    "occurrences": 4
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 400",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 403",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 419",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 434",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 466",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 470",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 511",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 516",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 57",
+                    "occurrences": 5
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 596",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 1 for 7",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 24",
+                    "occurrences": 6
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 26",
+                    "occurrences": 3
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 437",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 68",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 7",
+                    "occurrences": 3
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 70",
+                    "occurrences": 4
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 71",
+                    "occurrences": 8
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 79",
+                    "occurrences": 3
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 84",
+                    "occurrences": 5
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 87",
+                    "occurrences": 5
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 12",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 124",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 139",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 148",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 173",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 25",
+                    "occurrences": 3
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 396",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 397",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 4",
+                    "occurrences": 5
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 406",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 412",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 415",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 423",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 425",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 426",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 429",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 442",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 45",
+                    "occurrences": 4
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 453",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 461",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 464",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 467",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 472",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 476",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 480",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 482",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 58",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 633",
+                    "occurrences": 4
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 638",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 64",
+                    "occurrences": 4
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 646",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 652",
+                    "occurrences": 3
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 90",
+                    "occurrences": 3
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 126",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 130",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 150",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 17",
+                    "occurrences": 5
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 190",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 194",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 2",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 393",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 407",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 409",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 411",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 420",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 422",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 424",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 432",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 438",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 439",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 44",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 450",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 451",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 469",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 47",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 471",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 478",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 479",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 481",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 484",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 485",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 488",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 490",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 59",
+                    "occurrences": 5
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 624",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 656",
+                    "occurrences": 4
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 67",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 675",
+                    "occurrences": 3
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 681",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 684",
+                    "occurrences": 4
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 74",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 5 for 28",
+                    "occurrences": 4
+                },
+                {
+                    "outcome": "Predicted rating: 5 for 402",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 5 for 454",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 5 for 98",
+                    "occurrences": 1
+                }
+            ]
+        },
+        {
+            "process": "P3",
+            "occurrences": 198,
+            "average_latency_s": 0.006614,
+            "outcomes": [
+                {
+                    "outcome": "Client-side send: sent",
+                    "occurrences": 198
+                }
+            ]
+        },
+        {
+            "process": "P4",
+            "occurrences": 204,
+            "average_latency_s": 0.209286,
+            "outcomes": [
+                {
+                    "outcome": "Evaluation send: sent",
+                    "occurrences": 204
+                }
+            ]
+        }
+    ]
+}

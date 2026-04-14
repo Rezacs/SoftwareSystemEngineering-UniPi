@@ -6,106 +6,106 @@
         "preparation",
         "production"
     ],
-    "total_rows": 15238,
+    "total_rows": 37048,
     "unique_processes_count": 10,
     "processes": [
         {
             "process": "E1",
-            "occurrences": 44,
-            "average_latency_s": 0.016689,
+            "occurrences": 2042,
+            "average_latency_s": 0.01542,
             "outcomes": [
                 {
                     "outcome": "Label Sufficient: NO",
-                    "occurrences": 40
+                    "occurrences": 2033
                 },
                 {
                     "outcome": "Label Sufficient: YES",
-                    "occurrences": 4
+                    "occurrences": 9
                 }
             ]
         },
         {
             "process": "E2",
-            "occurrences": 2,
-            "average_latency_s": 0.00025,
+            "occurrences": 9,
+            "average_latency_s": 0.002433,
             "outcomes": [
                 {
                     "outcome": "Classifier Good: NO",
-                    "occurrences": 2
+                    "occurrences": 9
                 }
             ]
         },
         {
             "process": "I0",
-            "occurrences": 3000,
-            "average_latency_s": 31.78848,
+            "occurrences": 7000,
+            "average_latency_s": 50.885256,
             "outcomes": [
                 {
                     "outcome": "Record stored",
-                    "occurrences": 3000
+                    "occurrences": 7000
                 }
             ]
         },
         {
             "process": "I1",
-            "occurrences": 3000,
-            "average_latency_s": 31.799779,
+            "occurrences": 7000,
+            "average_latency_s": 50.89902,
             "outcomes": [
                 {
                     "outcome": "0-Not enough record to create a raw session",
-                    "occurrences": 869
+                    "occurrences": 1901
                 },
                 {
                     "outcome": "1-Enough record to create a raw session",
-                    "occurrences": 2131
+                    "occurrences": 5099
                 }
             ]
         },
         {
             "process": "I2",
-            "occurrences": 5500,
-            "average_latency_s": 16.273009,
+            "occurrences": 12722,
+            "average_latency_s": 25.321426,
             "outcomes": [
                 {
                     "outcome": "0-Invalid raw session, discarded",
-                    "occurrences": 2021
+                    "occurrences": 4869
                 },
                 {
                     "outcome": "1-Raw session is valid",
-                    "occurrences": 110
+                    "occurrences": 230
                 },
                 {
                     "outcome": "prepared session sent to classification system",
-                    "occurrences": 3369
+                    "occurrences": 7623
                 }
             ]
         },
         {
             "process": "I3",
-            "occurrences": 3369,
-            "average_latency_s": 36.407573,
+            "occurrences": 7623,
+            "average_latency_s": 51.323792,
             "outcomes": [
                 {
                     "outcome": "label sent to evaluation system",
-                    "occurrences": 3369
+                    "occurrences": 7623
                 }
             ]
         },
         {
             "process": "I4",
-            "occurrences": 110,
-            "average_latency_s": 39.833387,
+            "occurrences": 230,
+            "average_latency_s": 58.715242,
             "outcomes": [
                 {
                     "outcome": "raw session sent to preparation system",
-                    "occurrences": 110
+                    "occurrences": 230
                 }
             ]
         },
         {
             "process": "P2",
-            "occurrences": 59,
-            "average_latency_s": 0.002669,
+            "occurrences": 108,
+            "average_latency_s": 0.002576,
             "outcomes": [
                 {
                     "outcome": "Predicted rating: 1 for 2",
@@ -124,12 +124,28 @@
                     "occurrences": 6
                 },
                 {
+                    "outcome": "Predicted rating: 2 for 26",
+                    "occurrences": 3
+                },
+                {
                     "outcome": "Predicted rating: 2 for 68",
                     "occurrences": 1
                 },
                 {
+                    "outcome": "Predicted rating: 2 for 7",
+                    "occurrences": 3
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 70",
+                    "occurrences": 4
+                },
+                {
                     "outcome": "Predicted rating: 2 for 71",
-                    "occurrences": 5
+                    "occurrences": 8
+                },
+                {
+                    "outcome": "Predicted rating: 2 for 79",
+                    "occurrences": 3
                 },
                 {
                     "outcome": "Predicted rating: 2 for 84",
@@ -142,6 +158,26 @@
                 {
                     "outcome": "Predicted rating: 3 for 12",
                     "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 124",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 139",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 148",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 173",
+                    "occurrences": 1
+                },
+                {
+                    "outcome": "Predicted rating: 3 for 25",
+                    "occurrences": 3
                 },
                 {
                     "outcome": "Predicted rating: 3 for 4",
@@ -160,7 +196,31 @@
                     "occurrences": 4
                 },
                 {
+                    "outcome": "Predicted rating: 3 for 90",
+                    "occurrences": 3
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 126",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 130",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 150",
+                    "occurrences": 2
+                },
+                {
                     "outcome": "Predicted rating: 4 for 17",
+                    "occurrences": 5
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 190",
+                    "occurrences": 2
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 194",
                     "occurrences": 1
                 },
                 {
@@ -172,8 +232,16 @@
                     "occurrences": 1
                 },
                 {
+                    "outcome": "Predicted rating: 4 for 47",
+                    "occurrences": 2
+                },
+                {
                     "outcome": "Predicted rating: 4 for 59",
                     "occurrences": 5
+                },
+                {
+                    "outcome": "Predicted rating: 4 for 67",
+                    "occurrences": 2
                 },
                 {
                     "outcome": "Predicted rating: 4 for 74",
@@ -181,7 +249,7 @@
                 },
                 {
                     "outcome": "Predicted rating: 5 for 28",
-                    "occurrences": 1
+                    "occurrences": 4
                 },
                 {
                     "outcome": "Predicted rating: 5 for 98",
@@ -191,23 +259,23 @@
         },
         {
             "process": "P3",
-            "occurrences": 62,
-            "average_latency_s": 0.007373,
+            "occurrences": 113,
+            "average_latency_s": 0.006902,
             "outcomes": [
                 {
                     "outcome": "Client-side send: sent",
-                    "occurrences": 62
+                    "occurrences": 113
                 }
             ]
         },
         {
             "process": "P4",
-            "occurrences": 62,
-            "average_latency_s": 0.015648,
+            "occurrences": 115,
+            "average_latency_s": 0.037035,
             "outcomes": [
                 {
                     "outcome": "Evaluation send: sent",
-                    "occurrences": 62
+                    "occurrences": 115
                 }
             ]
         }

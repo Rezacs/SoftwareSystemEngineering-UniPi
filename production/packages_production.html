@@ -1,0 +1,27 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class src {
+          }
+          class classifierController {
+          }
+          class communicationController {
+          }
+          class config {
+          }
+          class evaluationSender {
+          }
+          class productionSystemOrchestrator {
+          }
+          classifierController --> config
+          communicationController --> config
+          productionSystemOrchestrator --> classifierController
+          productionSystemOrchestrator --> config
+          productionSystemOrchestrator --> evaluationSender
+  
+       </div>
+  </body>
+</html>

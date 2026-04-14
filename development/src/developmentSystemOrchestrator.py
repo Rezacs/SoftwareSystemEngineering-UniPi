@@ -70,12 +70,9 @@ def _sessions_to_frames(sessions, feature_cols: List[str]):
 #    ]
 #  }
 
-_D1 = "D1 - Calibration set received"
-_D2 = "D2 - Set hyperparameters"
-_D3 = "D3 - Ongoing validation"
-_D4 = "D4 - #Iterations fine?"
-_D5 = "D5 - Is there a valid classifier?"
-_D6 = "D6 - Test passed?"
+_D1 = "D1 - Classifier Sent"
+_D2 = "D2 - # Max outer iterations reached"
+_D3 = "D3 - Testing Report Sent"
 
 
 class DevelopmentSystemOrchestrator:

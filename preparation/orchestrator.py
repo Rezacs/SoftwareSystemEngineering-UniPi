@@ -1,6 +1,6 @@
-from preparation.raw_session_receiver import RawSessionReceiver
-from preparation.prepared_session_creator import PreparedSessionCreator
-from preparation.preparation_system_config import PreparationSystemConfiguration
+from raw_session_receiver import RawSessionReceiver
+from prepared_session_creator import PreparedSessionCreator
+from preparation_system_config import PreparationSystemConfiguration
 from pathlib import Path
 
 import sys
@@ -111,6 +111,11 @@ class PreparationSystemOrchestrator:
 
         tmp_log=[]
 
+        def latency_seconds() -> float:
+            end_time = time.perf_counter()
+            latency_ms = (end_time - start_time) * 1000
+            return latency_ms / 1000
+
         #Create prepared session
         raw_session = self.prepared_session_creator.parse_raw_session(raw_session)
 
@@ -149,12 +154,11 @@ class PreparationSystemOrchestrator:
                     risp = requests.post(self.segregation_url, json=p)
                     print(risp)
                 
-                    end_time=time.perf_counter()
                     event={
                         "process" : "I1",
                         "phase" : 0,
                         "outcome" : "prepared session sent to segregation system",
-                        "latency" : end_time-start_time
+                        "latency" : latency_seconds()
                     }
                     tmp_log.append(event)
 
@@ -188,12 +192,11 @@ class PreparationSystemOrchestrator:
                 risp = requests.post(self.classification_url, json=p)
                 print(risp)
             
-                end_time=time.perf_counter()
                 event={
                     "process" : "I2",
                     "phase" : 1,
                     "outcome" : "prepared session sent to classification system",
-                    "latency" : end_time-start_time
+                    "latency" : latency_seconds()
                 }
             
                 tmp_log.append(event)
@@ -220,7 +223,7 @@ class PreparationSystemOrchestrator:
 
         start_time=time.perf_counter()
 
-        timestamp=datetime.datetime.now().isoformat()
+        timestamp=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
         #Receive raw session
         raw_session = self.raw_session_receiver.receive_raw_session()

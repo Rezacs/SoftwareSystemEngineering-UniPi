@@ -311,7 +311,7 @@ class DevelopmentSystemOrchestrator:
     #   outcome  – human-readable string describing the result / branch taken
 
     def _now(self) -> str:
-        return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
     def _node_begin(self, node: str) -> None:
         """Start the stopwatch for a BPMN node."""
@@ -320,7 +320,11 @@ class DevelopmentSystemOrchestrator:
     def _node_end(self, node: str, outcome: str) -> None:
         """Stop the stopwatch and append the completed entry to the session list."""
         start   = self._node_start.pop(node, None)
-        latency = round(time.monotonic() - start, 4) if start is not None else 0.0
+        if start is not None:
+            latency_ms = (time.monotonic() - start) * 1000
+            latency = round(latency_ms / 1000, 4)
+        else:
+            latency = 0.0
 
         entry = {"process": node, "latency": latency, "outcome": outcome}
 

@@ -65,11 +65,6 @@ class Orchestrator:
     # =========================================================
 
     def process(self, data):
-
-        # ================= START SESSION + E1 =================
-        self.log_mgr.start_session()
-        self.log_mgr.start_process("E1")
-
         # ================= WAITING DECISION CHECK =================
         if self.state.is_waiting_decision():
 
@@ -86,10 +81,6 @@ class Orchestrator:
                     else:
                         self._finalized = True  # claim finalization
                         decision = self._suggest_decision(self.last_metrics)
-
-                        # END E1 (waiting path)
-                        self.log_mgr.end_process("Label Sufficient: NO")
-
                         return self.finalize_decision(decision, mode="AUTO")
 
                 # fell through — state was already cleared by winning thread
@@ -99,12 +90,11 @@ class Orchestrator:
             else:
                 logger.info("⏸ Waiting for human decision → buffering incoming data")
                 self.repo.save_label(data)
-
-                # END E1
-                self.log_mgr.end_process("Label Sufficient: NO")
-
-                self.log_mgr.finalize_log()
                 return {"status": "buffering_until_decision"}
+
+        # ================= START SESSION + E1 =================
+        session_key = self.log_mgr.start_session()
+        self.log_mgr.start_process(session_key, "E1")
 
         # ================= RECEIVE =================
         logger.info(
@@ -127,16 +117,16 @@ class Orchestrator:
             logger.info("Waiting for more matched pairs...")
 
             # END E1 (NOT sufficient)
-            self.log_mgr.end_process("Label Sufficient: NO")
+            self.log_mgr.end_process(session_key, "Label Sufficient: NO")
 
-            self.log_mgr.finalize_log()
+            self.log_mgr.finalize_log(session_key)
             return {"status": "waiting_for_data"}
 
         # ================= BATCH READY =================
         logger.info("Batch ready → Evaluating...")
 
         # END E1 (YES)
-        self.log_mgr.end_process("Label Sufficient: YES")
+        self.log_mgr.end_process(session_key, "Label Sufficient: YES")
 
         # ================= BUILD BATCH =================
         batch = self.batch_mgr.get_batch(pairs)
@@ -159,7 +149,7 @@ class Orchestrator:
         self._save_json("metrics.json", batch_metrics)
 
         # ================= MARK WAITING =================
-        self.state.set_batch(batch)
+        self.state.set_batch(batch, session_key=session_key)
 
         # ================= CLEAR USED DATA =================
         if self.eval_cfg.get("reset_after_batch", True):
@@ -189,12 +179,18 @@ class Orchestrator:
     # ================= FINAL DECISION ========================
     # =========================================================
 
-    def finalize_decision(self, decision, mode="HUMAN"):
+    def finalize_decision(self, decision, mode="HUMAN", session_key=None):
 
         logger.info(f"{mode} DECISION → {decision}")
 
+        if session_key is None:
+            session_key = self.state.get_session_key()
+        if not session_key:
+            logger.warning("No active evaluation session available while finalizing decision")
+
         # ================= START E2 =================
-        self.log_mgr.start_process("E2")
+        if session_key:
+            self.log_mgr.start_process(session_key, "E2")
 
         output = {
             "decision": decision,
@@ -206,13 +202,16 @@ class Orchestrator:
             output["action"] = "SEND_TO_MESSAGING"
             self._simulate_messaging(output)
 
-            self.log_mgr.end_process("Classifier Good: NO")
+            if session_key:
+                self.log_mgr.end_process(session_key, "Classifier Good: NO")
 
         else:
-            self.log_mgr.end_process("Classifier Good: YES")
+            if session_key:
+                self.log_mgr.end_process(session_key, "Classifier Good: YES")
 
         # ================= FINALIZE LOG =================
-        self.log_mgr.finalize_log()
+        if session_key:
+            self.log_mgr.finalize_log(session_key)
 
         # ================= SAVE OUTPUT =================
         self._save_json("decision.json", output)

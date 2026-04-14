@@ -77,10 +77,11 @@ class SegregationSystemOrchestrator:
         end_dt = self._iso_to_datetime(end_timestamp)
         if start_dt is None or end_dt is None:
             return None
-        latency = (end_dt - start_dt).total_seconds()
-        if latency < 0:
+        latency_ms = (end_dt - start_dt).total_seconds() * 1000
+        if latency_ms < 0:
             return None
-        return round(latency, 6)
+        latency_seconds = latency_ms / 1000
+        return round(latency_seconds, 6)
 
     def _migrate_legacy_timestamps_to_latency(self, process_entry: dict) -> None:
         # Backward compatibility for old log schema.

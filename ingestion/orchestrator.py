@@ -1,7 +1,7 @@
-from ingestion.record_receiver import RecordReceiver
-from ingestion.raw_session_creator import RawSessionCreator
-from ingestion.ingestion_system_config import IngestionSystemConfiguration
-from ingestion.records_buffer import RecordsBuffer
+from record_receiver import RecordReceiver
+from raw_session_creator import RawSessionCreator
+from ingestion_system_config import IngestionSystemConfiguration
+from records_buffer import RecordsBuffer
 import time
 import pandas as pd
 import requests
@@ -112,14 +112,18 @@ class IngestionSystemOrchestrator:
 
         tmp_log=[]
 
+        def latency_seconds() -> float:
+            end_time = time.perf_counter()
+            latency_ms = (end_time - start_time) * 1000
+            return latency_ms / 1000
+
         record = pd.DataFrame(record, index=[0]).reset_index(drop=True)
 
         if self.records_buffer.upsert_with_dataframe(record):
-            end_time=time.perf_counter()
             event={
                 "process" : "I0",
                 "outcome" : "Record stored",
-                "latency" : end_time-start_time
+                "latency" : latency_seconds()
             }
             tmp_log.append(event)
             print(f"[INFO] Record inserted in the Buffer")
@@ -132,22 +136,20 @@ class IngestionSystemOrchestrator:
         n_rows=self.records_buffer.getNumberOfAvailableRecords()
         print(f"[DEBUG] Available records in buffer: {n_rows}")
         if not self.raw_session_creator.isNumberOfRecordsSufficient(n_rows):
-            end_time=time.perf_counter()
             event={
                 "process" : "I1",
                 "outcome" : "0-Not enough record to create a raw session",
-                "latency" : end_time-start_time
+                "latency" : latency_seconds()
             }
             tmp_log.append(event)
             self.write_log_file(tmp_log,timestamp)
             print(f"[INFO] Record stored, not enough record to create a raw session")
             return self.http_200_response()
 
-        end_time=time.perf_counter()
         event={
                 "process" : "I1",
                 "outcome" : "1-Enough record to create a raw session",
-                "latency" : end_time-start_time
+            "latency" : latency_seconds()
         }
         tmp_log.append(event)
         #create raw session
@@ -159,22 +161,20 @@ class IngestionSystemOrchestrator:
         #mark missing samples and check if raw session is valid
 
         if self.raw_session_creator.mark_missing_samples(raw_session) > self.ingestion_system_config.missing_samples_treshold:
-            end_time=time.perf_counter()
             event={
                 "process" : "I2",
                 "outcome" : "0-Invalid raw session, discarded",
-                "latency" : end_time-start_time
+                "latency" : latency_seconds()
             }
             tmp_log.append(event)
             self.write_log_file(tmp_log,timestamp)
             print(f"[INFO] Raw session discarded")
             return self.http_200_response()
         
-        end_time=time.perf_counter()
         event={
                 "process" : "I2",
                 "outcome" : "1-Raw session is valid",
-                "latency" : end_time-start_time
+            "latency" : latency_seconds()
         }
         tmp_log.append(event)
 
@@ -193,12 +193,11 @@ class IngestionSystemOrchestrator:
                     #risp.raise_for_status()
 
                     
-                    end_time=time.perf_counter()
                     event={
                             "process" : "I3",
                             "phase" : 1,
                             "outcome" : "label sent to evaluation system",
-                            "latency" : end_time-start_time
+                            "latency" : latency_seconds()
                     }
                     tmp_log.append(event)
 
@@ -228,12 +227,11 @@ class IngestionSystemOrchestrator:
             print(risp)
 
             
-            end_time=time.perf_counter()
             event={
                     "process" : "I4",
                     "phase" : self.ingestion_system_config.phase,
                     "outcome" : "raw session sent to preparation system",
-                     "latency" : end_time-start_time
+                     "latency" : latency_seconds()
             }
             tmp_log.append(event)
 
@@ -271,7 +269,7 @@ class IngestionSystemOrchestrator:
 
         start_time=time.perf_counter()
 
-        timestamp=datetime.datetime.now().isoformat()
+        timestamp=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
         record = self.receiver.receive_record()
 

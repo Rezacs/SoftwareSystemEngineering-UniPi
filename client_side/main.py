@@ -4,7 +4,7 @@ import random
 import threading
 import math
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -44,6 +44,9 @@ csv_lock       = threading.Lock()
 
 streaming_done = threading.Event()
 streaming_done.set()   # idle at startup
+
+PLAYER_ID_BASE = 98
+PLAYER_ID_STEP = 98
 
 ##########################################
 # LOGGING HELPERS
@@ -87,6 +90,58 @@ def clear_logs():
 ##########################################
 # CSV HELPERS
 ##########################################
+
+def resolve_dev_csv_paths():
+    """Resolve configured CSV paths to absolute paths."""
+    resolved = []
+    for file_path in config['paths']['dev_files']:
+        candidate = Path(file_path)
+        if not candidate.is_absolute():
+            candidate = (REPO_ROOT / candidate).resolve()
+        resolved.append(candidate)
+    return resolved
+
+
+def restore_player_ids(csv_paths, base_size=PLAYER_ID_BASE):
+    """Normalize player_id values back to 1..base_size for each CSV file."""
+    with csv_lock:
+        for path in csv_paths:
+            if not path.exists():
+                print(f"  Warning: {path} not found, skipping restore.")
+                continue
+
+            df = _read_csv_safe(path)
+            if df.empty or "player_id" not in df.columns:
+                print(f"  Warning: {path} has no player_id column, skipping restore.")
+                continue
+
+            player_ids = pd.to_numeric(df["player_id"], errors="coerce")
+            valid_mask = player_ids.notna()
+            if valid_mask.any():
+                restored = ((player_ids[valid_mask].astype(int) - 1) % base_size) + 1
+                df.loc[valid_mask, "player_id"] = restored.astype(int)
+                df.to_csv(path, index=False)
+
+
+def increment_player_ids(csv_paths, step=PLAYER_ID_STEP):
+    """Increase player_id by step for all configured CSV files."""
+    with csv_lock:
+        for path in csv_paths:
+            if not path.exists():
+                print(f"  Warning: {path} not found, skipping increment.")
+                continue
+
+            df = _read_csv_safe(path)
+            if df.empty or "player_id" not in df.columns:
+                print(f"  Warning: {path} has no player_id column, skipping increment.")
+                continue
+
+            player_ids = pd.to_numeric(df["player_id"], errors="coerce")
+            valid_mask = player_ids.notna()
+            if valid_mask.any():
+                incremented = player_ids[valid_mask].astype(int) + step
+                df.loc[valid_mask, "player_id"] = incremented.astype(int)
+                df.to_csv(path, index=False)
 
 def _read_csv_safe(path):
     """Read a CSV, returning an empty DataFrame on any parse failure."""
@@ -176,6 +231,7 @@ def flush_all_logs():
 ##########################################
 
 def stream_worker(current_phase, limit, record_list,
+                  csv_paths,
                   max_rps: float = 50.0):      # ← tune this knob
     """
     max_rps: maximum records per second to send.
@@ -195,7 +251,12 @@ def stream_worker(current_phase, limit, record_list,
         t_start = time.monotonic()
 
         if i > 0 and i % total_available == 0:
-            random.shuffle(record_list)
+            increment_player_ids(csv_paths, step=PLAYER_ID_STEP)
+            record_list = load_record_list(csv_paths)
+            total_available = len(record_list)
+            if total_available == 0:
+                print("  ERROR: No records loaded after player_id increment.")
+                break
 
         record = record_list[i % total_available]
         p_id   = record.get('player_id')
@@ -297,7 +358,7 @@ def receive_label():
 
         new_row = {
             "player_id": int(p_id) if p_id is not None else None,
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             **{k: v for k, v in data.items() if k != "player_id"},
         }
         _append_to_csv(LABELS_CSV_PATH, pd.DataFrame([new_row]))
@@ -320,14 +381,13 @@ def run_flask():
 # DATA LOADER
 ##########################################
 
-def load_record_list():
+def load_record_list(csv_paths=None):
     """Load and interleave all dev CSVs into a shuffled flat record list."""
-    pool = []
-    for file_path in config['paths']['dev_files']:
-        candidate = Path(file_path)
-        if not candidate.is_absolute():
-            candidate = (REPO_ROOT / candidate).resolve()
+    if csv_paths is None:
+        csv_paths = resolve_dev_csv_paths()
 
+    pool = []
+    for candidate in csv_paths:
         if candidate.exists():
             df = pd.read_csv(candidate)
             df = df.where(pd.notnull(df), None).sample(frac=1).reset_index(drop=True)
@@ -353,11 +413,14 @@ def load_record_list():
 if __name__ == "__main__":
     threading.Thread(target=run_flask, daemon=True).start()
 
+    dev_csv_paths = resolve_dev_csv_paths()
+    restore_player_ids(dev_csv_paths, base_size=PLAYER_ID_BASE)
+
     while True:
         # ── Reset logs for this experiment ────────────────────
         clear_logs()
         log_event("clientsideLogs.json", {
-            "initial_experiment_timestamp": datetime.now().isoformat()
+            "initial_experiment_timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
         })
 
         print("\n" + "=" * 40)
@@ -367,7 +430,7 @@ if __name__ == "__main__":
         phase_choice = input("Select Phase: [0] Development, [1] Production: ").strip()
         stream_limit = int(input("Enter number of records to stream: ").strip())
 
-        record_list = load_record_list()
+        record_list = load_record_list(dev_csv_paths)
         if not record_list:
             print("  ERROR: No records loaded. Check config paths.")
             continue
@@ -375,7 +438,7 @@ if __name__ == "__main__":
         # ── Start background stream ────────────────────────────
         threading.Thread(
             target=stream_worker,
-            args=(phase_choice, stream_limit, record_list),
+            args=(phase_choice, stream_limit, record_list, dev_csv_paths),
             daemon=True,
         ).start()
 

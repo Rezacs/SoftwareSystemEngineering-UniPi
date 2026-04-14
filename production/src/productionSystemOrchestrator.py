@@ -13,6 +13,15 @@ class ProductionSystemOrchestrator:
         self.evaluation_sender = EvaluationSender()
         self.tmp_log = []
 
+    @staticmethod
+    def _utc_now_iso_ms() -> str:
+        return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+
+    @staticmethod
+    def _latency_seconds_from_start(start_time: float) -> float:
+        latency_ms = (time.perf_counter() - start_time) * 1000
+        return latency_ms / 1000
+
 
     def _log_event(self, initial_timestamp: str, process_code: str, latency: float, outcome: str):
         log_entry = {
@@ -39,7 +48,7 @@ class ProductionSystemOrchestrator:
             json.dump(logs, f, indent=4)
 
     def handle_classifier_received(self, uploaded_file):
-        initial_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        initial_timestamp = self._utc_now_iso_ms()
         start_time = time.perf_counter()
 
         metadata = self.classifier_controller.save_uploaded_classifier(uploaded_file)
@@ -49,7 +58,7 @@ class ProductionSystemOrchestrator:
             metadata["model_filename"]
         )
 
-        latency = time.perf_counter() - start_time
+        latency = self._latency_seconds_from_start(start_time)
 
         self._log_event(
             initial_timestamp=initial_timestamp,
@@ -62,7 +71,7 @@ class ProductionSystemOrchestrator:
         return deployment_info
 
     def handle_session_received(self, session: dict):
-        initial_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        initial_timestamp = self._utc_now_iso_ms()
         start_time = time.perf_counter()
 
         with open(LATEST_SESSION_PATH, "w", encoding="utf-8") as f:
@@ -73,7 +82,7 @@ class ProductionSystemOrchestrator:
         with open(LATEST_LABEL_PATH, "w", encoding="utf-8") as f:
             json.dump(classification_result, f, indent=4)
 
-        latency = time.perf_counter() - start_time
+        latency = self._latency_seconds_from_start(start_time)
 
         self._log_event(
             initial_timestamp=initial_timestamp,
@@ -86,11 +95,11 @@ class ProductionSystemOrchestrator:
         return classification_result
 
     def process_classification_result(self, classification_result: dict, communication_controller):
-        initial_timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        initial_timestamp = self._utc_now_iso_ms()
 
         start_client = time.perf_counter()
         client_response = communication_controller.send_label_to_client(classification_result)
-        client_latency = time.perf_counter() - start_client
+        client_latency = self._latency_seconds_from_start(start_client)
 
         self._log_event(
             initial_timestamp=initial_timestamp,
@@ -101,7 +110,7 @@ class ProductionSystemOrchestrator:
 
         start_eval = time.perf_counter()
         evaluation_response = self.evaluation_sender.send_label_to_evaluation(classification_result)
-        evaluation_latency = time.perf_counter() - start_eval
+        evaluation_latency = self._latency_seconds_from_start(start_eval)
 
         self._log_event(
             initial_timestamp=initial_timestamp,

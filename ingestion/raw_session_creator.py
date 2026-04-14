@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import pandas as pd
 import uuid
 import sys
@@ -23,7 +23,7 @@ class RawSessionCreator:
 
         return {
             "UUID": f"{session_uuid}",
-            "created_at": datetime.now().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "records": dataframe.to_dict(orient="records")
         }
     

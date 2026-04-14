@@ -4,7 +4,7 @@ Reza edit
 
 
 import argparse
-from ingestion.orchestrator import IngestionSystemOrchestrator
+from orchestrator import IngestionSystemOrchestrator
 
 if __name__ == "__main__":
     

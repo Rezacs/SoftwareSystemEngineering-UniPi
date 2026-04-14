@@ -1,6 +1,6 @@
 import json
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import joblib
@@ -65,7 +65,7 @@ class ClassifierController:
             "classifier_id":        classifier_id,
             "model_filename":       model_filename,
             "classifier_path":      str(destination_path.resolve()),
-            "deployment_timestamp": datetime.now().isoformat(),
+            "deployment_timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "active":               True,
         }
 
@@ -89,7 +89,7 @@ class ClassifierController:
             "classifier_id":        classifier_id,
             "model_filename":       model_filename,
             "classifier_path":      str(classifier_path.resolve()),
-            "deployment_timestamp": datetime.now().isoformat(),
+            "deployment_timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "status":               "deployed",
         }
 

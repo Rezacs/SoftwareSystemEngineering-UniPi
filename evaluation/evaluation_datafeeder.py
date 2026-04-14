@@ -1,6 +1,8 @@
 import requests
 import time
-import random
+import json
+import argparse
+from pathlib import Path
 
 # ================= CONFIG =================
 EXPERT_URL = "http://127.0.0.1:5007/expert-label"
@@ -10,13 +12,37 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-# ================= VALIDATION =================
-def generate_label():
-    return random.randint(1, 5)  # valid labels only
+# ================= INPUT LOADER =================
+def load_pairs_from_file(pairs_path):
+    """
+    Expected JSON format:
+    [
+      {"player_id": 1, "expert": 4, "classifier": 5},
+      ...
+    ]
+    """
+    path = Path(pairs_path)
+    if not path.is_file():
+        raise FileNotFoundError(f"Pairs file not found: {path}")
 
+    with path.open("r", encoding="utf-8") as f:
+        pairs = json.load(f)
 
-def generate_player_id(i):
-    return i  # integer only
+    if not isinstance(pairs, list):
+        raise ValueError("Pairs file must contain a JSON list")
+
+    validated = []
+    for idx, item in enumerate(pairs):
+        if not isinstance(item, dict):
+            raise ValueError(f"Item {idx} is not an object")
+
+        missing = [k for k in ["player_id", "expert", "classifier"] if k not in item]
+        if missing:
+            raise ValueError(f"Item {idx} missing keys: {missing}")
+
+        validated.append((item["player_id"], item["expert"], item["classifier"]))
+
+    return validated
 
 
 # ================= SEND FUNCTIONS =================
@@ -47,19 +73,13 @@ def send_classifier_label(player_id, label):
 
 
 # ================= MAIN TEST =================
-def run_test(num_records=10, delay=0.5):
+def run_test(pairs, delay=0.5):
     """
-    num_records: number of player_ids to send
+    pairs: list of tuples (player_id, expert_label, classifier_label)
     delay: seconds between requests
     """
 
-    for i in range(1, num_records + 1):
-
-        player_id = generate_player_id(i)
-
-        # generate labels
-        expert_label = generate_label()
-        classifier_label = generate_label()
+    for player_id, expert_label, classifier_label in pairs:
 
         # send expert first
         send_expert_label(player_id, expert_label)
@@ -74,4 +94,21 @@ def run_test(num_records=10, delay=0.5):
 
 # ================= ENTRY =================
 if __name__ == "__main__":
-    run_test(num_records=50, delay=0.3)
+    parser = argparse.ArgumentParser(
+        description="Send explicit expert/classifier label pairs to Evaluation endpoints"
+    )
+    parser.add_argument(
+        "--pairs-file",
+        required=True,
+        help="Path to JSON file containing label pairs (player_id, expert, classifier)"
+    )
+    parser.add_argument(
+        "--delay",
+        type=float,
+        default=0.3,
+        help="Delay in seconds between expert and classifier sends"
+    )
+    args = parser.parse_args()
+
+    input_pairs = load_pairs_from_file(args.pairs_file)
+    run_test(input_pairs, delay=args.delay)

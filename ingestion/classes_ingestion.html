@@ -1,0 +1,90 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class IngestionSystemConfiguration {
+            evaluation_system_endpoint
+            evaluation_system_ip
+            evaluation_system_port
+            hosting_ip
+            hosting_port
+            json_schema_path
+            missing_samples_treshold
+            number_of_threads
+            phase
+            preparation_system_endpoint
+            preparation_system_ip
+            preparation_system_port
+            sufficient_record_treshold
+          }
+          class IngestionSystemOrchestrator {
+            app : Flask
+            evaluation_url
+            executor : ThreadPoolExecutor
+            ingestion_system_config
+            lock : lock
+            log : dict
+            log_file_path
+            preparation_url
+            raw_session_creator
+            receiver
+            records_buffer
+            check_ip_and_port()
+            http_200_response()
+            http_400_response()
+            run(input_path, output_path)
+            start()
+            write_log_file(log: list, timestamp: datetime.datetime)
+          }
+          class RawSession {
+            UUID
+          }
+          class RawSessionCreator {
+            sufficient_record_treshold : int
+            create_raw_session(dataframe: pd.DataFrame) dict
+            isNumberOfRecordsSufficient(available_records_num) bool
+            mark_missing_samples(raw_session: dict) float
+          }
+          class Record {
+            samples : list
+            uuid : int
+            add_sample(sample: dict)
+            get_samples() list
+            get_uuid()
+            set_uuid(uuid)
+          }
+          class RecordReceiver {
+            schema
+            clean_json(record: dict) bool
+            receive_record()
+            validate_json_schema(record: dict) bool
+          }
+          class RecordsBuffer {
+            db_connection
+            thread_data : _local
+            create_table(query: str, params: list) bool
+            delete(query: str, params: list) bool
+            deleteRecord(id: int)
+            delete_records(ids: list) bool
+            drop_database() None
+            drop_table(table: str) bool
+            getNumberOfAvailableRecords()
+            init_db()
+            insert_dataframe(dataframe: pd.DataFrame, sample_type: str) bool
+            read_sql(query: str, params)
+            retrieveRecord(id: int)
+            retrieve_last_records() pd.DataFrame
+            shutdown_DB()
+            update(query: str, params: list) bool
+            upsert_with_dataframe(dataframe: pd.DataFrame) bool
+          }
+          IngestionSystemConfiguration --* IngestionSystemOrchestrator : ingestion_system_config
+          RawSessionCreator --* IngestionSystemOrchestrator : raw_session_creator
+          RecordReceiver --* IngestionSystemOrchestrator : receiver
+          RecordsBuffer --* IngestionSystemOrchestrator : records_buffer
+  
+       </div>
+  </body>
+</html>

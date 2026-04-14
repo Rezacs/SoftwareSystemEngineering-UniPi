@@ -1,0 +1,36 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class ingestion {
+          }
+          class ingestion_launcher {
+          }
+          class ingestion_system_config {
+          }
+          class main {
+          }
+          class orchestrator {
+          }
+          class raw_session {
+          }
+          class raw_session_creator {
+          }
+          class record {
+          }
+          class record_receiver {
+          }
+          class records_buffer {
+          }
+          ingestion_launcher --> orchestrator
+          main --> orchestrator
+          orchestrator --> ingestion_system_config
+          orchestrator --> raw_session_creator
+          orchestrator --> record_receiver
+          orchestrator --> records_buffer
+  
+       </div>
+  </body>
+</html>

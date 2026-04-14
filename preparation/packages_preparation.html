@@ -1,0 +1,31 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class preparation {
+          }
+          class main {
+          }
+          class orchestrator {
+          }
+          class preparation_launcher {
+          }
+          class preparation_system_config {
+          }
+          class prepared_session {
+          }
+          class prepared_session_creator {
+          }
+          class raw_session_receiver {
+          }
+          main --> orchestrator
+          orchestrator --> preparation_system_config
+          orchestrator --> prepared_session_creator
+          orchestrator --> raw_session_receiver
+          preparation_launcher --> orchestrator
+  
+       </div>
+  </body>
+</html>

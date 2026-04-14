@@ -1,0 +1,40 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class src {
+          }
+          class communicationController {
+          }
+          class developmentSystemOrchestrator {
+          }
+          class learningPlotView {
+          }
+          class non_resilience_test {
+          }
+          class segregation_system_simulation {
+          }
+          class testingOrchestrator {
+          }
+          class testingReportView {
+          }
+          class trainingOrchestrator {
+          }
+          class validationOrchestrator {
+          }
+          class validationReportView {
+          }
+          developmentSystemOrchestrator --> communicationController
+          developmentSystemOrchestrator --> learningPlotView
+          developmentSystemOrchestrator --> testingOrchestrator
+          developmentSystemOrchestrator --> testingReportView
+          developmentSystemOrchestrator --> trainingOrchestrator
+          developmentSystemOrchestrator --> validationOrchestrator
+          developmentSystemOrchestrator --> validationReportView
+          validationOrchestrator --> trainingOrchestrator
+  
+       </div>
+  </body>
+</html>

@@ -18,6 +18,8 @@
           }
           class batch_manager {
           }
+          class logging_manager {
+          }
           class orchestrator {
           }
           class state_manager {
@@ -40,11 +42,27 @@
           }
           class logger {
           }
+          class system_cleaner {
+          }
           class validation {
           }
           class schema_validator {
           }
+          json_api --> config_loader
+          json_api --> batch_manager
+          json_api --> orchestrator
+          json_api --> state_manager
+          json_api --> repository
+          json_api --> sqlite_store
+          json_api --> logger
+          json_api --> system_cleaner
+          json_api --> schema_validator
+          orchestrator --> logging_manager
+          orchestrator --> report_metrics
+          orchestrator --> visual_report
+          orchestrator --> logger
           main --> json_api
+          main --> config_loader
   
        </div>
   </body>

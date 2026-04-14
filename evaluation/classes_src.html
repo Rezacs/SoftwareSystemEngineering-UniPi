@@ -13,19 +13,26 @@
             all()
             get(key, default)
           }
+          class LoggingManager {
+            end_process(outcome)
+            finalize_log()
+            start_process(process_name)
+            start_session()
+          }
           class Orchestrator {
             batch_mgr
             config
             eval_cfg
             external_cfg
             last_batch : NoneType
-            last_metrics : NoneType
+            last_metrics : NoneType, dict
+            log_mgr
             metrics_engine
             paths_cfg
             repo
             state
             visual
-            human_decision(decision)
+            finalize_decision(decision, mode)
             process(data)
           }
           class ReportMetrics {
@@ -41,6 +48,7 @@
           }
           class SQLiteStore {
             conn
+            db_path
             clear()
             count_matched()
             delete(player_id)
@@ -59,9 +67,20 @@
             is_waiting_decision()
             set_batch(batch)
           }
+          class SystemCleaner {
+            config
+            db_path : Path
+            log_path
+            output_dir : Path
+            project_root : Path
+            clean_all()
+          }
           class VisualReport {
             generate(batch, config)
           }
+          LoggingManager --* Orchestrator : log_mgr
+          ReportMetrics --* Orchestrator : metrics_engine
+          VisualReport --* Orchestrator : visual
   
        </div>
   </body>

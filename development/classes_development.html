@@ -29,13 +29,13 @@
           }
           class TrainingOrchestrator {
             generate_calibration_report(X_train: pd.DataFrame, y_train: list, output_path: str, num_epochs: int) LearningPlot
-            generate_learning_curve(X_train, y_train, output_path, num_epochs)
+            generate_learning_curve(X_train: pd.DataFrame, y_train: list, output_path: str, num_epochs: int) LearningPlot
             set_parameters(params: dict) None
             train_classifier(X_train: pd.DataFrame, y_train: list, X_val: pd.DataFrame, y_val: list, classifier_id: str, model_path: str) Classifier
           }
           class ValidationOrchestrator {
             generate_validation_report(X_train: pd.DataFrame, y_train: list, X_val: pd.DataFrame, y_val: list) ValidationReport
-            grid_search(X_train, y_train, X_val, y_val) ValidationReport
+            grid_search(X_train: pd.DataFrame, y_train: list, X_val: pd.DataFrame, y_val: list) ValidationReport
             retrieve_average_parameters() dict
           }
           class ValidationReportView {

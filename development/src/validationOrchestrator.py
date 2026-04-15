@@ -1,16 +1,19 @@
+"""Orchestrator for the validation phase of the development pipeline."""
+
 import json
 from pathlib import Path
 from typing import List, Optional
 
 import pandas as pd
 
-from Data.classifier import Classifier
-from Data.validationReport import ValidationReport
-from Data.hyperParameters import HyperParameters
 from src.trainingOrchestrator import TrainingOrchestrator
+from Data.classifier import Classifier
+from Data.hyperParameters import HyperParameters
+from Data.validationReport import ValidationReport
 
 
 class ValidationOrchestrator:
+    """Trains one classifier per HyperParameters config and selects the best."""
 
     def __init__(
         self,
@@ -20,6 +23,7 @@ class ValidationOrchestrator:
         training_orchestrator: TrainingOrchestrator,
         overfitting_threshold: float = 0.1,
     ) -> None:
+        """Store all configuration needed for the validation loop."""
         self._hp_configs            = hp_configs
         self._classifier_folder     = classifier_folder
         self._report_path           = report_path
@@ -30,8 +34,9 @@ class ValidationOrchestrator:
 
     def retrieve_average_parameters(self) -> dict:
         """
-        Computes the mean num_layers and num_neurons across all
-        HyperParameters configs.
+        Compute the mean num_layers and num_neurons across all HyperParameters configs.
+
+        Returns a dict with integer-rounded averages.
         """
         avg_layers  = sum(h.num_layers  for h in self._hp_configs) / len(self._hp_configs)
         avg_neurons = sum(h.num_neurons for h in self._hp_configs) / len(self._hp_configs)
@@ -51,6 +56,7 @@ class ValidationOrchestrator:
     ) -> ValidationReport:
         """
         BPMN Tasks: SET HYPERPARAMS & GENERATE VALIDATION REPORT.
+
         Trains one classifier per HyperParameters config, selects the
         best non-overfitting one, and writes validation_report.json.
         """
@@ -94,13 +100,13 @@ class ValidationOrchestrator:
 
         report_path = Path(self._report_path)
         report_path.parent.mkdir(parents=True, exist_ok=True)
-        with report_path.open("w", encoding="UTF-8") as f:
+        with report_path.open("w", encoding="UTF-8") as fh:
             json.dump({
                 "overfitting_threshold": self._overfitting_threshold,
                 "best_classifiers":      candidates,
                 "selected_classifier":   selected_id,
                 "approve":               approved,
-            }, f, indent="\t")
+            }, fh, indent="\t")
 
         print(
             f"[ValidationOrchestrator] Report written — "
@@ -114,6 +120,12 @@ class ValidationOrchestrator:
             approve=approved,
         )
 
-    # alias
-    def grid_search(self, X_train, y_train, X_val, y_val) -> ValidationReport:
+    def grid_search(
+        self,
+        X_train: pd.DataFrame,
+        y_train: list,
+        X_val: pd.DataFrame,
+        y_val: list,
+    ) -> ValidationReport:
+        """Alias for generate_validation_report."""
         return self.generate_validation_report(X_train, y_train, X_val, y_val)

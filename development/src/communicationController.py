@@ -1,3 +1,5 @@
+"""Controller for inbound and outbound HTTP communication."""
+
 import json
 import threading
 from pathlib import Path
@@ -8,7 +10,7 @@ from flask import Flask, Response, jsonify, request
 
 
 class CommunicationController:
-  
+    """Manages the Flask server for receiving data and outbound HTTP calls."""
 
     def __init__(
         self,
@@ -22,6 +24,7 @@ class CommunicationController:
         received_data_path: str,
         rejected_report_path: str,
     ) -> None:
+        """Initialise all network parameters and register Flask routes."""
         self._listen_host          = listen_host
         self._listen_port          = listen_port
         self._segregation_ip       = segregation_ip
@@ -38,9 +41,8 @@ class CommunicationController:
 
     # ── INBOUND — Flask server ─────────────────────────────────────────
 
-    # -- Inside CommunicationController._register_routes --
-
     def _register_routes(self) -> None:
+        """Register all Flask URL rules."""
         @self._app.route("/data", methods=["POST"])
         def receive_data() -> Response:
             if not request.is_json:
@@ -48,18 +50,16 @@ class CommunicationController:
 
             payload: dict = request.get_json(force=True)
 
-            # --- NEW VALIDATION STEP ---
             try:
                 self._validate_payload_structure(payload)
             except ValueError as e:
                 print(f"[CommunicationController] Validation Failed: {e}")
                 return jsonify({"error": str(e)}), 400
-            # ---------------------------
 
             # Save RAW data for audit/debugging
             self._received_data_path.parent.mkdir(parents=True, exist_ok=True)
-            with self._received_data_path.open("w", encoding="UTF-8") as f:
-                json.dump(payload, f, indent="\t")
+            with self._received_data_path.open("w", encoding="UTF-8") as fh:
+                json.dump(payload, fh, indent="\t")
 
             if self._on_data_received is not None:
                 self._on_data_received(payload)
@@ -75,7 +75,7 @@ class CommunicationController:
                 raise ValueError(f"'{split}' must be a list")
             if len(payload[split]) == 0:
                 raise ValueError(f"'{split}' must not be empty")
-            
+
     def start_server(self, on_data_received: Callable[[dict], None]) -> None:
         """Start the Flask server in a daemon thread."""
         self._on_data_received = on_data_received
@@ -100,7 +100,8 @@ class CommunicationController:
 
     def send_classifier(self, model_path: str) -> bool:
         """
-        BPMN: CLASSIFIER SENT
+        BPMN: CLASSIFIER SENT.
+
         POST the trained .sav file to the Production System.
         Called by test_passed() when approved = True.
         """
@@ -132,21 +133,22 @@ class CommunicationController:
 
     def save_rejected_report(self, report_path: str) -> bool:
         """
-        BPMN: CONFIGURATION SENT (no external messaging system)
+        BPMN: CONFIGURATION SENT (no external messaging system).
+
         Saves the testing report JSON locally so it can be reviewed.
         Called by test_passed() when approved = False.
         """
         report_path = Path(report_path)
         try:
-            with report_path.open("r", encoding="UTF-8") as f:
-                report = json.load(f)
+            with report_path.open("r", encoding="UTF-8") as fh:
+                report = json.load(fh)
         except (FileNotFoundError, json.JSONDecodeError) as exc:
             print(f"[CommunicationController] Cannot read report: {exc}")
             return False
 
         self._rejected_report_path.parent.mkdir(parents=True, exist_ok=True)
-        with self._rejected_report_path.open("w", encoding="UTF-8") as f:
-            json.dump(report, f, indent="\t")
+        with self._rejected_report_path.open("w", encoding="UTF-8") as fh:
+            json.dump(report, fh, indent="\t")
 
         print(
             f"[CommunicationController] Rejected report saved → "

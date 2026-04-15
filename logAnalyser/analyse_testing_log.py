@@ -5,8 +5,8 @@ import json
 def process_logs():
     # Configuration
     folder_name = "Non Responsiveness Test - Development Phase"
-    sizes = [32, 64, 128, 256]
-    versions = [1, 2, 3]
+    sizes = [32, 64, 128, 256, 5]
+    versions = [1, 2, 3, 5]
     
     # Path handling: check local or parent directory
     base_path = ""

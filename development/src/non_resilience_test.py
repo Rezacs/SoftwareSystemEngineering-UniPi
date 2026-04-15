@@ -1,26 +1,70 @@
+"""Non-resiliency test suite for the Development System HTTP endpoint."""
+
 import requests
 
 DESTINATION_URL = "http://127.0.0.1:5005/data"
 
 VALID_PAYLOAD = {
     "training_set": [
-        {"session_id": "s-001", "player_id": 1, "skill_overall": 0.8, "social_influence_score": 0.2, "injuries_impact_score": 0.1, "label": 4},
-        {"session_id": "s-002", "player_id": 2, "skill_overall": 0.4, "social_influence_score": 0.5, "injuries_impact_score": 0.6, "label": 2},
-        {"session_id": "s-003", "player_id": 3, "skill_overall": 0.6, "social_influence_score": 0.3, "injuries_impact_score": 0.3, "label": 3},
-        {"session_id": "s-004", "player_id": 4, "skill_overall": 0.2, "social_influence_score": 0.8, "injuries_impact_score": 0.4, "label": 1},
-        {"session_id": "s-005", "player_id": 5, "skill_overall": 0.9, "social_influence_score": 0.1, "injuries_impact_score": 0.0, "label": 5},
+        {
+            "session_id": "s-001", "player_id": 1,
+            "skill_overall": 0.8, "social_influence_score": 0.2,
+            "injuries_impact_score": 0.1, "label": 4,
+        },
+        {
+            "session_id": "s-002", "player_id": 2,
+            "skill_overall": 0.4, "social_influence_score": 0.5,
+            "injuries_impact_score": 0.6, "label": 2,
+        },
+        {
+            "session_id": "s-003", "player_id": 3,
+            "skill_overall": 0.6, "social_influence_score": 0.3,
+            "injuries_impact_score": 0.3, "label": 3,
+        },
+        {
+            "session_id": "s-004", "player_id": 4,
+            "skill_overall": 0.2, "social_influence_score": 0.8,
+            "injuries_impact_score": 0.4, "label": 1,
+        },
+        {
+            "session_id": "s-005", "player_id": 5,
+            "skill_overall": 0.9, "social_influence_score": 0.1,
+            "injuries_impact_score": 0.0, "label": 5,
+        },
     ],
     "validation_set": [
-        {"session_id": "s-006", "player_id": 6, "skill_overall": 0.7, "social_influence_score": 0.4, "injuries_impact_score": 0.2, "label": 4},
-        {"session_id": "s-007", "player_id": 7, "skill_overall": 0.3, "social_influence_score": 0.6, "injuries_impact_score": 0.5, "label": 2},
+        {
+            "session_id": "s-006", "player_id": 6,
+            "skill_overall": 0.7, "social_influence_score": 0.4,
+            "injuries_impact_score": 0.2, "label": 4,
+        },
+        {
+            "session_id": "s-007", "player_id": 7,
+            "skill_overall": 0.3, "social_influence_score": 0.6,
+            "injuries_impact_score": 0.5, "label": 2,
+        },
     ],
     "test_set": [
-        {"session_id": "s-008", "player_id": 8, "skill_overall": 0.5, "social_influence_score": 0.5, "injuries_impact_score": 0.3, "label": 3},
-        {"session_id": "s-009", "player_id": 9, "skill_overall": 0.1, "social_influence_score": 0.9, "injuries_impact_score": 0.8, "label": 1},
+        {
+            "session_id": "s-008", "player_id": 8,
+            "skill_overall": 0.5, "social_influence_score": 0.5,
+            "injuries_impact_score": 0.3, "label": 3,
+        },
+        {
+            "session_id": "s-009", "player_id": 9,
+            "skill_overall": 0.1, "social_influence_score": 0.9,
+            "injuries_impact_score": 0.8, "label": 1,
+        },
     ],
     "hyperparameters": [
-        {"classifier_id": "manual_alpha", "num_layers": 2, "num_neurons": 16, "num_iterations": 100},
-        {"classifier_id": "manual_beta",  "num_layers": 3, "num_neurons": 32, "num_iterations": 150},
+        {
+            "classifier_id": "manual_alpha",
+            "num_layers": 2, "num_neurons": 16, "num_iterations": 100,
+        },
+        {
+            "classifier_id": "manual_beta",
+            "num_layers": 3, "num_neurons": 32, "num_iterations": 150,
+        },
     ],
 }
 
@@ -51,11 +95,31 @@ D2_CASES = [
         "payload": {
             **VALID_PAYLOAD,
             "training_set": [
-                {"session_id": "s-001", "player_id": 1, "skill_overall": 0.8, "social_influence_score": 0.2, "injuries_impact_score": 0.1, "label": 4},
-                {"session_id": "s-002", "player_id": 2, "skill_overall": 0.4, "social_influence_score": 0.5, "injuries_impact_score": 0.6},  # missing label
-                {"session_id": "s-003", "player_id": 3, "skill_overall": 0.6, "social_influence_score": 0.3, "injuries_impact_score": 0.3},  # missing label
-                {"session_id": "s-004", "player_id": 4, "skill_overall": 0.2, "social_influence_score": 0.8, "injuries_impact_score": 0.4, "label": 1},
-                {"session_id": "s-005", "player_id": 5, "skill_overall": 0.9, "social_influence_score": 0.1, "injuries_impact_score": 0.0, "label": 5},
+                {
+                    "session_id": "s-001", "player_id": 1,
+                    "skill_overall": 0.8, "social_influence_score": 0.2,
+                    "injuries_impact_score": 0.1, "label": 4,
+                },
+                {
+                    "session_id": "s-002", "player_id": 2,
+                    "skill_overall": 0.4, "social_influence_score": 0.5,
+                    "injuries_impact_score": 0.6,  # missing label
+                },
+                {
+                    "session_id": "s-003", "player_id": 3,
+                    "skill_overall": 0.6, "social_influence_score": 0.3,
+                    "injuries_impact_score": 0.3,  # missing label
+                },
+                {
+                    "session_id": "s-004", "player_id": 4,
+                    "skill_overall": 0.2, "social_influence_score": 0.8,
+                    "injuries_impact_score": 0.4, "label": 1,
+                },
+                {
+                    "session_id": "s-005", "player_id": 5,
+                    "skill_overall": 0.9, "social_influence_score": 0.1,
+                    "injuries_impact_score": 0.0, "label": 5,
+                },
             ],
         },
     },
@@ -64,8 +128,16 @@ D2_CASES = [
         "payload": {
             **VALID_PAYLOAD,
             "validation_set": [
-                {"session_id": "s-006", "player_id": 6, "skill_overall": 0.7, "social_influence_score": 0.4, "injuries_impact_score": 0.2, "label": 4},
-                {"session_id": "s-007", "player_id": 7, "skill_overall": 0.3, "social_influence_score": 0.6, "injuries_impact_score": 0.5},  # missing label
+                {
+                    "session_id": "s-006", "player_id": 6,
+                    "skill_overall": 0.7, "social_influence_score": 0.4,
+                    "injuries_impact_score": 0.2, "label": 4,
+                },
+                {
+                    "session_id": "s-007", "player_id": 7,
+                    "skill_overall": 0.3, "social_influence_score": 0.6,
+                    "injuries_impact_score": 0.5,  # missing label
+                },
             ],
         },
     },
@@ -74,14 +146,23 @@ D2_CASES = [
         "payload": {
             **VALID_PAYLOAD,
             "test_set": [
-                {"session_id": "s-008", "player_id": 8, "skill_overall": 0.5, "social_influence_score": 0.5, "injuries_impact_score": 0.3, "label": 3},
-                {"session_id": "s-009", "player_id": 9, "skill_overall": 0.1, "social_influence_score": 0.9, "injuries_impact_score": 0.8},  # missing label
+                {
+                    "session_id": "s-008", "player_id": 8,
+                    "skill_overall": 0.5, "social_influence_score": 0.5,
+                    "injuries_impact_score": 0.3, "label": 3,
+                },
+                {
+                    "session_id": "s-009", "player_id": 9,
+                    "skill_overall": 0.1, "social_influence_score": 0.9,
+                    "injuries_impact_score": 0.8,  # missing label
+                },
             ],
         },
     },
 ]
+
 # ── D3: Too few records ───────────────────────────────────────────────────────
-# Score 5: system trains only very bad classifiers, might remain stuck in validation loop
+# Score 5: system trains only very bad classifiers, might remain stuck
 
 D3_CASES = [
     {
@@ -89,7 +170,11 @@ D3_CASES = [
         "payload": {
             **VALID_PAYLOAD,
             "training_set": [
-                {"session_id": "s-001", "player_id": 1, "skill_overall": 0.8, "social_influence_score": 0.2, "injuries_impact_score": 0.1, "label": 4},
+                {
+                    "session_id": "s-001", "player_id": 1,
+                    "skill_overall": 0.8, "social_influence_score": 0.2,
+                    "injuries_impact_score": 0.1, "label": 4,
+                },
             ],
         },
     },
@@ -98,7 +183,11 @@ D3_CASES = [
         "payload": {
             **VALID_PAYLOAD,
             "validation_set": [
-                {"session_id": "s-006", "player_id": 6, "skill_overall": 0.7, "social_influence_score": 0.4, "injuries_impact_score": 0.2, "label": 4},
+                {
+                    "session_id": "s-006", "player_id": 6,
+                    "skill_overall": 0.7, "social_influence_score": 0.4,
+                    "injuries_impact_score": 0.2, "label": 4,
+                },
             ],
         },
     },
@@ -107,10 +196,18 @@ D3_CASES = [
         "payload": {
             **VALID_PAYLOAD,
             "training_set": [
-                {"session_id": "s-001", "player_id": 1, "skill_overall": 0.8, "social_influence_score": 0.2, "injuries_impact_score": 0.1, "label": 4},
+                {
+                    "session_id": "s-001", "player_id": 1,
+                    "skill_overall": 0.8, "social_influence_score": 0.2,
+                    "injuries_impact_score": 0.1, "label": 4,
+                },
             ],
             "validation_set": [
-                {"session_id": "s-006", "player_id": 6, "skill_overall": 0.7, "social_influence_score": 0.4, "injuries_impact_score": 0.2, "label": 4},
+                {
+                    "session_id": "s-006", "player_id": 6,
+                    "skill_overall": 0.7, "social_influence_score": 0.4,
+                    "injuries_impact_score": 0.2, "label": 4,
+                },
             ],
         },
     },
@@ -134,7 +231,11 @@ D4_CASES = [
         "payload": {
             **VALID_PAYLOAD,
             "hyperparameters": [
-                {"classifier_id": "manual_alpha", "num_layers": "two", "num_neurons": "sixteen", "num_iterations": "hundred"},
+                {
+                    "classifier_id": "manual_alpha",
+                    "num_layers": "two", "num_neurons": "sixteen",
+                    "num_iterations": "hundred",
+                },
             ],
         },
     },
@@ -143,20 +244,22 @@ D4_CASES = [
         "payload": {
             **VALID_PAYLOAD,
             "hyperparameters": [
-                {"classifier_id": "manual_alpha", "num_layers": -2, "num_neurons": -16, "num_iterations": -100},
+                {
+                    "classifier_id": "manual_alpha",
+                    "num_layers": -2, "num_neurons": -16, "num_iterations": -100,
+                },
             ],
         },
     },
     {
         "description": "D4 — empty hyperparameters list",
-        "payload": {
-            **VALID_PAYLOAD,
-            "hyperparameters": [],
-        },
+        "payload": {**VALID_PAYLOAD, "hyperparameters": []},
     },
 ]
 
+
 def send_case(case: dict) -> None:
+    """POST a single test case to the Development System and print the result."""
     print(f"\n{'='*60}")
     print(f"Sending: {case['description']}")
     print(f"{'='*60}")
@@ -165,11 +268,12 @@ def send_case(case: dict) -> None:
             DESTINATION_URL,
             json=case["payload"],
             headers={"Content-Type": "application/json"},
+            timeout=10,
         )
         print(f"Status : {response.status_code}")
         print(f"Response: {response.text}")
     except requests.exceptions.ConnectionError:
-        print("❌ Connection Error: Is the Development System running?")
+        print("Connection Error: Is the Development System running?")
 
 
 if __name__ == "__main__":

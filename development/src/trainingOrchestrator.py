@@ -1,12 +1,15 @@
+"""Orchestrator for the training and calibration phases of the development pipeline."""
+
+import matplotlib
+matplotlib.use("Agg")   # safe for server/thread contexts
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from pathlib import Path
 from typing import List, Optional
 
 import joblib
-import matplotlib
-matplotlib.use("Agg")   # safe for server/thread contexts
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 from sklearn.neural_network import MLPClassifier
 
 from Data.classifier import Classifier
@@ -15,6 +18,7 @@ from Data.preparedSession import PreparedSession
 
 
 def _sessions_to_frames(sessions: List[PreparedSession], feature_cols: List[str]):
+    """Convert a list of PreparedSession objects into a feature DataFrame and label list."""
     X = pd.DataFrame(
         [{col: getattr(s, col) for col in feature_cols} for s in sessions]
     )
@@ -24,7 +28,8 @@ def _sessions_to_frames(sessions: List[PreparedSession], feature_cols: List[str]
 
 def _to_numpy(X) -> np.ndarray:
     """
-    Accepts a DataFrame or ndarray and always returns a plain ndarray.
+    Accept a DataFrame or ndarray and always return a plain ndarray.
+
     This ensures the MLPClassifier is never fitted or called with
     feature names, avoiding the sklearn UserWarning at prediction time.
     """
@@ -34,8 +39,10 @@ def _to_numpy(X) -> np.ndarray:
 
 
 class TrainingOrchestrator:
+    """Handles MLP calibration, learning-curve generation, and full training."""
 
     def __init__(self, feature_cols: List[str], score_min: int, score_max: int) -> None:
+        """Initialise with feature column names and score range."""
         self._params:       dict      = {}
         self._feature_cols: List[str] = feature_cols
         self._score_min:    int       = score_min
@@ -44,10 +51,12 @@ class TrainingOrchestrator:
     # ── BPMN Task: SET HYPERPARAMS ─────────────────────────────────────
 
     def set_parameters(self, params: dict) -> None:
+        """Store hyperparameter dict for use in subsequent training calls."""
         print(f"[TrainingOrchestrator] SET HYPERPARAMS: {params}")
         self._params = params
 
     def _build_mlp(self, max_iter: Optional[int] = None) -> MLPClassifier:
+        """Construct an MLPClassifier from the currently stored parameters."""
         num_layers  = self._params.get("num_layers",  2)
         num_neurons = self._params.get("num_neurons", 64)
         iterations  = max_iter or self._params.get("max_iter", 200)
@@ -66,12 +75,13 @@ class TrainingOrchestrator:
         output_path: str,
         num_epochs: int = 10,
     ) -> LearningPlot:
+        """Train for num_epochs, save the learning-curve plot, and return a LearningPlot."""
         print(f"[TrainingOrchestrator] CALIBRATE — {num_epochs} epochs …")
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         mlp = self._build_mlp(max_iter=num_epochs)
-        mlp.fit(_to_numpy(X_train), y_train)   # ← numpy, no feature names
+        mlp.fit(_to_numpy(X_train), y_train)
 
         mse    = mlp.loss_curve_
         epochs = list(range(1, len(mse) + 1))
@@ -89,8 +99,14 @@ class TrainingOrchestrator:
         approve = len(mse) >= 2 and mse[-1] < mse[0]
         return LearningPlot(mse=mse, number_of_epochs=epochs, approve=approve, set_epochs=False)
 
-    # alias
-    def generate_learning_curve(self, X_train, y_train, output_path, num_epochs=10):
+    def generate_learning_curve(
+        self,
+        X_train: pd.DataFrame,
+        y_train: list,
+        output_path: str,
+        num_epochs: int = 10,
+    ) -> LearningPlot:
+        """Alias for generate_calibration_report."""
         return self.generate_calibration_report(X_train, y_train, output_path, num_epochs)
 
     # ── Training ────────────────────────────────────────────────────────
@@ -104,18 +120,19 @@ class TrainingOrchestrator:
         classifier_id: str,
         model_path: str,
     ) -> Classifier:
+        """Train the MLP, persist it to disk, and return a Classifier data object."""
         print(f"[TrainingOrchestrator] Training '{classifier_id}' …")
         model_path = Path(model_path)
         model_path.parent.mkdir(parents=True, exist_ok=True)
 
-        X_train_np = _to_numpy(X_train)   # ← strip feature names before fit
-        X_val_np   = _to_numpy(X_val)
+        x_train_np = _to_numpy(X_train)
+        x_val_np   = _to_numpy(X_val)
 
         mlp = self._build_mlp()
-        mlp.fit(X_train_np, y_train)       # ← numpy, no feature names
+        mlp.fit(x_train_np, y_train)
 
-        training_error   = 1.0 - mlp.score(X_train_np, y_train)
-        validation_error = 1.0 - mlp.score(X_val_np,   y_val)
+        training_error   = 1.0 - mlp.score(x_train_np, y_train)
+        validation_error = 1.0 - mlp.score(x_val_np,   y_val)
 
         joblib.dump(mlp, model_path)
 

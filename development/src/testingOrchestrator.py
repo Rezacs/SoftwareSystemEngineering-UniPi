@@ -1,3 +1,5 @@
+"""Orchestrator for the final testing phase of the development pipeline."""
+
 import json
 from pathlib import Path
 
@@ -8,11 +10,14 @@ from Data.testingReport import TestingReport
 
 
 class TestingOrchestrator:
+    """Evaluates a trained classifier on the held-out test set."""
+
     def __init__(
         self,
         report_path: str,
         generalization_threshold: float = 0.15,
     ) -> None:
+        """Store the report output path and acceptance threshold."""
         self._report_path              = report_path
         self._generalization_threshold = generalization_threshold
 
@@ -23,6 +28,7 @@ class TestingOrchestrator:
         X_test: pd.DataFrame,
         y_test: list,
     ) -> TestingReport:
+        """Load the classifier, compute test error, write report, and return result."""
         clf_id = classifier_data.get("classifier_id", "?")
         print(f"[TestingOrchestrator] GENERATE TEST REPORT for '{clf_id}' …")
 
@@ -32,14 +38,14 @@ class TestingOrchestrator:
 
         report_path = Path(self._report_path)
         report_path.parent.mkdir(parents=True, exist_ok=True)
-        with report_path.open("w", encoding="UTF-8") as f:
+        with report_path.open("w", encoding="UTF-8") as fh:
             json.dump({
                 "classifier_id":            clf_id,
                 "metric":                   "classification_error (1 - accuracy)",
                 "testing_error":            round(testing_error, 4),
                 "generalization_threshold": self._generalization_threshold,
                 "errors": {"passed": passed},
-            }, f, indent="\t")
+            }, fh, indent="\t")
 
         print(
             f"[TestingOrchestrator] error={testing_error:.4f}, "

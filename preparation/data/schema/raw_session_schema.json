@@ -37,8 +37,8 @@
                     "number_of_followers": { "type": ["integer", "null"] },
                     "skill_overall": { "type": ["integer", "null"] },
                     "label": { "type": ["integer","null"],
-                               "minimum" : 0,
-                               "maximum": 4 }
+                               "minimum" : 1,
+                               "maximum": 5 }
                 }
             }
         }

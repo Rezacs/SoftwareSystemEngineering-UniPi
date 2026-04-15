@@ -1,15 +1,16 @@
-from flask import Flask, request, jsonify
+"""Flask API routes for the evaluation system."""
+
+from flask import Flask, jsonify, request
 
 from src.config.config_loader import Config
-from src.validation.schema_validator import SchemaValidator
-from src.storage.sqlite_store import SQLiteStore
-from src.storage.repository import Repository
 from src.core.batch_manager import BatchManager
-from src.core.state_manager import StateManager
 from src.core.orchestrator import Orchestrator
-from src.utils.system_cleaner import SystemCleaner
-
+from src.core.state_manager import StateManager
+from src.storage.repository import Repository
+from src.storage.sqlite_store import SQLiteStore
 from src.utils.logger import logger
+from src.utils.system_cleaner import SystemCleaner
+from src.validation.schema_validator import SchemaValidator
 
 
 app = Flask(__name__)
@@ -39,7 +40,7 @@ orchestrator = Orchestrator(repo, batch_mgr, config, state)
 
 @app.route("/expert-label", methods=["POST"])
 def expert_label():
-
+    """Handle expert-labeled input data."""
     data = request.json
     data["source"] = "expert"
 
@@ -57,7 +58,7 @@ def expert_label():
 
 @app.route("/classifier-label", methods=["POST"])
 def classifier_label():
-
+    """Handle classifier-generated label input data."""
     data = request.json
     data["source"] = "classifier"
 
@@ -75,7 +76,7 @@ def classifier_label():
 
 @app.route("/human-decision", methods=["POST"])
 def human_decision():
-
+    """Process a final human review decision."""
     data = request.json
     decision = data.get("decision")
 
@@ -84,14 +85,7 @@ def human_decision():
 
     # ================= APPLY DECISION =================
     result = orchestrator.finalize_decision(decision, mode="HUMAN")
-
-   # logger.info("🔄 Resetting system for next batch...")
-
-    # ================= RESET STATE =================
-    #state.clear_batch()
-
     return jsonify(result)
-
 
 # =========================================================
 # ================= RESET SYSTEM  ================
@@ -99,7 +93,7 @@ def human_decision():
 
 @app.route("/reset", methods=["POST"])
 def reset():
-
+    """Reset the database and application state. Was useful for testing"""
     logger.warning("⚠️ Manual system reset triggered")
 
     repo.clear()
@@ -117,6 +111,7 @@ def reset():
 
 @app.route("/health", methods=["GET"])
 def health():
+    """Return the current API health status. was useful for testing"""
     return jsonify({
         "status": "running",
         "system": "evaluation"

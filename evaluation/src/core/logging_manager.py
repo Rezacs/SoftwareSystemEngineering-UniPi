@@ -1,6 +1,7 @@
 import json
 import threading
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 _log_lock = threading.Lock()
@@ -17,7 +18,8 @@ class LoggingManager:
         self._init_log()
 
     def _utc_now(self):
-        return datetime.now(timezone.utc)
+        #return datetime.now(timezone.cet)
+        return datetime.now(ZoneInfo("Europe/Rome"))
 
     def _format_ts(self, dt):
         return dt.strftime("%Y-%m-%dT%H:%M:%SZ")

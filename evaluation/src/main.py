@@ -1,7 +1,6 @@
 from src.api.json_api import app
 from src.config.config_loader import Config
-import json
-from pathlib import Path
+import logging
 
 config = Config()
 
@@ -36,7 +35,6 @@ if __name__ == "__main__":
     print("=================================\n")
 
     #to suppress Flask's default logging
-    import logging
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
 

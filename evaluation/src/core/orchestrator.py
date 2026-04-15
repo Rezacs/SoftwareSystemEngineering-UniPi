@@ -1,3 +1,4 @@
+"""Main orchestration logic for the evaluation workflow."""
 import json
 import threading
 from pathlib import Path
@@ -65,7 +66,7 @@ class Orchestrator:
     # =========================================================
 
     def process(self, data):
-
+        """Process incoming label data and manage batch evaluation flow."""
         # ================= START SESSION + E1 =================
         self.log_mgr.start_session()
         self.log_mgr.start_process("E1")
@@ -190,7 +191,7 @@ class Orchestrator:
     # =========================================================
 
     def finalize_decision(self, decision, mode="HUMAN"):
-
+        """Finalize the batch decision and reset the system state."""
         logger.info(f"{mode} DECISION → {decision}")
 
         # ================= START E2 =================

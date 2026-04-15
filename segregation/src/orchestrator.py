@@ -25,6 +25,7 @@ from .check_class_balancing import CheckClassBalancing
 from .check_input_coverage import CheckInputCoverage
 from .view_balancing import ViewBalancing
 from .view_coverage import ViewCoverage
+from .config_validator import validate_runtime_parameters
 
 
 class SegregationSystemOrchestrator:
@@ -251,7 +252,7 @@ class SegregationSystemOrchestrator:
         Main entry point for the segregation workflow.
         Executes the workflow based on current state and mode (Stop&Go or Testing).
         """
-        config = JsonIO.load(config_path)
+        config = validate_runtime_parameters(JsonIO.load(config_path))
         self.session_repository.initialize(segregation_db_path)
         
         # Store paths for use in helper methods

@@ -12,6 +12,7 @@ from typing import Optional
 
 from src.orchestrator import SegregationSystemOrchestrator
 from src.communication_controller import CommunicationController
+from src.config_validator import validate_runtime_parameters
 from src.utils.json_io import JsonIO
 from src import SEGREGATION_DB_PATH, SEGREGATION_LOG_PATH, SEGREGATION_WORKFLOW_STATE_PATH
 
@@ -26,7 +27,8 @@ def _read_config() -> dict:
     if not CONFIG_PATH.is_file():
         raise FileNotFoundError(f"Configuration file not found: {CONFIG_PATH}")
     with CONFIG_PATH.open("r", encoding="UTF-8") as f:
-        return json.load(f)
+        config = json.load(f)
+    return validate_runtime_parameters(config)
 
 
 # ── Mode selection ─────────────────────────────────────────────────────────
@@ -266,6 +268,10 @@ if __name__ == "__main__":
                     
         except KeyboardInterrupt:
             print("\n[Main] Shutdown requested by user.")
+            break
+        except ValueError as e:
+            print(f"[Main] Configuration error: {e}")
+            print("[Main] Stopping system due to invalid configuration.")
             break
         except Exception as e:
             print(f"[Main] Error during execution: {e}")

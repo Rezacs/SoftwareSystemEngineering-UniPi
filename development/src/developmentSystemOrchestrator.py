@@ -91,40 +91,40 @@ class DevelopmentSystemOrchestrator:
         pipe = cfg["pipeline"]
 
         # paths
-        self._status_file_path       = Path(pth["status_file"])
-        self._classifier_folder      = Path(pth["classifier_folder"])
-        self._learning_curve_path    = Path(pth["learning_curve"])
-        self._validation_report_path = Path(pth["validation_report"])
-        self._testing_report_path    = Path(pth["testing_report"])
-        self._user_input_path        = Path(pth["user_input"])
+        self._status_file_path: Path       = Path(pth["status_file"])
+        self._classifier_folder: Path      = Path(pth["classifier_folder"])
+        self._learning_curve_path: Path    = Path(pth["learning_curve"])
+        self._validation_report_path: Path = Path(pth["validation_report"])
+        self._testing_report_path: Path    = Path(pth["testing_report"])
+        self._user_input_path: Path        = Path(pth["user_input"])
 
         # model
-        self._feature_cols = mdl["feature_cols"]
-        self._score_min    = int(mdl["score_min"])
-        self._score_max    = int(mdl["score_max"])
+        self._feature_cols: List[str] = mdl["feature_cols"]
+        self._score_min: int          = int(mdl["score_min"])
+        self._score_max: int          = int(mdl["score_max"])
 
         # pipeline thresholds
-        self._overfitting_threshold    = float(pipe["overfitting_threshold"])
-        self._generalization_threshold = float(pipe["generalization_threshold"])
-        self._max_outer_iterations     = int(pipe["max_outer_iterations"])
-        self._default_max_iter         = int(pipe["default_max_iter"])
+        self._overfitting_threshold: float    = float(pipe["overfitting_threshold"])
+        self._generalization_threshold: float = float(pipe["generalization_threshold"])
+        self._max_outer_iterations: int       = int(pipe["max_outer_iterations"])
+        self._default_max_iter: int           = int(pipe["default_max_iter"])
 
         # domain objects
-        self._learning_set        = learning_set
-        self._hyper_param_configs = self._build_hyper_param_configs(cfg)
-        self._testing_mode        = testing_mode
+        self._learning_set: LearningSet = learning_set
+        self._hyper_param_configs: List[HyperParameters] = self._build_hyper_param_configs(cfg)
+        self._testing_mode: bool = testing_mode
         self._start_time: Optional[int] = None
 
         # persisted state
         self._status: Dict[str, Any] = self._load_status()
 
         # views
-        self._learning_plot_view     = LearningPlotView()
-        self._validation_report_view = ValidationReportView()
-        self._testing_report_view    = TestingReportView()
+        self._learning_plot_view: LearningPlotView = LearningPlotView()
+        self._validation_report_view: ValidationReportView = ValidationReportView()
+        self._testing_report_view: TestingReportView = TestingReportView()
 
         # communication (all network params from config)
-        self._comm = CommunicationController(
+        self._comm: CommunicationController = CommunicationController(
             listen_host          = net["listen_host"],
             listen_port          = int(net["listen_port"]),
             segregation_ip       = net["segregation_system"]["ip"],
@@ -137,10 +137,10 @@ class DevelopmentSystemOrchestrator:
         )
 
         # log
-        self._log_path    = LOG_PATH
-        self._session_key = "current_session"
+        self._log_path: Path = LOG_PATH
+        self._session_key: str = "current_session"
 
-        # per-node stopwatch: node-label → monotonic start time
+        # per-node stopwatch
         self._node_start: Dict[str, float] = {}
 
     # ── status persistence ─────────────────────────────────────────────

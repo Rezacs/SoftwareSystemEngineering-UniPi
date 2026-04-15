@@ -24,11 +24,11 @@ class ValidationOrchestrator:
         overfitting_threshold: float = 0.1,
     ) -> None:
         """Store all configuration needed for the validation loop."""
-        self._hp_configs            = hp_configs
-        self._classifier_folder     = classifier_folder
-        self._report_path           = report_path
-        self._training_orchestrator = training_orchestrator
-        self._overfitting_threshold = overfitting_threshold
+        self._hp_configs: List[HyperParameters] = hp_configs
+        self._classifier_folder: str = classifier_folder
+        self._report_path: str = report_path
+        self._training_orchestrator: TrainingOrchestrator = training_orchestrator
+        self._overfitting_threshold: float = overfitting_threshold
 
     # ── BPMN Task: SET AVERAGE HYPERPARAMS (data retrieval part) ──────
 

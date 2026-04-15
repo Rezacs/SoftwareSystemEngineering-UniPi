@@ -209,21 +209,13 @@ class IngestionSystemOrchestrator:
             end_time = time.perf_counter()
             event = {
                 "process": "I2",
-                "outcome": "0-Invalid raw session, discarded",
+                "outcome": "Invalid raw session, discarded",
                 "latency": end_time - start_time
             }
             tmp_log.append(event)
             self.write_log_file(tmp_log, timestamp)
             print("[INFO] Raw session discarded")
             return
-        
-        end_time = time.perf_counter()
-        event = {
-            "process": "I2",
-            "outcome": "1-Raw session is valid",
-            "latency": end_time - start_time
-        }
-        tmp_log.append(event)
         
         # check if is evaluation phase
         if self.ingestion_system_config.phase == 1:

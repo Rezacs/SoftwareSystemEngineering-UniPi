@@ -170,12 +170,14 @@ class RecordsBuffer:
             cursor.executemany(upsert_sql, data_tuples)
             self.db_connection.commit()
 
+            """
             print("\n--- Current State of 'records' Table ---")
             # Read the whole table into a new DataFrame for pretty printing
             current_table = pd.read_sql("SELECT * FROM records", self.db_connection)
             # .to_string() forces Pandas to print all columns and rows without truncating
             print(current_table.to_string())
             print("----------------------------------------\n")
+            """
 
             return True
 

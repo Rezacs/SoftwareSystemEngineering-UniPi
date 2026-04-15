@@ -5,6 +5,8 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
+from ingestion.raw_session import RawSession
+
 
 class RawSessionCreator:
     """Creates and validates raw data sessions from incoming records.
@@ -54,14 +56,15 @@ class RawSessionCreator:
             dict: A dictionary containing the session 'UUID', 'created_at'
                 timestamp, and 'records' as a list of dictionaries.
         """
-        session_uuid = str(uuid.uuid4())
+        batch_uuid = str(uuid.uuid4())
 
-        dataframe['UUID'] = session_uuid
+        dataframe['UUID'] = batch_uuid
 
         dataframe = dataframe.replace(np.nan, None)
 
+
         return {
-            "UUID": f"{session_uuid}",
+            "UUID": f"{batch_uuid}",
             "created_at": datetime.now().isoformat(),
             "records": dataframe.to_dict(orient="records")
         }

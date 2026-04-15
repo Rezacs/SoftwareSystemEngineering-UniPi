@@ -224,17 +224,16 @@ class IngestionSystemOrchestrator:
             print(f"Sending : {raw_session}")
             risp = requests.post(self.preparation_url, json=raw_session,timeout=10)
 
+            #risp.raise_for_status()
             print(risp)
-
-            print(f"[INFO] Raw session correctly sent to preparation system")
 
             
             end_time=time.perf_counter()
             event={
-                        "process" : "I4",
-                        "phase" : self.ingestion_system_config.phase,
-                        "outcome" : "raw session sent to preparation system",
-                        "latency" : end_time-start_time
+                    "process" : "I4",
+                    "phase" : self.ingestion_system_config.phase,
+                    "outcome" : "raw session sent to preparation system",
+                     "latency" : end_time-start_time
             }
             tmp_log.append(event)
 
@@ -242,7 +241,10 @@ class IngestionSystemOrchestrator:
             self.write_log_file(tmp_log,timestamp)
 
             if not self.records_buffer.delete_records(ids):
-                print(f"ERROR: an error occured deleting records from buffer")
+                print(f"ERROR: an error occured extracting records from buffer")
+                
+
+            print(f"[INFO] Raw session correctly sent to preparation system")
         
         except requests.exceptions.Timeout:
             print(f"\nERROR: Connection to {self.preparation_url} timed out after 10 seconds.")

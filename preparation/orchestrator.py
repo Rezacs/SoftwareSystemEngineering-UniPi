@@ -16,28 +16,41 @@ from preparation.raw_session_receiver import RawSessionReceiver
 
 
 class PreparationSystemOrchestrator:
-    """Orchestrator for the preparation system, receive the raw sessions, process them, and creates
-    the prepared session, then it sends them to segregation system or classification system, depending
-    in which phase is running.
+    """Orchestrates the preparation system pipeline and handles network routing.
 
-    Args:
-      config_file_path(str): the configuration file in which are specified all the parameters to run
-    the system.
+    This class sets up a Flask server to receive raw sessions, processes them
+    concurrently using a thread pool, runs them through the data preparation
+    pipeline (cleaning, imputing, feature extraction), un-batches the records,
+    and forwards the individual prepared sessions to either the segregation
+    system (Phase 0) or the classification system (Phase 1).
 
-    Returns:
-
+    Attributes:
+        log_file_path (Path): Path to the preparation event log JSON file.
+        log (dict): In-memory dictionary holding the event logs.
+        preparation_system_config (PreparationSystemConfiguration): System configurations.
+        raw_session_receiver (RawSessionReceiver): Validates incoming JSON schemas.
+        prepared_session_creator (PreparedSessionCreator): Handles data transformations.
+        segregation_url (str): Endpoint URL for the segregation system.
+        classification_url (str): Endpoint URL for the classification system.
+        executor (concurrent.futures.ThreadPoolExecutor): Thread pool for background tasks.
+        lock (threading.Lock): Mutex lock for safe, concurrent log writing.
+        app (Flask): The underlying Flask web application.
     """
 
     def __init__(self, config_file_path: str = None):
+        """Initializes the orchestrator, its components, and the Flask application.
 
+        Args:
+            config_file_path (str, optional): Path to the configuration JSON file.
+                If None, resolves to a default path in the config directory.
+        """
         if config_file_path is None:
             config_file_path = Path(__file__).resolve().parents[1] / "config" / "preparationConfig.json"
 
         self.log_file_path = Path(__file__).resolve().parents[1] / "logs" / "preparationLog.json"
 
         try:
-
-            with open(self.log_file_path, 'r') as f:
+            with open(self.log_file_path, 'r', encoding='utf-8') as f:
                 self.log = json.load(f)
 
         except FileNotFoundError:
@@ -50,7 +63,7 @@ class PreparationSystemOrchestrator:
             print("Falling back to an empty log to prevent a crash.")
             self.log = {}
 
-        print(f"[INFO] Preparation system orchestrator initialization...")
+        print("[INFO] Preparation system orchestrator initialization...")
 
         self.preparation_system_config = PreparationSystemConfiguration(config_file_path)
 
@@ -66,68 +79,72 @@ class PreparationSystemOrchestrator:
 
         self.raw_session_receiver = RawSessionReceiver(self.preparation_system_config.json_schema_path)
 
-        print(f"[INFO] Raw session receiver initialized")
+        print("[INFO] Raw session receiver initialized")
 
         self.prepared_session_creator = PreparedSessionCreator()
 
         self.segregation_url = f"http://{self.preparation_system_config.segregation_system_ip}:{self.preparation_system_config.segregation_system_port}/{self.preparation_system_config.segregation_system_endpoint}"
         self.classification_url = f"http://{self.preparation_system_config.classification_system_ip}:{self.preparation_system_config.classification_system_port}/{self.preparation_system_config.classification_system_endpoint}"
 
-        print(f"[INFO] Initializing Thread pool")
+        print("[INFO] Initializing Thread pool")
 
         self.executor = concurrent.futures.ThreadPoolExecutor(
             max_workers=self.preparation_system_config.number_of_threads)
         self.lock = threading.Lock()
 
-        print(f"[INFO] Prepared session creator initialized")
+        print("[INFO] Prepared session creator initialized")
 
         self.app = Flask(__name__)
 
         self.app.add_url_rule('/run', methods=['POST'], view_func=self.run)
 
-        print(f"[INFO] Flask service started initialized")
+        print("[INFO] Flask service started initialized")
 
-    def write_log_file(self, log: list, timestamp: datetime.datetime):
-        """
+    def write_log_file(self, log: list, timestamp: str):
+        """Thread-safely writes processing event logs to the JSON log file.
 
         Args:
-          log: list: 
-          timestamp: datetime.datetime: 
-
-        Returns:
-
+            log (list): A list of dictionary objects representing processing events.
+            timestamp (str): The ISO formatted timestamp used as the key for the log entry.
         """
-
         # Thread safe using lock
-
         with self.lock:
             self.log[f"{timestamp}"] = log
 
-            with open(self.log_file_path, 'w') as file:
+            with open(self.log_file_path, 'w', encoding='utf-8') as file:
                 json.dump(self.log, file, indent=4)
 
     def http_200_response(self):
-        """ """
+        """Returns a standardized HTTP 200 Success response.
+
+        Returns:
+            tuple: A Flask JSON response and a 200 HTTP status code.
+        """
         # If the record received are valid this is what the client side system will receive in every case
         return jsonify({"Message": "Data correctly received"}), 200
 
     def http_400_response(self):
-        """ """
+        """Returns a standardized HTTP 400 Bad Request response.
+
+        Returns:
+            tuple: A Flask JSON response and a 400 HTTP status code.
+        """
         # If the record received isn't valid this is what the client side system will receive
         return jsonify({"Error": "Raw session received has an invalid schema"}), 400
 
-    def _process(self, start_time, timestamp, raw_session):
-        """
+    def _process(self, start_time: float, timestamp: str, raw_session: dict):
+        """Asynchronously processes a raw session and forwards the prepared data.
+
+        This method applies the data preparation pipeline (cleaning, imputing,
+        clipping outliers, extracting features) to the batch session. It then
+        un-batches the results into individual prepared sessions and routes them
+        to the appropriate downstream system based on the current phase.
 
         Args:
-          start_time: 
-          timestamp: 
-          raw_session: 
-
-        Returns:
-
+            start_time (float): The performance counter start time of the request.
+            timestamp (str): The ISO formatted timestamp of the request.
+            raw_session (dict): The incoming raw session payload.
         """
-
         tmp_log = []
 
         # Create prepared session
@@ -137,7 +154,7 @@ class PreparationSystemOrchestrator:
         raw_session = self.prepared_session_creator.correct_missing_samples(raw_session)
 
         if raw_session is None:
-            print(f"[INFO] Raw session discarded due too many errors")
+            print("[INFO] Raw session discarded due too many errors")
             return
 
         # Correct outliers
@@ -165,19 +182,17 @@ class PreparationSystemOrchestrator:
             for p in prepared_sessions:
                 # Development phase
                 # Send to segregation system
-
                 try:
-
                     print(f"sending : {p}")
-                    risp = requests.post(self.segregation_url, json=p)
+                    risp = requests.post(self.segregation_url, json=p, timeout=2)
                     print(risp)
-                
-                    end_time=time.perf_counter()
-                    event={
-                        "process" : "X1",
-                        "phase" : 0,
-                        "outcome" : "prepared session sent to segregation system",
-                        "latency" : end_time-start_time
+
+                    end_time = time.perf_counter()
+                    event = {
+                        "process": "X1",
+                        "phase": 0,
+                        "outcome": "prepared session sent to segregation system",
+                        "latency": end_time - start_time
                     }
                     tmp_log.append(event)
 
@@ -197,23 +212,21 @@ class PreparationSystemOrchestrator:
 
             self.write_log_file(tmp_log, timestamp)
 
-            return self.http_200_response()
+            return
 
         for p in prepared_sessions:
             # Evaluation phase send to classification system
-
             try:
-
                 print(f"sending : {p}")
-                risp = requests.post(self.classification_url, json=p)
+                risp = requests.post(self.classification_url, json=p,timeout=2)
                 print(risp)
-            
-                end_time=time.perf_counter()
-                event={
-                    "process" : "X2",
-                    "phase" : 1,
-                    "outcome" : "prepared session sent to classification system",
-                    "latency" : end_time-start_time
+
+                end_time = time.perf_counter()
+                event = {
+                    "process": "X2",
+                    "phase": 1,
+                    "outcome": "prepared session sent to classification system",
+                    "latency": end_time - start_time
                 }
 
                 tmp_log.append(event)
@@ -236,8 +249,15 @@ class PreparationSystemOrchestrator:
         self.write_log_file(tmp_log, timestamp)
 
     def run(self):
-        """ """
+        """Flask route handler to receive and process incoming raw sessions.
 
+        This method intercepts HTTP POST requests, delegates validation to the
+        RawSessionReceiver, and submits valid payloads to the thread pool for
+        asynchronous processing.
+
+        Returns:
+            tuple: An HTTP response indicating success (200) or schema failure (400).
+        """
         start_time = time.perf_counter()
 
         timestamp = datetime.datetime.now().isoformat()
@@ -246,18 +266,23 @@ class PreparationSystemOrchestrator:
         raw_session = self.raw_session_receiver.receive_raw_session()
 
         if raw_session is None:
-            print(f"[INFO] : Raw session received has invalid schema, discarded")
+            print("[INFO] : Raw session received has invalid schema, discarded")
             return self.http_400_response()
 
         # awake a Thread from the pool
-
         self.executor.submit(self._process, start_time, timestamp, raw_session)
 
         return self.http_200_response()
 
     def check_ip_and_port(self):
-        """ """
+        """Verifies that the configured IP and port are available for the server.
 
+        Creates a dummy network socket to test the connection.
+
+        Raises:
+            SystemExit: If the target port is already in use or cannot be bound,
+                safely terminating the system to prevent conflicts.
+        """
         target_ip = self.preparation_system_config.hosting_ip
         target_port = self.preparation_system_config.hosting_port
 
@@ -268,7 +293,7 @@ class PreparationSystemOrchestrator:
             # 2. Attempt to bind to the IP and Port
             test_socket.bind((target_ip, target_port))
 
-            # 3. If it succeeds, the port is free! 
+            # 3. If it succeeds, the port is free!
             #  close test socket so Flask can use it.
             test_socket.close()
 
@@ -277,7 +302,7 @@ class PreparationSystemOrchestrator:
             if getattr(e, 'winerror', e.errno) in (10048, 98):
                 print(f"\nERROR: Port {target_port} is already in use!")
             else:
-                print(f"\nERROR: Network configuration issue!")
+                print("\nERROR: Network configuration issue!")
                 print(f"Cannot bind to IP: '{target_ip}'. Make sure this IP belongs to your machine.")
                 print(f"System details: {e}")
 
@@ -285,11 +310,9 @@ class PreparationSystemOrchestrator:
             sys.exit(1)
 
     def start(self):
-        """Start Flask server"""
-
+        """Starts the Flask web server to begin listening for incoming sessions."""
         print("Starting Flask server...")
 
         self.check_ip_and_port()
 
-        self.app.run(host=self.preparation_system_config.hosting_ip, port=self.preparation_system_config.hosting_port,
-                     threaded=True)
+        self.app.run(host=self.preparation_system_config.hosting_ip, port=self.preparation_system_config.hosting_port)

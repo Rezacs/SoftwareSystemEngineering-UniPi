@@ -224,7 +224,7 @@ class IngestionSystemOrchestrator:
             self.write_log_file(tmp_log, timestamp)
             print("[INFO] Raw session discarded")
             return
-
+        
         end_time = time.perf_counter()
         event = {
             "process": "I2",
@@ -232,7 +232,7 @@ class IngestionSystemOrchestrator:
             "latency": end_time - start_time
         }
         tmp_log.append(event)
-
+        
         # check if is evaluation phase
         if self.ingestion_system_config.phase == 1:
             # send label to evaluation system
@@ -243,7 +243,7 @@ class IngestionSystemOrchestrator:
 
                 try:
                     print(f"Sending : {json_label}")
-                    risp = requests.post(self.evaluation_url, json=json_label, timeout=10)
+                    risp = requests.post(self.evaluation_url, json=json_label, timeout=2)
 
                     # risp.raise_for_status()
 
@@ -272,8 +272,8 @@ class IngestionSystemOrchestrator:
 
         # send data preparation system
         try:
-            # print(f"Sending : {raw_session}")
-            risp = requests.post(self.preparation_url, json=raw_session, timeout=10)
+            print(f"Sending : {raw_session}")
+            risp = requests.post(self.preparation_url, json=raw_session, timeout=3)
 
             # risp.raise_for_status()
             print(risp)

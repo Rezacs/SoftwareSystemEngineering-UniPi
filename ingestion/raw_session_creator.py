@@ -82,13 +82,17 @@ class RawSessionCreator:
                 (total missing values / total rows). Returns sys.maxsize if
                 required labels are missing.
         """
+
+
         dataframe = pd.DataFrame(raw_session['records'])
+
 
         number_of_samples = len(dataframe)
 
         # marking
 
         dataframe = dataframe.replace([None, ""], np.nan)
+
 
         number_of_missing_values = dataframe.isna().sum().sum()
 

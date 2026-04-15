@@ -4,21 +4,37 @@ from pathlib import Path
 
 
 class PreparationSystemConfiguration:
-    """
-    Class to handle the configuration parameters of the ingestion system
+    """Handles the configuration parameters for the data preparation system.
+
+    This class loads configuration settings from a JSON file, validates the
+    types and values of the required parameters, and makes them available
+    as instance attributes. If any parameter is missing, invalid, or if the file
+    cannot be read, the application will exit with a specific error code.
 
     Attributes:
-        phase (int) : To set in which phase the system should work, 0 development , 1 evaluation
-        classification_system_port (int)
-        classification_system_ip (string)
-        segregation_system_port (int)
-        segregation_system_ip (string)
-
+        phase (int): The operating phase of the system (0 for development, 1 for evaluation).
+        hosting_ip (str): The IP address where the preparation system is hosted.
+        hosting_port (int): The port number where the preparation system listens.
+        json_schema_path (str): The file path to the expected JSON validation schema.
+        number_of_threads (int): The maximum number of worker threads allowed (must be 1-4).
+        segregation_system_port (int): The port of the downstream segregation system.
+        segregation_system_ip (str): The IP address of the downstream segregation system.
+        segregation_system_endpoint (str): The API endpoint route for the segregation system.
+        classification_system_port (int): The port of the downstream classification system.
+        classification_system_ip (str): The IP address of the downstream classification system.
+        classification_system_endpoint (str): The API endpoint route for the classification system.
     """
 
     def __init__(self, config_file_path):
-        """
-        Load the parameters from a configuration file
+        """Loads and validates system parameters from the given configuration file.
+
+        Args:
+            config_file_path (str or Path): The path to the JSON configuration file.
+
+        Raises:
+            SystemExit: Terminates the program with specific status codes if the
+                file is missing (100), contains invalid JSON (101), or if any
+                configuration values fail validation checks (1-9).
         """
         try:
             config_file_path = Path(config_file_path)

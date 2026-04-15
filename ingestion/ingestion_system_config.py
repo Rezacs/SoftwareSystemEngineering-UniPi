@@ -59,7 +59,7 @@ class IngestionSystemConfiguration:
 
                 self.missing_samples_threshold = config.get("missing_samples_threshold", 20)
 
-                if not isinstance(self.missing_samples_treshold, int):
+                if not isinstance(self.missing_samples_threshold, int):
                     print("ERROR> Missing samples treshold in configuration file not valid")
                     sys.exit(4)
 

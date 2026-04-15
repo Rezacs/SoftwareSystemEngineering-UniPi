@@ -75,7 +75,7 @@ class IngestionSystemOrchestrator:
 
         print("[INFO] Record receiver initialized")
 
-        self.raw_session_creator = RawSessionCreator(self.ingestion_system_config.sufficient_record_treshold)
+        self.raw_session_creator = RawSessionCreator(self.ingestion_system_config.sufficient_record_threshold)
 
         print("[INFO] Raw session creator initialized")
 
@@ -89,7 +89,7 @@ class IngestionSystemOrchestrator:
 
         # Creation of url to speak with Evaluation system and preparation system
         self.evaluation_url = f"http://{self.ingestion_system_config.evaluation_system_ip}:{self.ingestion_system_config.evaluation_system_port}/{self.ingestion_system_config.evaluation_system_endpoint}"
-        self.preparation_url = f"http://{self.ingestion_system_config.preparation_system_ip}:{self.ingestion_system_config.preparation_system_port}/{self.ingestion_system_config.preparation_system_endpoint} "
+        self.preparation_url = f"http://{self.ingestion_system_config.preparation_system_ip}:{self.ingestion_system_config.preparation_system_port}/{self.ingestion_system_config.preparation_system_endpoint}"
 
         print("[INFO] Initializing Thread pool")
 
@@ -106,8 +106,8 @@ class IngestionSystemOrchestrator:
         print(f"\n"
               f"     --- Ingestion System Configuration ---\n"
               f"     Phase:             {self.ingestion_system_config.phase}\n"
-              f"     Missing_Samples: {self.ingestion_system_config.missing_samples_treshold}, \n"
-              f"     Sufficient_Records: {self.ingestion_system_config.sufficient_record_treshold} \n"
+              f"     Missing_Samples: {self.ingestion_system_config.missing_samples_threshold}, \n"
+              f"     Sufficient_Records: {self.ingestion_system_config.sufficient_record_threshold} \n"
               f"     Evaluation System IP:PORT : {self.ingestion_system_config.evaluation_system_ip}:{self.ingestion_system_config.evaluation_system_port}\n"
               f"     Evaluation System endpoint : /{self.ingestion_system_config.evaluation_system_endpoint}\n"
               f"     Preparation System IP:PORT : {self.ingestion_system_config.preparation_system_ip}:{self.ingestion_system_config.preparation_system_port}\n"
@@ -206,14 +206,14 @@ class IngestionSystemOrchestrator:
         tmp_log.append(event)
         # create raw session
 
-        records, ids = self.records_buffer.retrieve_last_records()
+        with self.lock:
+            records, ids = self.records_buffer.extract_last_records()
 
         raw_session = self.raw_session_creator.create_raw_session(records)
 
         # mark missing samples and check if raw session is valid
 
-        if self.raw_session_creator.mark_missing_samples(
-                raw_session) > self.ingestion_system_config.missing_samples_treshold:
+        if self.raw_session_creator.mark_missing_samples(raw_session) > self.ingestion_system_config.missing_samples_threshold:
             end_time = time.perf_counter()
             event = {
                 "process": "I2",
@@ -278,22 +278,28 @@ class IngestionSystemOrchestrator:
             # risp.raise_for_status()
             print(risp)
 
-            end_time = time.perf_counter()
-            event = {
-                "process": "I4",
-                "phase": self.ingestion_system_config.phase,
-                "outcome": "raw session sent to preparation system",
-                "latency": end_time - start_time
-            }
-            tmp_log.append(event)
+            if risp.status_code != 200:
+                print(f"[WARNING] Request failed with status code: {risp.status_code}")
+                print(f"          Server response details: {risp.text}")
+                self.records_buffer.upsert_with_dataframe(records)
+            else:
 
-            # write json log file
-            self.write_log_file(tmp_log, timestamp)
+                end_time = time.perf_counter()
+                event = {
+                    "process": "I4",
+                    "phase": self.ingestion_system_config.phase,
+                    "outcome": "raw session sent to preparation system",
+                    "latency": end_time - start_time
+                }
+                tmp_log.append(event)
 
-            if not self.records_buffer.delete_records(ids):
-                print("ERROR: an error occurred extracting records from buffer")
+                # write json log file
+                self.write_log_file(tmp_log, timestamp)
 
-            print("[INFO] Raw session correctly sent to preparation system")
+            #if not self.records_buffer.delete_records(ids):
+            #    print("ERROR: an error occurred extracting records from buffer")
+
+                print("[INFO] Raw session correctly sent to preparation system")
 
         except requests.exceptions.Timeout:
             print(f"\nERROR: Connection to {self.preparation_url} timed out after 10 seconds.")

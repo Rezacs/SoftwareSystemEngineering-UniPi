@@ -301,21 +301,38 @@ class RecordsBuffer:
         count = result[0]
         return count
 
-    def retrieve_last_records(self):
+    def extract_last_records(self):
         """Retrieves all records from the database that have a non-null label.
-
+            # IMPORTANT NOT THREAD SAFE MUST BE MANAGED OUTSIDE
         Returns:
             pd.DataFrame: If no records are found, returns an empty DataFrame.
             tuple: If records are found, returns a tuple containing (pd.DataFrame
                 of records, list of fetched IDs).
         """
-        select_query = "SELECT * FROM records WHERE label IS NOT NULL"
+        """select_query = "SELECT * FROM records WHERE label IS NOT NULL"
         df = pd.read_sql(select_query, self.db_connection)
 
         if df.empty:
             return df
 
         fetched_ids = df['ID'].tolist()
+        return df, fetched_ids"""
+    
+        select_query = "SELECT * FROM records WHERE label IS NOT NULL"
+        df = pd.read_sql(select_query, self.db_connection)
+
+        fetched_ids = df['ID'].tolist() if not df.empty else []
+
+        if fetched_ids:
+            cursor = self.db_connection.cursor()
+    
+            placeholders = ','.join(['?'] * len(fetched_ids))
+            delete_query = f"DELETE FROM records WHERE ID IN ({placeholders})"
+    
+            # Execute the deletion and commit the transaction
+            cursor.execute(delete_query, fetched_ids)
+            self.db_connection.commit()
+
         return df, fetched_ids
 
     def delete_records(self, ids: list) -> bool:

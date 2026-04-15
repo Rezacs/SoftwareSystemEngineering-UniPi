@@ -158,10 +158,14 @@ _csv_buffer: list = []
 _csv_buffer_lock = threading.Lock()
 CSV_FLUSH_INTERVAL = 50  # flush every N rows
 
-def _append_to_csv(path, new_df):
+def _append_to_csv(path, new_df, overwrite=False):
     """Buffer rows and flush to CSV in batches to avoid O(n²) rewrites."""
     global _csv_buffer
     with _csv_buffer_lock:
+        if overwrite:
+            _csv_buffer = []
+            if path.exists():
+                path.unlink()
         _csv_buffer.extend(new_df.to_dict(orient="records"))
         if len(_csv_buffer) >= CSV_FLUSH_INTERVAL:
             _flush_csv_buffer(path)
@@ -332,7 +336,7 @@ def generate_testing_csv(current_phase):
 
     phase_name  = "development" if current_phase == "0" else "production"
     output_path = LOG_DIR / f"testing_log_{phase_name}.csv"
-    _append_to_csv(output_path, pd.DataFrame(rows))
+    _append_to_csv(output_path, pd.DataFrame(rows), overwrite=True)
     print(f"  SUCCESS: {len(rows)} rows written → {output_path}")
 
 ##########################################

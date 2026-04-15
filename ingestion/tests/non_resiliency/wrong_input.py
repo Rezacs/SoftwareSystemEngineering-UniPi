@@ -1,20 +1,22 @@
-import requests
 import json
+
+import requests
+
 
 def send_payload(payload, server_url):
     """Helper function to handle the pause, print, and network request."""
-    print(f"\nPayload ready to send:")
+    print("\nPayload ready to send:")
     print(json.dumps(payload, indent=4))
-    
+
     # Wait for the user to press Enter before sending
     user_action = input("\nPress [ENTER] to send this request, or type 'c' to cancel: ")
-    
+
     if user_action.strip().lower() == 'c':
         print(" -> Canceled sending. Returning to menu.")
-        return True # Return True to keep the main loop running
+        return True  # Return True to keep the main loop running
 
     try:
-        response = requests.post(server_url, json=payload)
+        response = requests.post(server_url, json=payload, timeout=10)
         if response.status_code == 200:
             # Safely try to parse JSON response, fallback to text if not JSON
             try:
@@ -24,29 +26,30 @@ def send_payload(payload, server_url):
             print(f"  -> Success! Server: {server_response}")
         else:
             print(f"  -> Failed! Status: {response.status_code} - {response.text}")
-            
+
     except requests.exceptions.ConnectionError:
         print("\nError: Could not connect to the server. Is your Flask app running?")
-        
+
     return True
+
 
 def interactive_json_menu(server_url):
     """Displays a menu of hardcoded JSONs for the user to select and send."""
-    
+
     # 1. Define your hardcoded JSONs here
     hardcoded_options = [
         {
             "description": "Invalid json schema",
             "data": {
-                "player_id": [101,2],
-                "skill_overall": [85,0],
-                "label": {"a":3}
+                "player_id": [101, 2],
+                "skill_overall": [85, 0],
+                "label": {"a": 3}
             }
         },
         {
             "description": "Unexpected key/values",
             "data": {
-                "player_id" : 100,
+                "player_id": 100,
                 "abc": 101,
                 "cd": 12,
                 "aa": 2
@@ -64,10 +67,10 @@ def interactive_json_menu(server_url):
                 "player_id": 101,
                 "label": 5
             },
-            {
-                "player_id": 101,
-                "label": 3
-            }]
+                {
+                    "player_id": 101,
+                    "label": 3
+                }]
         },
         {
             "description": "Record with all missing values",
@@ -102,10 +105,10 @@ def interactive_json_menu(server_url):
         print("\n==========================================")
         print(" Select a payload to send:")
         print("==========================================")
-        
+
         for i, option in enumerate(hardcoded_options):
             print(f" [{i}] - {option['description']}")
-            
+
         print(" [q] - Quit")
         print("==========================================")
 
@@ -118,14 +121,14 @@ def interactive_json_menu(server_url):
 
         # Validate the input
         if not choice.isdigit() or not (0 <= int(choice) < len(hardcoded_options)):
-            print("\n❌ Invalid choice. Please enter a valid number from the list.")
+            print("\nInvalid choice. Please enter a valid number from the list.")
             continue
 
         # 3. Retrieve the selected JSON and pass it to the sending function
         selected_index = int(choice)
         selected_payload = hardcoded_options[selected_index]['data']
-        
-        if not isinstance(selected_payload,list):
+
+        if not isinstance(selected_payload, list):
             print(f"\n--- Loading: {hardcoded_options[selected_index]['description']} ---")
             send_payload(selected_payload, server_url)
         else:
@@ -135,5 +138,5 @@ def interactive_json_menu(server_url):
 
 
 if __name__ == "__main__":
-    SERVER_URL = 'http://127.0.0.1:5002/run'
+    SERVER_URL = 'http://127.0.0.1:5001/run'
     interactive_json_menu(SERVER_URL)

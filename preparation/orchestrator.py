@@ -151,7 +151,7 @@ class PreparationSystemOrchestrator:
                 
                     end_time=time.perf_counter()
                     event={
-                        "process" : "I1",
+                        "process" : "X1",
                         "phase" : 0,
                         "outcome" : "prepared session sent to segregation system",
                         "latency" : end_time-start_time
@@ -190,7 +190,7 @@ class PreparationSystemOrchestrator:
             
                 end_time=time.perf_counter()
                 event={
-                    "process" : "I2",
+                    "process" : "X2",
                     "phase" : 1,
                     "outcome" : "prepared session sent to classification system",
                     "latency" : end_time-start_time

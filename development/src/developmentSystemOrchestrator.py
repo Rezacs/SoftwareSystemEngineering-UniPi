@@ -451,8 +451,8 @@ class DevelopmentSystemOrchestrator:
     def set_average_hyperparams(self) -> None:
         
         self._node_begin(_D1) #Classifier sent
-        self._node_begin(_D2) #Testing Report sent
-        self._node_begin(_D3) #Max outer iterations reached
+        self._node_begin(_D2) #Max outer iterations reached
+        self._node_begin(_D3) #Testing Report sent
         val_orch = ValidationOrchestrator(
             hp_configs=self._hyper_param_configs,
             classifier_folder=self._classifier_folder,
@@ -569,7 +569,7 @@ class DevelopmentSystemOrchestrator:
 
             iteration = self._status.get("iteration", 0) + 1
             if iteration >= self._max_outer_iterations:
-                self._node_end(_D3, f"no: max iterations reached ({iteration})")
+                self._node_end(_D2, f"no: max iterations reached ({iteration})")
                 self._finalize_log("rejected report")
                 print(
                     f"[Orchestrator] Max outer iterations "
@@ -651,7 +651,7 @@ class DevelopmentSystemOrchestrator:
             self._finalize_log("classifier sent")
             self._reset_status()
         else:
-            self._node_end(_D2, "no: test rejected")
+            self._node_end(_D3, "no: test rejected")
 
             print("\n[Orchestrator] TEST REJECTED: Saving report and resetting to IDLE.")
             self._comm.save_rejected_report(self._testing_report_path)

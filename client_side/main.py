@@ -257,13 +257,29 @@ def generate_testing_csv(current_phase):
             continue
 
         for _session_ts, entries in data.items():
-            for entry in entries:
-                rows.append({
-                    "system":    system_name,
-                    "process":   entry.get("process"),
-                    "latency_s": entry.get("latency", 0),
-                    "outcome":   entry.get("outcome", ""),
-                })
+            if system_name == "ingestion":
+                prev_latency = 0.0
+                process_order = ["I0", "I1", "I2", "I3", "I4"]
+                order_map = {p: i for i, p in enumerate(process_order)}
+                sorted_entries = sorted(entries, key=lambda e: order_map.get(e.get("process", ""), 99))
+                for entry in sorted_entries:
+                    raw = entry.get("latency", 0) or 0
+                    delta = round(raw - prev_latency, 6)
+                    prev_latency = raw
+                    rows.append({
+                        "system":    system_name,
+                        "process":   entry.get("process"),
+                        "latency_s": delta,
+                        "outcome":   entry.get("outcome", ""),
+                    })
+            else:
+                for entry in entries:
+                    rows.append({
+                        "system":    system_name,
+                        "process":   entry.get("process"),
+                        "latency_s": entry.get("latency", 0),
+                        "outcome":   entry.get("outcome", ""),
+                    })
 
     if not rows:
         print("  FAILED: No process entries found in logs.")

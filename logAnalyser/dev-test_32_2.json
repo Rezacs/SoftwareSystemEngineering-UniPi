@@ -1,0 +1,62 @@
+[
+    {
+        "process": "D1 - Classifier Sent",
+        "occurrences": 3,
+        "avg_latency": 0.4152666666666667
+    },
+    {
+        "process": "D3 - Testing Report Sent",
+        "occurrences": 3,
+        "avg_latency": 0.5164
+    },
+    {
+        "process": "I0",
+        "occurrences": 2998,
+        "avg_latency": 3.770902972981988
+    },
+    {
+        "process": "I1",
+        "occurrences": 2998,
+        "avg_latency": 0.02725310707138092
+    },
+    {
+        "process": "I2",
+        "occurrences": 2144,
+        "avg_latency": 0.03166303451492537
+    },
+    {
+        "process": "I4",
+        "occurrences": 80,
+        "avg_latency": 0.0902135
+    },
+    {
+        "process": "P1",
+        "occurrences": 3,
+        "avg_latency": 0.015333333333333332
+    },
+    {
+        "process": "S1",
+        "occurrences": 27,
+        "avg_latency": 8.592592592592593e-06
+    },
+    {
+        "process": "S2",
+        "occurrences": 7,
+        "avg_latency": 0.20949785714285715
+    },
+    {
+        "process": "S3",
+        "occurrences": 6,
+        "avg_latency": 0.23306749999999998
+    },
+    {
+        "process": "S4",
+        "occurrences": 6,
+        "avg_latency": 0.024206000000000002
+    },
+    {
+        "process": "X1",
+        "occurrences": 2449,
+        "avg_latency": 1.631766439117732
+    }
+]

@@ -186,21 +186,13 @@ class IngestionSystemOrchestrator:
         n_rows = self.records_buffer.get_number_of_available_records()
         print(f"[DEBUG] Available records in buffer: {n_rows}")
         if not self.raw_session_creator.is_number_of_records_sufficient(n_rows):
-            end_time = time.perf_counter()
-            event = {
-                "process": "I1",
-                "outcome": "0-Not enough record to create a raw session",
-                "latency": end_time - start_time
-            }
-            tmp_log.append(event)
-            self.write_log_file(tmp_log, timestamp)
             print("[INFO] Record stored, not enough record to create a raw session")
             return
 
         end_time = time.perf_counter()
         event = {
             "process": "I1",
-            "outcome": "1-Enough record to create a raw session",
+            "outcome": "Enough record to create a raw session",
             "latency": end_time - start_time
         }
         tmp_log.append(event)

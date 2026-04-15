@@ -1,0 +1,13 @@
+{
+  "hosting_ip": "128.10.10.11",
+  "hosting_port": 5002,
+  "number_of_threads" : 2,
+  "phase": 1,
+  "json_schema_path" : "data/schema/raw_session_schema.json",
+  "classification_system_port": 5006,
+  "classification_system_ip": "127.0.0.1",
+  "classification_system_endpoint": "session",
+  "segregation_system_port": 5003,
+  "segregation_system_ip": "127.0.0.1",
+  "segregation_system_endpoint": "prepared-sessions"
+}

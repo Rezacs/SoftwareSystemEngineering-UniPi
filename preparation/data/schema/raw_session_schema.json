@@ -29,13 +29,16 @@
                 ],
                 "properties": {
                     "UUID": { "type": "string" },
-                    "player_id": { "type": ["integer", "string"] },
-                    "days_missed": { "type": "integer" },
-                    "games_missed": { "type": "integer" },
-                    "number_of_likes": { "type": "integer" },
-                    "number_of_followers": { "type": "integer" },
-                    "skill_overall": { "type": "integer" },
-                    "label": { "type": ["integer", "string", "null"] }
+                    "player_id": { "type": "integer",
+                                    "minimum": 0 },
+                    "days_missed": { "type": ["integer", "null"] },
+                    "games_missed": { "type": ["integer", "null"] },
+                    "number_of_likes": { "type": ["integer", "null"] },
+                    "number_of_followers": { "type": ["integer", "null"] },
+                    "skill_overall": { "type": ["integer", "null"] },
+                    "label": { "type": ["integer","null"],
+                               "minimum" : 1,
+                               "maximum": 5 }
                 }
             }
         }
